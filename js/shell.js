@@ -9,8 +9,9 @@
     if (w === 'tex' && !window.Tex) w = 'md';
     shell.dataset.ws = w;
     document.querySelectorAll('.ws-seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ws === w)));
-    store.set('folio.ws', w);
+    if (shell.classList.contains('zen')) setZen(false);
     if (w === 'tex') Tex.show(); else document.title = 'Folio';
+    if (w === 'home') Home.render();
     $('#dropTitle').textContent = w === 'tex' ? 'Suelta para añadir al proyecto' : 'Suelta para abrir';
     $('#dropSub').textContent = w === 'tex' ? 'Imágenes van a figuras/ · una carpeta se abre como proyecto' : 'Archivos .md, .markdown o .txt';
   }
@@ -35,13 +36,13 @@
     if (!$('#modal').hidden) return;
     if ((e.ctrlKey || e.metaKey) && (e.key === '.' || e.code === 'Period')) { e.preventDefault(); setZen(!shell.classList.contains('zen')); return; }
     if (e.key === 'Escape' && shell.classList.contains('zen') && !document.querySelector('.CodeMirror-dialog, .CodeMirror-hints')) setZen(false);
-    if (ws() === 'tex') Tex.onKey(e); else Markdown.onKey(e);
+    if (ws() === 'tex') Tex.onKey(e); else if (ws() === 'md') Markdown.onKey(e);
   });
 
   /* ---------- drag & drop routing ---------- */
   let dragDepth = 0;
   const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes('Files');
-  addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; if (ws() === 'md') $('#drop').hidden = false; });
+  addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; if (ws() !== 'tex') $('#drop').hidden = false; });
   addEventListener('dragover', e => { if (hasFiles(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } });
   addEventListener('dragleave', e => { if (!hasFiles(e)) return; dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) $('#drop').hidden = true; });
   addEventListener('drop', async e => {
@@ -54,10 +55,10 @@
     let entries = [];
     if (handlePromises) { const hs = await Promise.all(handlePromises); entries = hs.map((h, i) => h ? { handle: h } : (files[i] ? { file: files[i] } : null)).filter(Boolean); }
     if (!entries.length) entries = files.map(f => ({ file: f }));
-    // a .tex/.bib or a folder dropped on the Markdown side opens the LaTeX workspace
-    if (ws() === 'md' && window.Tex) {
+    // a .tex/.bib or a folder dropped on Inicio or the Markdown side opens the LaTeX workspace
+    if (ws() !== 'tex' && window.Tex) {
       const isTexish = entries.some(en => (en.handle && en.handle.kind === 'directory') || Tex.isTex(en.handle ? en.handle.name : en.file.name));
-      if (isTexish) { setWs('tex'); }
+      setWs(isTexish ? 'tex' : 'md');
     }
     if (ws() === 'tex') Tex.onDrop(entries, e); else Markdown.onDrop(entries);
   });
@@ -74,9 +75,9 @@
     });
   }
 
-  /* ---------- boot ---------- */
+  /* ---------- boot: always start on Inicio, unless a file was handed to the app ---------- */
   Markdown.boot(window.__FOLIO_FILE__);
-  setWs(store.get('folio.ws') === 'tex' ? 'tex' : 'md');
+  setWs(window.__FOLIO_FILE__ ? 'md' : 'home');
 
   /* ---------- service worker (offline + updates) ---------- */
   if ('serviceWorker' in navigator && !inFrame && location.protocol !== 'file:') {

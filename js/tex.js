@@ -600,7 +600,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
   }
   function showEmptyEditor() {
     if (!cm) return;
-    cm.swapDoc(CodeMirror.Doc('% Abre una carpeta de proyecto o el proyecto de ejemplo desde el menú del proyecto.\n', 'stex'));
+    cm.swapDoc(CodeMirror.Doc('% Sin proyecto abierto.\n% Elige uno en Inicio o desde el menú del proyecto (arriba a la izquierda).\n', 'stex'));
     cm.setOption('readOnly', 'nocursor');
     $('#imgPrev').hidden = true; updateFileHead(); renderOutline();
   }
@@ -1325,19 +1325,46 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     else if (k === 's') { e.preventDefault(); saveAndCompile(); }
     else if (k === 'o') { e.preventDefault(); openFolderDialog(); }
   }
+  function init() {
+    if (inited) return;
+    inited = true;
+    initEditor();
+    $('#autoCompile').checked = store.get('folio.tex.auto') !== false;
+    renderTree(); updateFileHead(); showProblems(); renderOutline();
+  }
+  let autoTried = false;   // the last project reopens by itself once, and only if permission is still granted
   async function show() {
-    if (!inited) {
-      inited = true;
-      initEditor();
-      $('#autoCompile').checked = store.get('folio.tex.auto') !== false;
-      renderTree(); updateFileHead(); showProblems();
-      if (pendingFile) { const f = pendingFile; pendingFile = null; await openFileHandle(f); return; }
-      const lastId = store.get('folio.tex.last');
-      const rec = lastId && lastId !== 'sample' ? (await FolioDB.projects().catch(() => [])).find(p => p.id === lastId) : null;
-      if (rec && rec.handle && await verifyPermission(rec.handle, false)) { await reopen(rec); return; }
-      await openSample();
-      if (rec) toast(`Para volver a “${rec.name}”, ábrelo desde el menú del proyecto (Recientes).`, 6000);
-    } else if (cm) setTimeout(() => cm.refresh(), 0);
+    const first = !inited;
+    init();
+    if (!first) { if (cm) setTimeout(() => cm.refresh(), 0); return; }
+    if (pendingFile) { const f = pendingFile; pendingFile = null; autoTried = true; await openFileHandle(f); return; }
+    if (autoTried || P) return;
+    autoTried = true;
+    const lastId = store.get('folio.tex.last');
+    if (lastId === 'sample') { await openSample(); return; }
+    const rec = lastId ? (await FolioDB.projects().catch(() => [])).find(p => p.id === lastId) : null;
+    if (rec && rec.handle && await verifyPermission(rec.handle, false)) await reopen(rec);
+  }
+
+  /* ---------- entry points used by Inicio ---------- */
+  async function recents() {
+    return (await FolioDB.projects().catch(() => [])).filter(r => r.id !== 'sample').sort((a, b) => (b.opened || 0) - (a.opened || 0));
+  }
+  // run an open/create action from Inicio and switch to LaTeX only if a project actually opened
+  async function enter(action) {
+    autoTried = true; init();
+    const before = P; await action();
+    if (P && P !== before) Shell.setWs('tex');
+  }
+  const openRecent = rec => enter(() => reopen(rec));
+  async function forget(rec) {
+    const msg = rec.kind === 'file'
+      ? `¿Quitar “${rec.name}” de la lista? El archivo en tu equipo no se borra.`
+      : `¿Quitar el proyecto “${rec.name}” de la lista? La carpeta y sus archivos en tu equipo no se borran.`;
+    if (!(await ask(msg, 'Quitar', true))) return false;
+    await FolioDB.deleteProject(rec.id).catch(() => { });
+    if (store.get('folio.tex.last') === rec.id) store.set('folio.tex.last', null);
+    return true;
   }
   let pendingFile = null;
   async function openFromLaunch(handle) {
@@ -1347,5 +1374,11 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
   window.addEventListener('beforeunload', e => { if (P && anyDirty()) { saveAll().catch(() => { }); e.preventDefault(); e.returnValue = ''; } });
   document.addEventListener('visibilitychange', () => { if (document.hidden && P && anyDirty()) saveAll().catch(() => { }); });
 
-  window.Tex = { show, onKey, onDrop, openFromLaunch, isTex: name => /\.(tex|ltx|bib)$/i.test(name), get project() { return P; } };
+  window.Tex = {
+    show, onKey, onDrop, openFromLaunch, recents, openRecent, forget,
+    newProject: () => enter(newProject),
+    openFolder: () => enter(() => openFolderDialog()),
+    openSample: () => enter(openSample),
+    isTex: name => /\.(tex|ltx|bib)$/i.test(name), get project() { return P; }
+  };
 })();

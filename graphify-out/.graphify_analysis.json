@@ -97,7 +97,9 @@
       "js_markdown_heading",
       "js_markdown_insertblock",
       "js_markdown_inserttable",
+      "js_markdown_library",
       "js_markdown_linerange",
+      "js_markdown_loadhandles",
       "js_markdown_loadsample",
       "js_markdown_marksaved",
       "js_markdown_newdocument",
@@ -105,9 +107,12 @@
       "js_markdown_oninput",
       "js_markdown_onkey",
       "js_markdown_opendialog",
+      "js_markdown_opendoc",
       "js_markdown_openfile",
       "js_markdown_parserow",
+      "js_markdown_persisthandles",
       "js_markdown_prefixlines",
+      "js_markdown_removedoc",
       "js_markdown_render",
       "js_markdown_rendertabs",
       "js_markdown_replacerange",
@@ -180,6 +185,15 @@
       "notice",
       "notice_avisos_de_terceros"
     ],
+    "12": [
+      "js_home",
+      "js_home_ago",
+      "js_home_openitem",
+      "js_home_paint",
+      "js_home_removeitem",
+      "js_home_render",
+      "js_home_row"
+    ],
     "13": [
       "js_shell",
       "js_shell_setws",
@@ -200,7 +214,7 @@
     "1": 0.11764705882352941,
     "2": 0.12418300653594772,
     "3": 0.21904761904761905,
-    "4": 0.12222222222222222,
+    "4": 0.10853658536585366,
     "5": 0.24444444444444444,
     "6": 0.3333333333333333,
     "7": 0.2222222222222222,
@@ -208,7 +222,8 @@
     "9": 0.2857142857142857,
     "10": 0.6666666666666666,
     "11": 1.0,
-    "13": 0.5,
+    "12": 0.47619047619047616,
+    "13": 0.6666666666666666,
     "14": 1.0,
     "15": 1.0
   },
@@ -224,6 +239,11 @@
       "degree": 10
     },
     {
+      "id": "js_markdown_activate",
+      "label": "activate()",
+      "degree": 9
+    },
+    {
       "id": "js_markdown_setmode",
       "label": "setMode()",
       "degree": 8
@@ -231,11 +251,6 @@
     {
       "id": "js_tex_engine_start",
       "label": "start()",
-      "degree": 7
-    },
-    {
-      "id": "js_markdown_activate",
-      "label": "activate()",
       "degree": 7
     },
     {
@@ -284,7 +299,7 @@
     {
       "type": "low_cohesion",
       "question": "Should `markdown.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.12222222222222222 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.10853658536585366 - nodes in this community are weakly interconnected."
     }
   ]
 }

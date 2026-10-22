@@ -45,6 +45,13 @@ Windows no la bloquea porque no usa scripts: Edge hace la instalación.
 
 ## 3. Uso
 
+**Inicio:** la app abre en una vista con tus documentos Markdown y tus proyectos LaTeX
+recientes, en dos columnas. Clic en uno para abrirlo; **Nuevo** y **Abrir** crean o abren
+otros; el buscador filtra por nombre. El icono de papelera los quita de Folio: los archivos
+de tu equipo nunca se borran (solo se pierde el contenido de un documento que exista
+únicamente dentro de Folio, y la app avisa antes). Cerrar una pestaña no quita el
+documento de Inicio. La guía de uso y el proyecto de ejemplo están al pie de cada columna.
+
 **Markdown:** igual que antes: lectura tipo hoja, edición con vista previa, tablas y
 `Ctrl+S` guarda sobre el archivo original.
 

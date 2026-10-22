@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 164 nodes · 251 edges · 15 communities (10 shown, 5 thin omitted)
-- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.83)
+- 176 nodes · 274 edges · 16 communities (11 shown, 5 thin omitted)
+- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 38 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `97f46b46`
+- Built from commit: `d933696a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,15 +26,17 @@
 - Folio — sistema visual
 - IEEEtran.cls
 - NOTICE.md
+- home.js
+- shell.js
 - sw.js
 - build-site.sh
 
 ## God Nodes (most connected - your core abstractions)
 1. `runCompile()` - 11 edges
 2. `db()` - 10 edges
-3. `setMode()` - 8 edges
-4. `start()` - 7 edges
-5. `activate()` - 7 edges
+3. `activate()` - 9 edges
+4. `setMode()` - 8 edges
+5. `start()` - 7 edges
 6. `Folio — Markdown y LaTeX en tu escritorio` - 7 edges
 7. `emit()` - 6 edges
 8. `kvGet()` - 6 edges
@@ -47,7 +49,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (15 total, 5 thin omitted)
+## Communities (16 total, 5 thin omitted)
 
 ### Community 0 - "tex-engine.js"
 Cohesion: 0.22
@@ -66,8 +68,8 @@ Cohesion: 0.22
 Nodes (11): detectMain(), dirHandleFor(), openFileHandle(), openFolderDialog(), openProject(), projectIdFor(), reopen(), scanDir() (+3 more)
 
 ### Community 4 - "markdown.js"
-Cohesion: 0.12
-Nodes (33): activate(), applyZoom(), boot(), buildToc(), copyText(), download(), exportHtml(), formatRows() (+25 more)
+Cohesion: 0.11
+Nodes (37): activate(), applyZoom(), boot(), buildToc(), copyText(), download(), exportHtml(), formatRows() (+29 more)
 
 ### Community 5 - "ui.js"
 Cohesion: 0.24
@@ -89,6 +91,10 @@ Nodes (4): assert(), compress(), compressBlock(), compressPackage()
 Cohesion: 0.29
 Nodes (6): Color, Disposición, Folio — sistema visual, Forma y profundidad, Movimiento, Tipografía
 
+### Community 12 - "home.js"
+Cohesion: 0.48
+Nodes (5): ago(), paint(), removeItem(), render(), row()
+
 ## Knowledge Gaps
 - **7 isolated node(s):** `codemirror`, `dompurify`, `@highlightjs/cdn-assets`, `marked`, `pdfjs-dist` (+2 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 70 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
@@ -104,4 +110,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `build-mirror.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.12418300653594772 - nodes in this community are weakly interconnected._
 - **Should `markdown.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.12222222222222222 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10853658536585366 - nodes in this community are weakly interconnected._

@@ -39,11 +39,23 @@
   const newId = () => 'd' + Date.now().toString(36) + (uid++);
   const cur = () => docs.find(d => d.id === active) || null;
   const dirty = d => d && d.content !== d.saved;
-  const makeDoc = (name, content, opts = {}) => ({ id: newId(), name, content, saved: opts.saved ?? content, path: opts.path || '', isSample: !!opts.isSample });
+  const makeDoc = (name, content, opts = {}) => ({ id: newId(), name, content, saved: opts.saved ?? content, path: opts.path || '', isSample: !!opts.isSample, opened: Date.now(), closed: false });
+  const openDocs = () => docs.filter(d => !d.closed);
   const persist = debounce(() => {
-    store.set('folio.docs', docs.map(({ id, name, content, saved, path, isSample }) => ({ id, name, content, saved, path, isSample })));
+    store.set('folio.docs', docs.map(({ id, name, content, saved, path, isSample, opened, closed }) => ({ id, name, content, saved, path, isSample, opened, closed })));
     store.set('folio.active', active);
   }, 300);
+  /* file handles survive restarts in IndexedDB, so a document opened from disk keeps saving to its file */
+  const HANDLES_KEY = 'md-handles';
+  async function persistHandles() {
+    if (!window.FolioDB) return;
+    const obj = {}; for (const [id, h] of handles) if (docs.some(d => d.id === id)) obj[id] = h;
+    try { await FolioDB.kvSet(HANDLES_KEY, obj); } catch (e) { }
+  }
+  async function loadHandles() {
+    if (!window.FolioDB) return;
+    try { const obj = await FolioDB.kvGet(HANDLES_KEY); for (const [id, h] of Object.entries(obj || {})) if (docs.some(d => d.id === id)) handles.set(id, h); } catch (e) { }
+  }
 
   function render() {
     const d = cur();
@@ -72,7 +84,7 @@
     btns.forEach(b => b.classList.toggle('on', b === on));
   }
   function renderTabs() {
-    $('#tabs').innerHTML = docs.map(d => `
+    $('#tabs').innerHTML = openDocs().map(d => `
       <div class="tab ${d.id === active ? 'on' : ''}" data-id="${d.id}">
         <button class="tab-name" role="tab" aria-selected="${d.id === active}" title="${esc(d.path || d.name)}">${dirty(d) ? '<span class="dot" title="Sin guardar"></span>' : ''}${esc(d.name)}${d.isSample ? ' <span class="tag">ejemplo</span>' : ''}</button>
         <button class="tab-x" aria-label="Cerrar ${esc(d.name)}">×</button>
@@ -97,6 +109,7 @@
   }
   function activate(id) {
     active = id; const d = cur();
+    if (d) { d.closed = false; d.opened = Date.now(); }
     editor.value = d ? d.content : '';
     renderTabs(); render(); persist();
     viewer.scrollTop = 0; editor.scrollTop = 0;
@@ -259,6 +272,7 @@
 
   /* ---------- open / save ---------- */
   async function openFile(file, handle, path) {
+    if (window.Shell && Shell.ws() !== 'md' && MD_RE.test(file.name)) Shell.setWs('md');
     if (!MD_RE.test(file.name)) { toast(`${file.name} no es un archivo Markdown. Folio abre .md, .markdown y .txt.`); return; }
     const text = await file.text();
     if (handle) {
@@ -270,7 +284,7 @@
     }
     const s = docs.find(d => d.isSample && !dirty(d)); if (s) docs.splice(docs.indexOf(s), 1);
     const d = makeDoc(file.name, text, { path });
-    docs.push(d); if (handle) handles.set(d.id, handle);
+    docs.push(d); if (handle) { handles.set(d.id, handle); persistHandles(); }
     activate(d.id);
     toast(`Abierto: ${file.name}`);
   }
@@ -301,7 +315,7 @@
       try {
         const nh = await showSaveFilePicker({ id: 'folio-md', suggestedName: /\.\w+$/.test(d.name) ? d.name : d.name + '.md', types: [{ description: 'Documento Markdown', accept: { 'text/markdown': ['.md'] } }] });
         const w = await nh.createWritable(); await w.write(d.content); await w.close();
-        handles.set(d.id, nh); d.path = ''; markSaved(d, nh.name); toast(`Guardado: ${nh.name}. Desde ahora Ctrl+S sobrescribe este archivo.`); return;
+        handles.set(d.id, nh); persistHandles(); d.path = ''; markSaved(d, nh.name); toast(`Guardado: ${nh.name}. Desde ahora Ctrl+S sobrescribe este archivo.`); return;
       } catch (e) { if (e.name === 'AbortError') return; }
     }
     if (!inFrame) { download(/\.\w+$/.test(d.name) ? d.name : d.name + '.md', d.content, 'text/markdown'); markSaved(d); toast('Descargado en tu carpeta de descargas.'); return; }
@@ -344,10 +358,12 @@
     const id = tab.dataset.id;
     if (e.target.closest('.tab-x')) {
       const d = docs.find(x => x.id === id);
-      if (dirty(d) && !(await ask(`“${d.name}” tiene cambios sin guardar. ¿Cerrarlo de todas formas?`, 'Cerrar sin guardar', true))) return;
-      const i = docs.indexOf(d); docs.splice(i, 1); handles.delete(id);
-      const next = docs[i] || docs[i - 1] || null;
-      activate(next ? next.id : null); return;
+      const open = openDocs(), i = open.indexOf(d);
+      if (d.isSample && !dirty(d)) { docs.splice(docs.indexOf(d), 1); handles.delete(id); }
+      else d.closed = true;
+      const next = open[i + 1] || open[i - 1] || null;
+      if (id === active || !next) activate(next ? next.id : null); else { renderTabs(); persist(); }
+      return;
     }
     if (id !== active) activate(id);
   });
@@ -433,13 +449,47 @@
       if (same && dirty(same)) startId = same.id;
       else { if (same) docs.splice(docs.indexOf(same), 1); const d = makeDoc(inj.name || 'documento.md', inj.content, { path: inj.path || '' }); docs.push(d); startId = d.id; }
     }
-    if (!docs.length) docs.push(makeDoc('Guía rápida.md', SAMPLE, { isSample: true }));
-    if (!docs.some(d => d.id === startId)) startId = docs[docs.length - 1].id;
+    docs = docs.filter(d => !(d.isSample && !dirty(d)));
+    docs.forEach(d => { if (d.opened == null) d.opened = 0; if (d.closed == null) d.closed = false; });
+    const start = docs.find(d => d.id === startId && !d.closed) || openDocs().sort((a, b) => b.opened - a.opened)[0];
+    startId = start ? start.id : null;
     if (store.get('folio.toc') === false) app.classList.add('toc-off');
     applyZoom();
     setMode(store.get('folio.mode') || 'read');
     activate(startId);
+    loadHandles();
   }
 
-  window.Markdown = { boot, onKey, onDrop, openFile, setMode, hasUnsavedOnDisk, isMarkdown: name => MD_RE.test(name), download };
+  /* ---------- library (used by Inicio) ---------- */
+  function library() {
+    return docs.map(d => ({ id: d.id, name: d.name, path: d.path, opened: d.opened || 0, dirty: dirty(d), hasFile: handles.has(d.id), isOpen: !d.closed, isSample: d.isSample }));
+  }
+  async function openDoc(id) {
+    const d = docs.find(x => x.id === id); if (!d) return;
+    const h = handles.get(id);
+    if (h && !dirty(d)) {
+      try {
+        let perm = await h.queryPermission({ mode: 'read' });
+        if (perm !== 'granted') perm = await h.requestPermission({ mode: 'read' });
+        if (perm === 'granted') { const text = await (await h.getFile()).text(); if (text !== d.content) { d.content = d.saved = text; } }
+      } catch (e) { toast(`No se pudo leer ${d.name} del disco; se muestra la última copia guardada en Folio.`); }
+    }
+    Shell.setWs('md'); activate(id);
+  }
+  async function removeDoc(id) {
+    const d = docs.find(x => x.id === id); if (!d) return false;
+    const onDisk = handles.has(id) || d.path;
+    const msg = onDisk
+      ? `¿Quitar “${d.name}” de Folio? El archivo en tu equipo no se borra.${dirty(d) ? ' Los cambios sin guardar se perderán.' : ''}`
+      : `¿Eliminar “${d.name}”? Solo existe dentro de Folio, así que su contenido se perderá.`;
+    if (!(await ask(msg, onDisk ? 'Quitar' : 'Eliminar', true))) return false;
+    const wasActive = id === active;
+    docs.splice(docs.indexOf(d), 1); handles.delete(id); persistHandles();
+    if (wasActive) { const next = openDocs().sort((a, b) => b.opened - a.opened)[0]; activate(next ? next.id : null); }
+    else { renderTabs(); persist(); }
+    toast(onDisk ? `“${d.name}” ya no aparece en Folio.` : `“${d.name}” eliminado.`);
+    return true;
+  }
+
+  window.Markdown = { boot, onKey, onDrop, openFile, openDialog, newDocument, loadSample, library, openDoc, removeDoc, setMode, hasUnsavedOnDisk, isMarkdown: name => MD_RE.test(name), download };
 })();
