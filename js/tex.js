@@ -575,8 +575,8 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
         'Ctrl-G': 'jumpToLine'
       }
     });
-    cm.on('changes', () => { if (!P || !P.open) return; updateFileHead(); renderTreeSoon(); autoSave(); });
-    cm.on('cursorActivity', () => { const c = cm.getCursor(); $('#texPos').textContent = P && P.open ? `Ln ${c.line + 1}, Col ${c.ch + 1}` : ''; });
+    cm.on('changes', () => { if (!P || !P.open) return; updateFileHead(); renderTreeSoon(); renderOutlineSoon(); autoSave(); });
+    cm.on('cursorActivity', () => { const c = cm.getCursor(); $('#texPos').textContent = P && P.open ? `Ln ${c.line + 1}, Col ${c.ch + 1}` : ''; outlineActive(); });
     cm.on('inputRead', (c, ch) => {
       if (!ch.text || ch.text.length !== 1) return;
       const t = ch.text[0];
@@ -602,7 +602,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     if (!cm) return;
     cm.swapDoc(CodeMirror.Doc('% Abre una carpeta de proyecto o el proyecto de ejemplo desde el menú del proyecto.\n', 'stex'));
     cm.setOption('readOnly', 'nocursor');
-    $('#imgPrev').hidden = true; updateFileHead();
+    $('#imgPrev').hidden = true; updateFileHead(); renderOutline();
   }
   let imgUrl = null;
   async function openPath(path, line) {
@@ -611,7 +611,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     const prev = $('#imgPrev');
     if (IMG_EXT.test(path) || /\.pdf$/i.test(path)) {
       const file = await P.files.get(path).handle.getFile();
-      P.open = path; renderTree(); updateFileHead();
+      P.open = path; renderTree(); updateFileHead(); renderOutline();
       prev.hidden = false;
       if (/\.pdf$/i.test(path)) prev.innerHTML = `<figure><p style="color:var(--ink-2)">PDF de ${fmtBytes(file.size)}. Puedes incluirlo como figura con \\includegraphics.</p><button class="btn" id="figIns">Insertar como figura</button></figure>`;
       else { imgUrl = URL.createObjectURL(file); prev.innerHTML = `<figure><img src="${imgUrl}" alt="${esc(basename(path))}"><figcaption>${esc(path)} · ${fmtBytes(file.size)}</figcaption><button class="btn" id="figIns">Insertar como figura</button></figure>`; }
@@ -633,7 +633,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     cm.swapDoc(b.doc); cm.setOption('readOnly', false);
     applyLineMarks();
     if (line) { cm.setCursor({ line: line - 1, ch: 0 }); cm.scrollIntoView({ line: line - 1, ch: 0 }, 120); }
-    renderTree(); updateFileHead();
+    renderTree(); updateFileHead(); renderOutline();
     setTimeout(() => { cm.refresh(); if (!line) cm.focus(); }, 0);
   }
   function updateFileHead() {
@@ -644,6 +644,71 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     $('#texSave').textContent = anyDirty() ? 'Cambios sin guardar' : 'Todo guardado';
     $('#texSave').className = anyDirty() ? 'st-warn' : 'st-ok';
   }
+
+  /* ================= outline (sections of the open file, plus its \input files) ================= */
+  const SEC_LEVEL = { part: 0, chapter: 1, section: 2, subsection: 3, subsubsection: 4, paragraph: 5 };
+  const SEC_RE = /\\(part|chapter|section|subsection|subsubsection|paragraph)\*?\s*(?:\[[^\]]*\])?\s*\{/g;
+  const INPUT_RE = /\\(?:input|include|subfile)\s*\{([^}]+)\}/g;
+  let outlineItems = [];
+  const stripComment = l => { const m = l.match(/(^|[^\\])%/); return m ? l.slice(0, m.index + m[1].length) : l; };
+  function bracedArg(text, from) {
+    let depth = 1, i = from;
+    for (; i < text.length && depth; i++) { if (text[i] === '\\') { i++; continue; } if (text[i] === '{') depth++; else if (text[i] === '}') depth--; }
+    return depth ? null : text.slice(from, i - 1);
+  }
+  const plainTitle = t => t.replace(/\\[a-zA-Z]+\*?(\[[^\]]*\])?\{([^{}]*)\}/g, '$2').replace(/\\[a-zA-Z]+\*?/g, '').replace(/[{}$]/g, '').replace(/~/g, ' ').replace(/\s+/g, ' ').trim();
+  function resolveInput(arg) {
+    const rel = arg.trim(); const base = dirname(P.main || '');
+    const cands = [rel, rel + '.tex', joinPath(base, rel), joinPath(base, rel + '.tex')].map(normPath);
+    return cands.find(c => P.files.has(c)) || null;
+  }
+  function renderOutline() {
+    const el = $('#outline'); outlineItems = [];
+    if (!P || !P.open || !cm || !/\.(tex|ltx)$/i.test(P.open)) { el.innerHTML = `<p class="log-empty">${P ? 'Abre un archivo .tex para ver sus secciones.' : 'Sin proyecto.'}</p>`; return; }
+    const lines = cm.getValue().split('\n');
+    lines.forEach((raw, line) => {
+      const l = stripComment(raw); if (!l.includes('\\')) return;
+      for (const m of l.matchAll(SEC_RE)) {
+        const t = bracedArg(l, m.index + m[0].length);
+        outlineItems.push({ kind: 'sec', level: SEC_LEVEL[m[1]], title: plainTitle(t == null ? l.slice(m.index + m[0].length) : t) || '(sin título)', line });
+      }
+      for (const m of l.matchAll(INPUT_RE)) {
+        const path = resolveInput(m[1]);
+        if (path) outlineItems.push({ kind: 'file', title: path, path, line });
+      }
+    });
+    if (!outlineItems.length) { el.innerHTML = '<p class="log-empty">Este archivo no tiene secciones. Usa \\section{…} para crearlas.</p>'; return; }
+    const top = Math.min(...outlineItems.filter(i => i.kind === 'sec').map(i => i.level), 2);
+    el.innerHTML = '<ol>' + outlineItems.map((it, i) => it.kind === 'file'
+      ? `<li><button class="ol-item file lv${Math.max(2, top + 1)}" data-i="${i}" title="Abrir ${esc(it.path)}">${iconFor(it.path)}<span class="t">${esc(basename(it.path))}</span></button></li>`
+      : `<li><button class="ol-item lv${Math.min(5, it.level - top + 2)}" data-i="${i}" title="${esc(it.title)} · línea ${it.line + 1}"><span class="t">${esc(it.title)}</span><span class="k">${it.line + 1}</span></button></li>`).join('') + '</ol>';
+    outlineActive();
+  }
+  const renderOutlineSoon = debounce(renderOutline, 300);
+  function outlineActive() {
+    if (!cm || !outlineItems.length) return;
+    const cur = cm.getCursor().line; let on = -1;
+    outlineItems.forEach((it, i) => { if (it.kind === 'sec' && it.line <= cur) on = i; });
+    $('#outline').querySelectorAll('.ol-item').forEach(b => b.classList.toggle('on', +b.dataset.i === on));
+  }
+  $('#outline').addEventListener('click', e => {
+    const b = e.target.closest('.ol-item'); if (!b) return;
+    const it = outlineItems[+b.dataset.i]; if (!it) return;
+    if (it.kind === 'file') { openPath(it.path); return; }
+    if (innerWidth <= 1000) setView('code');
+    cm.setCursor({ line: it.line, ch: 0 });
+    cm.scrollTo(null, Math.max(0, cm.heightAtLine(it.line, 'local') - 24));
+    cm.focus();
+  });
+
+  /* sidebar sections collapse independently */
+  const secState = store.get('folio.tex.sections') || {};
+  document.querySelectorAll('.side-t').forEach(b => {
+    const sec = b.closest('.side-sec');
+    const apply = open => { sec.classList.toggle('collapsed', !open); b.setAttribute('aria-expanded', String(open)); };
+    apply(secState[b.dataset.sec] !== false);
+    b.addEventListener('click', () => { const open = b.getAttribute('aria-expanded') !== 'true'; apply(open); secState[b.dataset.sec] = open; store.set('folio.tex.sections', secState); });
+  });
 
   /* ---------- save ---------- */
   async function saveFile(path) {
@@ -876,6 +941,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     const b = $('#compileBtn');
     b.querySelector('svg, .spin').outerHTML = on ? '<span class="spin" aria-hidden="true"></span>' : '<svg viewBox="0 0 16 16" fill="currentColor" id="compileIco"><path d="M4.5 2.8v10.4L13 8z"/></svg>';
     b.querySelector('span:last-child').textContent = on ? 'Compilando' : 'Compilar';
+    $('.pdf-pane').classList.toggle('compiling', on);
   }
   $('#compileBtn').addEventListener('click', () => compile('button'));
   $('#autoCompile').addEventListener('change', e => store.set('folio.tex.auto', e.target.checked));
@@ -1122,8 +1188,9 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
   new ResizeObserver(debounce(() => { if (zoom === 'width') relayout(); }, 120)).observe(scroller);
   function markStale(on) {
     let el = $('#pdfStale');
+    $('.pdf-pane').classList.toggle('stale', !!(on && lastPdf));
     if (!on || !lastPdf) { if (el) el.remove(); return; }
-    if (!el) { el = document.createElement('div'); el.id = 'pdfStale'; el.className = 'pdf-stale'; $('.pdf-pane').style.position = 'relative'; $('.pdf-pane').appendChild(el); }
+    if (!el) { el = document.createElement('div'); el.id = 'pdfStale'; el.className = 'pdf-stale'; $('.pdf-pane').appendChild(el); }
     el.textContent = 'Hay errores: se muestra el último PDF correcto';
   }
   $('#pdfSave').addEventListener('click', () => savePdf());
@@ -1200,6 +1267,16 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
   if (store.get('folio.tex.tree') === false) main.classList.add('tree-off');
   function setView(v) { main.dataset.view = v; document.querySelectorAll('#texViewSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v))); if (v === 'code' && cm) setTimeout(() => cm.refresh(), 0); if (v === 'pdf') relayout(); }
   document.querySelectorAll('#texViewSeg button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  /* wide-screen layout: editor only, editor + PDF, or PDF only */
+  function setLayout(l) {
+    if (!['code', 'split', 'pdf'].includes(l)) l = 'split';
+    main.dataset.layout = l;
+    document.querySelectorAll('#layoutSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.layout === l)));
+    store.set('folio.tex.layoutMode', l);
+    setTimeout(() => { if (cm) cm.refresh(); }, 0);
+  }
+  document.querySelectorAll('#layoutSeg button').forEach(b => b.addEventListener('click', () => setLayout(b.dataset.layout)));
+  setLayout(store.get('folio.tex.layoutMode') || 'split');
 
   /* ================= drag & drop ================= */
   const codeWrap = $('#codeWrap');

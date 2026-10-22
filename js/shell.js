@@ -20,9 +20,21 @@
   UI.initTheme();
   UI.initPicker();
 
+  /* ---------- focus mode: hides the chrome around the editor and the page ---------- */
+  function setZen(on) {
+    shell.classList.toggle('zen', on);
+    $('#zenExit').hidden = !on;
+    $('#zenBtn').setAttribute('aria-pressed', String(on));
+    dispatchEvent(new Event('resize'));
+  }
+  $('#zenBtn').addEventListener('click', () => setZen(true));
+  $('#zenExit').addEventListener('click', () => setZen(false));
+
   /* ---------- global keyboard ---------- */
   addEventListener('keydown', e => {
     if (!$('#modal').hidden) return;
+    if ((e.ctrlKey || e.metaKey) && (e.key === '.' || e.code === 'Period')) { e.preventDefault(); setZen(!shell.classList.contains('zen')); return; }
+    if (e.key === 'Escape' && shell.classList.contains('zen') && !document.querySelector('.CodeMirror-dialog, .CodeMirror-hints')) setZen(false);
     if (ws() === 'tex') Tex.onKey(e); else Markdown.onKey(e);
   });
 

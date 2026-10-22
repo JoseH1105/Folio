@@ -41,7 +41,7 @@
   const ask = (message, ok, danger) => dialog({ message, ok, danger });
 
   /* ---------- theme ---------- */
-  const THEMES = ['system', 'light', 'dark'];
+  const THEMES = ['dark', 'light', 'system'];
   const THEME_LABEL = { system: 'según el sistema', light: 'claro', dark: 'oscuro' };
   const THEME_ICON = {
     system: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="2.5" width="13" height="9" rx="1.2"/><path d="M5.5 14h5M8 11.5V14"/><path d="M8 2.5v9" /><path d="M8 3.3a3.7 3.7 0 0 1 0 7.4z" fill="currentColor" stroke="none"/></svg>',
@@ -52,11 +52,11 @@
     if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme;
     const b = $('#themeBtn'); if (b) { b.innerHTML = THEME_ICON[t]; b.title = 'Tema: ' + THEME_LABEL[t] + ' (clic para cambiar)'; }
     const dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-    const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = dark ? '#16191F' : '#3243C4';
+    const meta = document.querySelector('meta[name=theme-color]'); if (meta) meta.content = dark ? '#0B0D10' : '#E8EBEF';
   }
   function initTheme() {
-    let t = 'system'; try { t = localStorage.getItem('folio.theme') || 'system'; } catch (e) { }
-    if (!THEMES.includes(t)) t = 'system';
+    let t = 'dark'; try { t = localStorage.getItem('folio.theme') || 'dark'; } catch (e) { }
+    if (!THEMES.includes(t)) t = 'dark';
     applyTheme(t);
     $('#themeBtn').addEventListener('click', () => {
       t = THEMES[(THEMES.indexOf(t) + 1) % THEMES.length];

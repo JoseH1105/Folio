@@ -58,6 +58,12 @@ Windows no la bloquea porque no usa scripts: Edge hace la instalación.
   (interruptor «Compilar al escribir»), o con **Compilar** / `Ctrl+Enter`.
 - **Imágenes:** arrástralas o pégalas (`Ctrl+V`, sirve para capturas de pantalla) en el
   editor. Se copian a `figuras/` y se inserta el bloque `figure` donde está el cursor.
+- **Esquema:** debajo de los archivos aparecen las secciones del `.tex` abierto (y los
+  archivos que incluye con `\input`); clic en una para saltar a ella. La sección donde
+  está el cursor queda marcada.
+- **Disposición:** en la barra superior elige **Editor**, **Dividido** o **PDF**.
+- **Modo enfoque:** el botón de las cuatro esquinas (o `Ctrl+.`) oculta todo menos el
+  texto y el PDF; `Esc` lo cierra. También funciona en Markdown.
 - **Registro:** muestra los errores en español; clic en uno te lleva a la línea.
 - **Guardar PDF:** botón de descarga sobre el PDF o menú junto a Compilar.
 
