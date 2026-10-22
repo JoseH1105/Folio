@@ -76,6 +76,11 @@ Windows no la bloquea porque no usa scripts: Edge hace la instalación.
   primera vez que un documento los pide (pocos KB cada uno) y se reutilizan en todos
   tus proyectos.
 - Después de eso compila sin internet.
+- Folio trae las colecciones habituales de TeX Live, pero no todas las clases de revistas y
+  congresos (las de Overleaf vienen de TeX Live completo). Incluye **IEEEtran** con sus
+  estilos de bibliografía. Si una plantilla usa otra clase (`elsarticle`, `acmart`,
+  `llncs`…), copia su archivo `.cls` (viene en la plantilla de la revista o en CTAN) a la
+  carpeta del proyecto, junto al archivo principal.
 - El motor se reinicia solo cada 30 compilaciones y se apaga tras 10 minutos sin uso
   para liberar memoria. **Motor y paquetes descargados…** (menú junto a Compilar)
   muestra cuánto ocupa y permite borrarlo.

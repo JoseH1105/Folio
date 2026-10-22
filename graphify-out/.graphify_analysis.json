@@ -50,6 +50,7 @@
       "ref_fs",
       "ref_path",
       "tools_build_mirror",
+      "tools_build_mirror_bare_name_formats",
       "tools_build_mirror_basic",
       "tools_build_mirror_cd_meta",
       "tools_build_mirror_chunk",
@@ -84,17 +85,40 @@
     ],
     "4": [
       "js_markdown",
+      "js_markdown_activate",
+      "js_markdown_applyzoom",
+      "js_markdown_boot",
+      "js_markdown_buildtoc",
+      "js_markdown_copytext",
+      "js_markdown_download",
+      "js_markdown_exporthtml",
       "js_markdown_formatrows",
       "js_markdown_hasunsavedondisk",
       "js_markdown_heading",
       "js_markdown_insertblock",
       "js_markdown_inserttable",
       "js_markdown_linerange",
+      "js_markdown_loadsample",
+      "js_markdown_marksaved",
+      "js_markdown_newdocument",
+      "js_markdown_ondrop",
+      "js_markdown_oninput",
+      "js_markdown_onkey",
+      "js_markdown_opendialog",
+      "js_markdown_openfile",
       "js_markdown_parserow",
       "js_markdown_prefixlines",
+      "js_markdown_render",
+      "js_markdown_rendertabs",
       "js_markdown_replacerange",
+      "js_markdown_save",
+      "js_markdown_setmode",
+      "js_markdown_status",
       "js_markdown_tableatcaret",
       "js_markdown_tableop",
+      "js_markdown_tocactive",
+      "js_markdown_toggletoc",
+      "js_markdown_tohtml",
       "js_markdown_wrap"
     ],
     "5": [
@@ -119,13 +143,15 @@
       "busytex_folio_tex_worker_send"
     ],
     "7": [
-      "js_markdown_activate",
-      "js_markdown_applyzoom",
-      "js_markdown_boot",
-      "js_markdown_loadsample",
-      "js_markdown_newdocument",
-      "js_markdown_setmode",
-      "js_markdown_toggletoc"
+      "readme",
+      "readme_1_publicarla_una_sola_vez_unos_10_minutos",
+      "readme_2_instalarla_en_windows",
+      "readme_3_uso",
+      "readme_abrir_archivos_con_clic_derecho",
+      "readme_actualizar",
+      "readme_descargas_y_memoria",
+      "readme_folio_markdown_y_latex_en_tu_escritorio",
+      "readme_licencia"
     ],
     "8": [
       "tools_minilz4",
@@ -137,28 +163,22 @@
       "tools_minilz4_uncompress"
     ],
     "9": [
-      "js_markdown_buildtoc",
-      "js_markdown_render",
-      "js_markdown_tocactive",
-      "js_markdown_tohtml"
+      "design",
+      "design_color",
+      "design_disposición",
+      "design_folio_sistema_visual",
+      "design_forma_y_profundidad",
+      "design_movimiento",
+      "design_tipografía"
     ],
     "10": [
-      "js_markdown_copytext",
-      "js_markdown_download",
-      "js_markdown_exporthtml",
-      "js_markdown_save"
+      "dml_insert",
+      "dml_update",
+      "texmf_extra_ieeetran"
     ],
     "11": [
-      "js_markdown_marksaved",
-      "js_markdown_oninput",
-      "js_markdown_rendertabs",
-      "js_markdown_status"
-    ],
-    "12": [
-      "js_markdown_ondrop",
-      "js_markdown_onkey",
-      "js_markdown_opendialog",
-      "js_markdown_openfile"
+      "notice",
+      "notice_avisos_de_terceros"
     ],
     "13": [
       "js_shell",
@@ -178,17 +198,16 @@
   "cohesion": {
     "0": 0.21666666666666667,
     "1": 0.11764705882352941,
-    "2": 0.1323529411764706,
+    "2": 0.12418300653594772,
     "3": 0.21904761904761905,
-    "4": 0.28205128205128205,
+    "4": 0.12222222222222222,
     "5": 0.24444444444444444,
     "6": 0.3333333333333333,
-    "7": 0.38095238095238093,
+    "7": 0.2222222222222222,
     "8": 0.38095238095238093,
-    "9": 0.5,
+    "9": 0.2857142857142857,
     "10": 0.6666666666666666,
-    "11": 0.6666666666666666,
-    "12": 0.5,
+    "11": 1.0,
     "13": 0.5,
     "14": 1.0,
     "15": 1.0
@@ -220,6 +239,11 @@
       "degree": 7
     },
     {
+      "id": "readme_folio_markdown_y_latex_en_tu_escritorio",
+      "label": "Folio — Markdown y LaTeX en tu escritorio",
+      "degree": 7
+    },
+    {
       "id": "js_tex_engine_emit",
       "label": "emit()",
       "degree": 6
@@ -238,85 +262,29 @@
       "id": "js_tex_engine_registercache",
       "label": "registerCache()",
       "degree": 6
-    },
-    {
-      "id": "js_tex_engine_writecache",
-      "label": "writeCache()",
-      "degree": 6
     }
   ],
-  "surprises": [
-    {
-      "source": "copyText()",
-      "target": "setMode()",
-      "source_files": [
-        "js/markdown.js",
-        "js/markdown.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 10 → community 7"
-    },
-    {
-      "source": "onKey()",
-      "target": "save()",
-      "source_files": [
-        "js/markdown.js",
-        "js/markdown.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 10 → community 12"
-    },
-    {
-      "source": "save()",
-      "target": "markSaved()",
-      "source_files": [
-        "js/markdown.js",
-        "js/markdown.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 10 → community 11"
-    },
-    {
-      "source": "replaceRange()",
-      "target": "onInput()",
-      "source_files": [
-        "js/markdown.js",
-        "js/markdown.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 11 → community 4"
-    },
-    {
-      "source": "activate()",
-      "target": "renderTabs()",
-      "source_files": [
-        "js/markdown.js",
-        "js/markdown.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 11 → community 7"
-    }
-  ],
+  "surprises": [],
   "questions": [
     {
       "type": "isolated_nodes",
       "question": "What connects `codemirror`, `dompurify`, `@highlightjs/cdn-assets` to the rest of the system?",
-      "why": "5 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "why": "7 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
       "why": "Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 2` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.1323529411764706 - nodes in this community are weakly interconnected."
+      "question": "Should `build-mirror.cjs` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12418300653594772 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `markdown.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12222222222222222 - nodes in this community are weakly interconnected."
     }
   ]
 }

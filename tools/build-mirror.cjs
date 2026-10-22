@@ -63,15 +63,21 @@ function read(f) {
   return o;
 }
 
+// pdfTeX asks kpathsea for font metrics and virtual fonts by bare name (\font → "ptmr7t"),
+// so the remote lookup requests <format>/ptmr7t; those formats are also served without suffix.
+const BARE_NAME_FORMATS = new Set([3, 33]);
 const seen = new Set(); let files = 0, bytes = 0, dups = 0;
 function put(name, buf) {
   for (const fmt of formatsFor(name)) {
-    const key = fmt + '/' + name;
-    if (seen.has(key)) { dups++; continue; }
-    seen.add(key);
-    const p = path.join(out, String(fmt), name);
-    fs.mkdirSync(path.dirname(p), { recursive: true });
-    fs.writeFileSync(p, buf); files++; bytes += buf.length;
+    const names = BARE_NAME_FORMATS.has(fmt) && name.includes('.') ? [name, name.slice(0, name.lastIndexOf('.'))] : [name];
+    for (const n of names) {
+      const key = fmt + '/' + n;
+      if (seen.has(key)) { dups++; continue; }
+      seen.add(key);
+      const p = path.join(out, String(fmt), n);
+      fs.mkdirSync(path.dirname(p), { recursive: true });
+      fs.writeFileSync(p, buf); files++; bytes += buf.length;
+    }
   }
 }
 for (const f of meta.files) {

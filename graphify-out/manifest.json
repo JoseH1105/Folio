@@ -24,10 +24,10 @@
     "semantic_hash": "c367cdaf101055703e02bc143ffee75b"
   },
   "js/tex.js": {
-    "mtime": 1792646160.3500834,
-    "seen": 1792691918.0021026,
-    "ast_hash": "f7a826a30b8f194d85768d1dbf9fdf3f",
-    "semantic_hash": "f7a826a30b8f194d85768d1dbf9fdf3f"
+    "mtime": 1792692322.9183054,
+    "seen": 1792692535.858311,
+    "ast_hash": "2e35a47e5b6b8fb45fa9fec3e5f68f5d",
+    "semantic_hash": ""
   },
   "js/ui.js": {
     "mtime": 1792646119.9265873,
@@ -48,10 +48,10 @@
     "semantic_hash": "412cfe479a9317ffa4e3d0975886ea48"
   },
   "tools/build-mirror.cjs": {
-    "mtime": 1792645243.8842154,
-    "seen": 1792691918.0021026,
-    "ast_hash": "fc4e31d3f80a8366afa7c7a9ae7331d0",
-    "semantic_hash": "fc4e31d3f80a8366afa7c7a9ae7331d0"
+    "mtime": 1792692440.5840292,
+    "seen": 1792692535.858311,
+    "ast_hash": "138dff8b61d26a451064d78e92d7f83c",
+    "semantic_hash": ""
   },
   "tools/build-site.sh": {
     "mtime": 1792645243.8847153,
@@ -64,5 +64,59 @@
     "seen": 1792691918.0021026,
     "ast_hash": "df695c00ec3be1c686df8fd1cc0970d4",
     "semantic_hash": "df695c00ec3be1c686df8fd1cc0970d4"
+  },
+  "texmf-extra/IEEEtran.cls": {
+    "mtime": 1792692308.5106473,
+    "seen": 1792692535.858311,
+    "ast_hash": "5b2e4fa15b0f7eabb840ebf67df4c0f7",
+    "semantic_hash": ""
+  },
+  ".github/workflows/publicar.yml": {
+    "mtime": 1792645243.8742032,
+    "seen": 1792692535.858311,
+    "ast_hash": "61bd6b45af1ac3bbadc77e7ddffc16c0",
+    "semantic_hash": ""
+  },
+  "DESIGN.md": {
+    "mtime": 1792646395.7951822,
+    "seen": 1792692535.858311,
+    "ast_hash": "e0fcbfe8354bc34aefa7c9d093f1636a",
+    "semantic_hash": ""
+  },
+  "NOTICE.md": {
+    "mtime": 1792692533.9387336,
+    "seen": 1792692535.858311,
+    "ast_hash": "0edc7d662bdbc3d7c5c5178d93863d71",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792692533.9761772,
+    "seen": 1792692535.858311,
+    "ast_hash": "dc15b2fa873eed5fe76deb3587f63962",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1792646334.5162163,
+    "seen": 1792692535.858311,
+    "ast_hash": "78ca3e2e88d3c833e00c93c1335a4274",
+    "semantic_hash": ""
+  },
+  "icons/icon-192.png": {
+    "mtime": 1792646368.7010818,
+    "seen": 1792692535.858311,
+    "ast_hash": "bce4c1e44dc7b593e71151d7e6765c7f",
+    "semantic_hash": ""
+  },
+  "icons/icon-512.png": {
+    "mtime": 1792646368.7051656,
+    "seen": 1792692535.858311,
+    "ast_hash": "22b6a2b8fd5d06960e0f9f8a043511fb",
+    "semantic_hash": ""
+  },
+  "icons/icon-maskable.png": {
+    "mtime": 1792646368.708807,
+    "seen": 1792692535.858311,
+    "ast_hash": "d6f415713c0300ff165549041ade4eed",
+    "semantic_hash": ""
   }
 }

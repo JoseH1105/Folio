@@ -953,7 +953,8 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     if (/^Undefined control sequence/.test(msg)) { const cmd = (ctx.match(/(\\[A-Za-z@]+)\s*$/) || [])[1]; return ['Comando no definido' + (cmd ? `: ${cmd}` : ''), 'Revisa si está mal escrito o si falta el \\usepackage que lo define.']; }
     if ((m = /^LaTeX Error: File `([^']+)' not found/.exec(msg))) {
       const f = m[1];
-      if (/\.(sty|cls)$/.test(f)) return [`No se encontró el paquete «${f.replace(/\.(sty|cls)$/, '')}»`, 'Revisa el nombre. Si es correcto, puede que no exista en TeX Live o que no haya conexión para descargarlo.'];
+      if (/\.cls$/.test(f)) return [`No se encontró la clase de documento «${f.replace(/\.cls$/, '')}»`, `Revisa el nombre. Si es correcto, es una clase que Folio no incluye (muchas plantillas de revistas y congresos): copia el archivo ${f} de la plantilla, o descárgalo de CTAN, a la carpeta del proyecto junto al archivo principal.`];
+      if (/\.sty$/.test(f)) return [`No se encontró el paquete «${f.replace(/\.sty$/, '')}»`, `Revisa el nombre. Si es correcto, puede que Folio no lo incluya o que no haya conexión para descargarlo: también puedes copiar ${f} a la carpeta del proyecto.`];
       return [`No se encontró el archivo «${f}»`, 'Revisa la ruta y el nombre (mayúsculas incluidas) relativos al archivo principal.'];
     }
     if ((m = /^Package pdftex.def Error: File `([^']+)' not found/.exec(msg))) return [`No se encontró la imagen «${m[1]}»`, 'Revisa la ruta relativa al archivo principal y la extensión.'];
