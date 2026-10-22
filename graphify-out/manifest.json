@@ -1,0 +1,68 @@
+{
+  "busytex/folio-tex-worker.js": {
+    "mtime": 1792645243.8767061,
+    "seen": 1792691918.0021026,
+    "ast_hash": "702f80a18afcff6b5e7e05cec26e3515",
+    "semantic_hash": "702f80a18afcff6b5e7e05cec26e3515"
+  },
+  "js/markdown.js": {
+    "mtime": 1792645243.8792076,
+    "seen": 1792691918.0021026,
+    "ast_hash": "d76a955e126550ce1cc757b1df429870",
+    "semantic_hash": "d76a955e126550ce1cc757b1df429870"
+  },
+  "js/shell.js": {
+    "mtime": 1792646245.0902243,
+    "seen": 1792691918.0021026,
+    "ast_hash": "b242cfdd388f7901f40c1dc41b608fb0",
+    "semantic_hash": "b242cfdd388f7901f40c1dc41b608fb0"
+  },
+  "js/tex-engine.js": {
+    "mtime": 1792645243.8802118,
+    "seen": 1792691918.0021026,
+    "ast_hash": "c367cdaf101055703e02bc143ffee75b",
+    "semantic_hash": "c367cdaf101055703e02bc143ffee75b"
+  },
+  "js/tex.js": {
+    "mtime": 1792646160.3500834,
+    "seen": 1792691918.0021026,
+    "ast_hash": "f7a826a30b8f194d85768d1dbf9fdf3f",
+    "semantic_hash": "f7a826a30b8f194d85768d1dbf9fdf3f"
+  },
+  "js/ui.js": {
+    "mtime": 1792646119.9265873,
+    "seen": 1792691918.0021026,
+    "ast_hash": "e05eb3e410da99be1ed09e1ae932f54e",
+    "semantic_hash": "e05eb3e410da99be1ed09e1ae932f54e"
+  },
+  "package.json": {
+    "mtime": 1792645243.882152,
+    "seen": 1792691918.0021026,
+    "ast_hash": "9fbd5a23bfa7a84db8d015ba535e17f1",
+    "semantic_hash": "9fbd5a23bfa7a84db8d015ba535e17f1"
+  },
+  "sw.js": {
+    "mtime": 1792645243.8827183,
+    "seen": 1792691918.0021026,
+    "ast_hash": "412cfe479a9317ffa4e3d0975886ea48",
+    "semantic_hash": "412cfe479a9317ffa4e3d0975886ea48"
+  },
+  "tools/build-mirror.cjs": {
+    "mtime": 1792645243.8842154,
+    "seen": 1792691918.0021026,
+    "ast_hash": "fc4e31d3f80a8366afa7c7a9ae7331d0",
+    "semantic_hash": "fc4e31d3f80a8366afa7c7a9ae7331d0"
+  },
+  "tools/build-site.sh": {
+    "mtime": 1792645243.8847153,
+    "seen": 1792691918.0021026,
+    "ast_hash": "dbeff0a0903cd9561f73b28a3b3f7f7a",
+    "semantic_hash": "dbeff0a0903cd9561f73b28a3b3f7f7a"
+  },
+  "tools/minilz4.cjs": {
+    "mtime": 1792645243.8852153,
+    "seen": 1792691918.0021026,
+    "ast_hash": "df695c00ec3be1c686df8fd1cc0970d4",
+    "semantic_hash": "df695c00ec3be1c686df8fd1cc0970d4"
+  }
+}
