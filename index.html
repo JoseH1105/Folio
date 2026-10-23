@@ -188,6 +188,21 @@ svg{flex:none}
 .tb.txt{font-weight:500;font-size:12.5px}
 .tb.serif{font-family:var(--f-doc);font-size:15px}
 .tb-label{font:600 10.5px/1 var(--f-ui);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin:0 4px 0 2px}
+/* shortcut bars (Markdown format bar, LaTeX insert bar) at 1.2x so each action reads at a glance */
+.toolbar,.ins-bar{font-size:16px}
+.toolbar{min-height:48px;padding-block:6px}
+.toolbar .tb,.ins-bar .tb{min-width:34px;height:34px;padding:0 8px;gap:7px;border-radius:7px}
+.toolbar .tb.txt,.ins-bar .tb.txt{font-size:15px}
+.toolbar .tb.serif,.ins-bar .tb.serif{font-size:18px}
+.toolbar .tb svg,.ins-bar .tb svg{width:19px;height:19px}
+.toolbar .tb-label{font-size:12.5px}
+.toolbar .sep,.ins-bar .sep{height:22px;margin:0 7px}
+.ins-bar .ib{width:34px;height:34px}
+.ins-bar .ib svg{width:19px;height:19px}
+.ins-bar .toggle{font-size:15px;gap:10px}
+.ins-bar .toggle input{width:34px;height:19px;border-radius:10px}
+.ins-bar .toggle input::after{width:13px;height:13px}
+.ins-bar .toggle input:checked::after{transform:translateX(15px)}
 .work{display:grid;min-height:0;position:relative}
 .ws-md[data-mode="read"] .work{grid-template-columns:248px minmax(0,1fr)}
 .ws-md[data-mode="read"].toc-off .work{grid-template-columns:minmax(0,1fr)}
@@ -329,10 +344,11 @@ svg{flex:none}
 .file-head .path{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:7px}
 .file-head .path::before{content:"";width:14px;height:14px;flex:none;background:var(--accent);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.4' stroke-linejoin='round'%3E%3Cpath d='M3.5 1.5h6l3 3v10h-9z M9.5 1.5v3h3'/%3E%3Cpath d='M5.5 8h5M5.5 10.5h5' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.4' stroke-linejoin='round'%3E%3Cpath d='M3.5 1.5h6l3 3v10h-9z M9.5 1.5v3h3'/%3E%3Cpath d='M5.5 8h5M5.5 10.5h5' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat}
 .file-head .saved{margin-left:auto;white-space:nowrap;font-size:12px}
-.ins-bar{display:flex;align-items:center;gap:2px;background:var(--bg-2);border-bottom:1px solid var(--line);height:38px;padding:0 8px;flex:none;overflow-x:auto;scrollbar-width:none}
+.ins-bar{display:flex;align-items:center;gap:2px;background:var(--bg-2);border-bottom:1px solid var(--line);flex-wrap:wrap;row-gap:2px;min-height:46px;padding:5px 8px;flex:none}
 .ins-bar::-webkit-scrollbar{display:none}
 .ins-bar>*{flex:none}
 @container code (max-width:760px){.ins-bar .toggle span{display:none}}
+@container code (max-width:680px){.ins-bar .tb-t{display:none}}
 .ins-bar .right{margin-left:auto;display:flex;align-items:center;gap:8px;padding-left:8px}
 .toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);cursor:pointer;user-select:none;white-space:nowrap}
 .toggle input{appearance:none;width:28px;height:16px;border-radius:9px;background:var(--bg-4);border:1px solid var(--line-2);position:relative;cursor:pointer;margin:0;transition:background .18s var(--ease),border-color .18s}
@@ -773,10 +789,10 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
           <button class="tb" data-ins="itemize" title="Lista con viñetas"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 4h8M6 8h8M6 12h8"/><circle cx="2.8" cy="4" r=".9" fill="currentColor"/><circle cx="2.8" cy="8" r=".9" fill="currentColor"/><circle cx="2.8" cy="12" r=".9" fill="currentColor"/></svg></button>
           <button class="tb" data-ins="enumerate" title="Lista numerada"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 4h7.5M6.5 8h7.5M6.5 12h7.5"/><text x="1" y="5.6" font-size="5" fill="currentColor" stroke="none" font-family="sans-serif">1</text><text x="1" y="9.6" font-size="5" fill="currentColor" stroke="none" font-family="sans-serif">2</text><text x="1" y="13.6" font-size="5" fill="currentColor" stroke="none" font-family="sans-serif">3</text></svg></button>
           <span class="sep"></span>
-          <button class="tb serif" id="eqBtn" data-ins="equation" title="Ecuaciones: fracciones, potencias, integrales, derivadas, símbolos…" aria-haspopup="dialog"><i>f(x)</i><svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="width:10px;height:10px;margin-left:-2px"><path d="m4 6 4 4 4-4"/></svg></button>
-          <button class="tb txt" data-ins="figure" title="Insertar imagen (también puedes arrastrarla o pegarla)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="m2.5 11.5 3.5-3.5 3 3 2-2 2.5 2.5"/><circle cx="10.5" cy="6" r="1"/></svg>Figura</button>
-          <button class="tb txt" id="texTableBtn" data-ins="table" title="Insertar tabla"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.5"/><path d="M1.8 6.3h12.4M1.8 9.8h12.4M6 2.8v10.4M10 2.8v10.4"/></svg>Tabla</button>
-          <button class="tb txt" data-ins="code" title="Bloque de código (listings)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/></svg>Código</button>
+          <button class="tb serif" id="eqBtn" data-ins="equation" title="Ecuaciones: fracciones, potencias, integrales, derivadas, símbolos…" aria-haspopup="dialog"><i>f(x)</i><svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="width:12px;height:12px;margin-left:-2px"><path d="m4 6 4 4 4-4"/></svg></button>
+          <button class="tb txt" data-ins="figure" title="Insertar imagen (también puedes arrastrarla o pegarla)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="m2.5 11.5 3.5-3.5 3 3 2-2 2.5 2.5"/><circle cx="10.5" cy="6" r="1"/></svg><span class="tb-t">Figura</span></button>
+          <button class="tb txt" id="texTableBtn" data-ins="table" title="Insertar tabla"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.5"/><path d="M1.8 6.3h12.4M1.8 9.8h12.4M6 2.8v10.4M10 2.8v10.4"/></svg><span class="tb-t">Tabla</span></button>
+          <button class="tb txt" data-ins="code" title="Bloque de código (listings)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/></svg><span class="tb-t">Código</span></button>
           <button class="tb txt" data-ins="ref" title="Referencia a una etiqueta" style="font-family:var(--f-mono)">\ref</button>
           <div class="right">
             <label class="toggle" title="Guarda y compila automáticamente unos segundos después de dejar de escribir"><input type="checkbox" id="autoCompile" checked><span>Compilar al escribir</span></label>
