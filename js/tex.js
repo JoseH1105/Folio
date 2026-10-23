@@ -157,116 +157,116 @@
   }
 
   /* ---------- templates & sample ---------- */
-  const PREAMBLE = String.raw`\documentclass[12pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{graphicx,booktabs,ragged2e}
-\usepackage[spanish,es-tabla,activeacute]{babel}
-\usepackage{amsmath,amssymb}
-\usepackage{float}
-\usepackage{listings}
-\usepackage{xcolor}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{hyperref}
-\usepackage{xurl}
-\usepackage{tabularx}
+  const PREAMBLE = `\\documentclass[12pt,a4paper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage{graphicx,booktabs,ragged2e}
+\\usepackage[spanish,es-tabla,activeacute]{babel}
+\\usepackage{amsmath,amssymb}
+\\usepackage{float}
+\\usepackage{listings}
+\\usepackage{xcolor}
+\\usepackage{caption}
+\\usepackage{subcaption}
+\\usepackage{hyperref}
+\\usepackage{xurl}
+\\usepackage{tabularx}
 
-\lstset{basicstyle=\ttfamily\small, keywordstyle=\color{blue!55!black}\bfseries,
-  commentstyle=\color{gray}\itshape, stringstyle=\color{green!45!black},
-  frame=single, rulecolor=\color{black!25}, breaklines=true, numbers=left,
-  numberstyle=\tiny\color{gray}, showstringspaces=false,
-  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {¿}{{\textquestiondown}}1 {¡}{{\textexclamdown}}1
-           {°}{{\textdegree}}1 {±}{{$\pm$}}1}
-\hypersetup{colorlinks=true, linkcolor=blue!50!black, urlcolor=blue!50!black, citecolor=green!40!black}
+\\lstset{basicstyle=\\ttfamily\\small, keywordstyle=\\color{blue!55!black}\\bfseries,
+  commentstyle=\\color{gray}\\itshape, stringstyle=\\color{green!45!black},
+  frame=single, rulecolor=\\color{black!25}, breaklines=true, numbers=left,
+  numberstyle=\\tiny\\color{gray}, showstringspaces=false,
+  literate={á}{{\\'a}}1 {é}{{\\'e}}1 {í}{{\\'i}}1 {ó}{{\\'o}}1 {ú}{{\\'u}}1
+           {Á}{{\\'A}}1 {É}{{\\'E}}1 {Í}{{\\'I}}1 {Ó}{{\\'O}}1 {Ú}{{\\'U}}1
+           {ñ}{{\\~n}}1 {Ñ}{{\\~N}}1 {ü}{{\\"u}}1 {Ü}{{\\"U}}1 {¿}{{\\textquestiondown}}1 {¡}{{\\textexclamdown}}1
+           {°}{{\\textdegree}}1 {±}{{$\\pm$}}1}
+\\hypersetup{colorlinks=true, linkcolor=blue!50!black, urlcolor=blue!50!black, citecolor=green!40!black}
 `;
-  const NEW_MAIN = PREAMBLE + String.raw`
-\title{Título del documento}
-\author{Jose Hernández Barrantes}
-\date{\today}
+  const NEW_MAIN = PREAMBLE + `
+\\title{Título del documento}
+\\author{Jose Hernández Barrantes}
+\\date{\\today}
 
-\begin{document}
-\maketitle
+\\begin{document}
+\\maketitle
 
-\section{Introducción}
+\\section{Introducción}
 Escribe aquí. Arrastra o pega una imagen en el editor para insertarla como figura.
 
-\end{document}
+\\end{document}
 `;
-  const SAMPLE_MAIN = PREAMBLE + String.raw`
-\title{Modelado de un sistema de primer orden}
-\author{Proyecto de ejemplo de Folio}
-\date{\today}
+  const SAMPLE_MAIN = PREAMBLE + `
+\\title{Modelado de un sistema de primer orden}
+\\author{Proyecto de ejemplo de Folio}
+\\date{\\today}
 
-\begin{document}
-\maketitle
+\\begin{document}
+\\maketitle
 
-\begin{abstract}
-\justifying
+\\begin{abstract}
+\\justifying
 Este documento es un ejemplo para probar Folio: usa el mismo preámbulo de tus artículos, con
 figuras, tablas, ecuaciones, código y referencias cruzadas. Edita el texto y el PDF se
 actualiza solo unos segundos después.
-\end{abstract}
+\\end{abstract}
 
-\section{Introducción}
-\justifying
+\\section{Introducción}
+\\justifying
 Un sistema de primer orden responde a una entrada escalón con una curva exponencial
-caracterizada por su ganancia estática $K$ y su constante de tiempo $\tau$~\cite{ogata2010}.
-La Figura~\ref{fig:respuesta} muestra la respuesta simulada y la Tabla~\ref{tab:parametros}
+caracterizada por su ganancia estática $K$ y su constante de tiempo $\\tau$~\\cite{ogata2010}.
+La Figura~\\ref{fig:respuesta} muestra la respuesta simulada y la Tabla~\\ref{tab:parametros}
 resume los parámetros identificados.
 
-\section{Modelo}
+\\section{Modelo}
 La función de transferencia del sistema es
-\begin{equation}
-  G(s) = \frac{Y(s)}{U(s)} = \frac{K}{\tau s + 1},
-  \label{eq:tf}
-\end{equation}
+\\begin{equation}
+  G(s) = \\frac{Y(s)}{U(s)} = \\frac{K}{\\tau s + 1},
+  \\label{eq:tf}
+\\end{equation}
 y su respuesta a un escalón de amplitud $A$ es
-\begin{equation}
-  y(t) = K A \left(1 - e^{-t/\tau}\right), \qquad t \geq 0.
-  \label{eq:escalon}
-\end{equation}
-A partir de \eqref{eq:escalon}, la salida alcanza el 63,2\,\% de su valor final cuando $t=\tau$.
+\\begin{equation}
+  y(t) = K A \\left(1 - e^{-t/\\tau}\\right), \\qquad t \\geq 0.
+  \\label{eq:escalon}
+\\end{equation}
+A partir de \\eqref{eq:escalon}, la salida alcanza el 63,2\\,\\% de su valor final cuando $t=\\tau$.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\linewidth]{figuras/respuesta-escalon.png}
-  \caption{Respuesta al escalón del sistema de primer orden.}
-  \label{fig:respuesta}
-\end{figure}
+\\begin{figure}[H]
+  \\centering
+  \\includegraphics[width=0.8\\linewidth]{figuras/respuesta-escalon.png}
+  \\caption{Respuesta al escalón del sistema de primer orden.}
+  \\label{fig:respuesta}
+\\end{figure}
 
-\section{Resultados}
-\begin{table}[H]
-  \centering
-  \caption{Parámetros identificados a partir del ensayo.}
-  \label{tab:parametros}
-  \begin{tabularx}{0.8\linewidth}{Xcc}
-    \toprule
-    Parámetro & Símbolo & Valor \\
-    \midrule
-    Ganancia estática & $K$ & 2,0 \\
-    Constante de tiempo & $\tau$ & 1,5\,s \\
-    Tiempo de establecimiento (2\,\%) & $t_s$ & 6,0\,s \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
+\\section{Resultados}
+\\begin{table}[H]
+  \\centering
+  \\caption{Parámetros identificados a partir del ensayo.}
+  \\label{tab:parametros}
+  \\begin{tabularx}{0.8\\linewidth}{Xcc}
+    \\toprule
+    Parámetro & Símbolo & Valor \\\\
+    \\midrule
+    Ganancia estática & $K$ & 2,0 \\\\
+    Constante de tiempo & $\\tau$ & 1,5\\,s \\\\
+    Tiempo de establecimiento (2\\,\\%) & $t_s$ & 6,0\\,s \\\\
+    \\bottomrule
+  \\end{tabularx}
+\\end{table}
 
-El siguiente código calcula la respuesta de la ecuación~\eqref{eq:escalon}:
-\begin{lstlisting}[language=Python]
+El siguiente código calcula la respuesta de la ecuación~\\eqref{eq:escalon}:
+\\begin{lstlisting}[language=Python]
 import numpy as np
 
 def respuesta(t, K=2.0, tau=1.5, A=1.0):
     """Respuesta al escalón de un sistema de primer orden."""
     return K * A * (1 - np.exp(-t / tau))
-\end{lstlisting}
+\\end{lstlisting}
 
-Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}.
+Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}.
 
-\bibliographystyle{plain}
-\bibliography{referencias}
+\\bibliographystyle{plain}
+\\bibliography{referencias}
 
-\end{document}
+\\end{document}
 `;
   const SAMPLE_BIB = `@book{ogata2010,
   author    = {Katsuhiko Ogata},
