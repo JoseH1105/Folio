@@ -1,33 +1,33 @@
 {
   "busytex/folio-tex-worker.js": {
-    "mtime": 1792645243.8767061,
-    "seen": 1792691918.0021026,
-    "ast_hash": "702f80a18afcff6b5e7e05cec26e3515",
-    "semantic_hash": "702f80a18afcff6b5e7e05cec26e3515"
+    "mtime": 1792728771.1460118,
+    "seen": 1792729176.9927826,
+    "ast_hash": "9fca8685124e2d87c9cb2c3b46122f8c",
+    "semantic_hash": "9fca8685124e2d87c9cb2c3b46122f8c"
   },
   "js/markdown.js": {
-    "mtime": 1792696948.5495472,
-    "seen": 1792696964.8687532,
-    "ast_hash": "9fb5e1fb149c8a0d9a6cbb4c059f2d0a",
-    "semantic_hash": ""
+    "mtime": 1792728879.3429587,
+    "seen": 1792729176.9927826,
+    "ast_hash": "2992769231543c52c09f6158235f73b0",
+    "semantic_hash": "2992769231543c52c09f6158235f73b0"
   },
   "js/shell.js": {
     "mtime": 1792696811.6831965,
-    "seen": 1792696964.8687532,
+    "seen": 1792729176.9927826,
     "ast_hash": "becbbc53f97dd6ec0b7da03a8b0865c6",
-    "semantic_hash": ""
+    "semantic_hash": "becbbc53f97dd6ec0b7da03a8b0865c6"
   },
   "js/tex-engine.js": {
-    "mtime": 1792645243.8802118,
-    "seen": 1792691918.0021026,
-    "ast_hash": "c367cdaf101055703e02bc143ffee75b",
-    "semantic_hash": "c367cdaf101055703e02bc143ffee75b"
+    "mtime": 1792728771.2015657,
+    "seen": 1792729176.9927826,
+    "ast_hash": "e8d84074d76fc1826cbc11c8a85eee2f",
+    "semantic_hash": "e8d84074d76fc1826cbc11c8a85eee2f"
   },
   "js/tex.js": {
-    "mtime": 1792696762.564991,
-    "seen": 1792696964.8687532,
-    "ast_hash": "63cf864b2178c1ea0b335eb46cd8299f",
-    "semantic_hash": ""
+    "mtime": 1792728961.1817956,
+    "seen": 1792729176.9927826,
+    "ast_hash": "e4cb9955a1eca2aa5ff946d5e8bafc3d",
+    "semantic_hash": "e4cb9955a1eca2aa5ff946d5e8bafc3d"
   },
   "js/ui.js": {
     "mtime": 1792646119.9265873,
@@ -43,15 +43,15 @@
   },
   "sw.js": {
     "mtime": 1792696811.754712,
-    "seen": 1792696964.8687532,
+    "seen": 1792729176.9932835,
     "ast_hash": "a0cc9dcfeb87bfa90b24e909533c91c2",
-    "semantic_hash": ""
+    "semantic_hash": "a0cc9dcfeb87bfa90b24e909533c91c2"
   },
   "tools/build-mirror.cjs": {
     "mtime": 1792692440.5840292,
-    "seen": 1792692535.858311,
+    "seen": 1792729176.9932835,
     "ast_hash": "138dff8b61d26a451064d78e92d7f83c",
-    "semantic_hash": ""
+    "semantic_hash": "138dff8b61d26a451064d78e92d7f83c"
   },
   "tools/build-site.sh": {
     "mtime": 1792645243.8847153,
@@ -67,9 +67,9 @@
   },
   "texmf-extra/IEEEtran.cls": {
     "mtime": 1792692308.5106473,
-    "seen": 1792692535.858311,
+    "seen": 1792729176.9932835,
     "ast_hash": "5b2e4fa15b0f7eabb840ebf67df4c0f7",
-    "semantic_hash": ""
+    "semantic_hash": "5b2e4fa15b0f7eabb840ebf67df4c0f7"
   },
   ".github/workflows/publicar.yml": {
     "mtime": 1792645243.8742032,
@@ -90,15 +90,15 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1792696961.9570026,
-    "seen": 1792696964.8687532,
-    "ast_hash": "3aab8224ded09ec74cfce6958cf65a6e",
+    "mtime": 1792729155.392332,
+    "seen": 1792729157.8823752,
+    "ast_hash": "4e7d512aa58aa21801fb2ed4fb290d76",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1792696945.0717773,
-    "seen": 1792696964.8687532,
-    "ast_hash": "43b80fe1c71410d959c3f27e03012a5d",
+    "mtime": 1792728845.5893028,
+    "seen": 1792729157.8823752,
+    "ast_hash": "f4d5e71766f910bbef7ef2e01923d579",
     "semantic_hash": ""
   },
   "icons/icon-192.png": {
@@ -121,8 +121,8 @@
   },
   "js/home.js": {
     "mtime": 1792696948.6240714,
-    "seen": 1792696964.8687532,
+    "seen": 1792729176.9927826,
     "ast_hash": "6ff2726efbad52cb2cfff7f335b59c8b",
-    "semantic_hash": ""
+    "semantic_hash": "6ff2726efbad52cb2cfff7f335b59c8b"
   }
 }

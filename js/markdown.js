@@ -29,7 +29,14 @@
   function toHtml(md) {
     slugs = {};
     if (!hasMarked) return '<pre>' + esc(md) + '</pre>';
-    const raw = marked.parse(md);
+    // render block by block so each top-level element knows its source lines (double-click → source)
+    const tokens = marked.lexer(md);
+    let raw = '', line = 0;
+    for (const t of tokens) {
+      const start = line; line += (t.raw.match(/\n/g) || []).length;
+      if (t.type === 'space') continue;
+      raw += marked.parser(Object.assign([t], { links: tokens.links })).replace(/^(\s*<[a-zA-Z][\w-]*)/, `$1 data-line="${start}" data-end="${line}"`);
+    }
     return window.DOMPurify ? DOMPurify.sanitize(raw, { ADD_ATTR: ['target'] }) : raw;
   }
 
@@ -398,7 +405,40 @@
     app.classList.remove('toc-open');
   });
   viewer.addEventListener('scroll', debounce(tocActive, 60));
-  page.addEventListener('dblclick', () => { if (app.dataset.mode === 'read') setMode('edit'); });
+  /* double-click on the sheet: open the source at the same word */
+  function caretTop(pos) {
+    const cs = getComputedStyle(editor), m = document.createElement('div');
+    for (const p of ['font', 'letterSpacing', 'tabSize', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'lineHeight']) m.style[p] = cs[p];
+    Object.assign(m.style, { position: 'absolute', visibility: 'hidden', top: '0', left: '-9999px', boxSizing: 'border-box', width: editor.clientWidth + 'px', whiteSpace: 'pre-wrap', overflowWrap: 'break-word' });
+    m.textContent = editor.value.slice(0, pos); const mark = document.createElement('span'); mark.textContent = '​'; m.appendChild(mark);
+    document.body.appendChild(m); const top = mark.offsetTop; m.remove(); return top;
+  }
+  page.addEventListener('dblclick', e => {
+    const d = cur(); if (!d) return;
+    const blk = e.target.closest('[data-line]');
+    const sel = window.getSelection(), word = sel.toString().trim();
+    if (!blk) { if (app.dataset.mode === 'read') setMode('edit'); return; }
+    const lines = d.content.split('\n');
+    const startPos = lines.slice(0, +blk.dataset.line).reduce((n, l) => n + l.length + 1, 0);
+    const blockSrc = lines.slice(+blk.dataset.line, +blk.dataset.end + 1).join('\n');
+    let pos = startPos, len = 0;
+    if (word && !/\s/.test(word)) {
+      // the n-th time the word appears in the rendered block is the n-th time in its source
+      let nth = 0;
+      try { const r = document.createRange(); r.setStart(blk, 0); r.setEnd(sel.getRangeAt(0).startContainer, sel.getRangeAt(0).startOffset); const before = r.toString().toLowerCase(), w = word.toLowerCase(); for (let i = before.indexOf(w); i >= 0; i = before.indexOf(w, i + 1)) nth++; } catch (er) { }
+      const src = blockSrc.toLowerCase(), w = word.toLowerCase();
+      let i = src.indexOf(w), k = 0;
+      while (i >= 0 && k < nth) { const j = src.indexOf(w, i + 1); if (j < 0) break; i = j; k++; }
+      if (i >= 0) { pos = startPos + i; len = word.length; }
+    }
+    if (app.dataset.mode === 'read') setMode('edit');
+    setTimeout(() => {
+      editor.focus({ preventScroll: true });
+      editor.setSelectionRange(pos, pos + len);
+      editor.scrollTop = Math.max(0, caretTop(pos) - editor.clientHeight / 3);
+      status();
+    }, 0);
+  });
   let syncing = false;
   editor.addEventListener('scroll', () => {
     if (app.dataset.mode !== 'edit' || syncing) return;

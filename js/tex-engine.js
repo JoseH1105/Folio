@@ -202,7 +202,7 @@
     emit({ status: 'ready', detail: `Compilado en ${(ms / 1000).toFixed(1)} s` + ((res.newFiles || []).length ? ` · ${res.newFiles.length} archivos nuevos guardados en caché` : '') });
     if (state.compiles >= RECYCLE_AFTER) terminate('Motor reciclado para liberar memoria');
     else armIdle();
-    return { ok: res.exit_code === 0 && !!res.pdf, exitCode: res.exit_code, pdf: res.pdf || null, log: res.log || '', ms, fetched: (res.newFiles || []).length };
+    return { ok: res.exit_code === 0 && !!res.pdf, exitCode: res.exit_code, pdf: res.pdf || null, synctex: res.synctex || null, log: res.log || '', ms, fetched: (res.newFiles || []).length };
   }
 
   // Serialized queue: one compile at a time, the newest pending request replaces older ones.

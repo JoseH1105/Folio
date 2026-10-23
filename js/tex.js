@@ -931,7 +931,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
     problems = parseLog(res.log);
     if (!res.ok && !problems.some(p => p.sev === 'error')) problems.unshift({ sev: 'error', msg: 'La compilación no generó PDF', detail: 'Revisa el registro completo.' });
     rawLog = res.log;
-    if (res.ok) lastPdf = res.pdf;
+    if (res.ok) { lastPdf = res.pdf; setSynctex(res.synctex); }
     showProblems(!res.ok && (reason === 'key' || reason === 'button' || reason === 'save'));
     if (res.ok) { await showPdf(res.pdf); markStale(false); }
     else markStale(true);
@@ -1077,7 +1077,7 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
   function clearPdf() {
     if (pdfDoc) { pdfDoc.destroy(); pdfDoc = null; }
     views.forEach(v => { if (v.task) try { v.task.cancel(); } catch (e) { } });
-    views = []; pagesEl.innerHTML = ''; $('#pdfEmpty').hidden = false; $('#pdfPage').textContent = '– / –';
+    views = []; pagesEl.innerHTML = ''; setSynctex(null); $('#pdfEmpty').hidden = false; $('#pdfPage').textContent = '– / –';
     markStale(false);
   }
   function cssScale(vp1) { return zoom === 'width' ? Math.max(0.3, (scroller.clientWidth - 28) / vp1.width) : zoom; }
@@ -1150,6 +1150,120 @@ Más información en \url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden}
       scroller.scrollTop = v.el.offsetTop - 16 + yTop * v.el.offsetHeight;
     } catch (e) { }
   }
+  /* ---------- SyncTeX: double-click on the PDF jumps to the source line (and word) ---------- */
+  const SP_PER_BP = 65781.76;
+  let syncRaw = null, syncMap = null;
+  function setSynctex(bytes) { syncRaw = bytes; syncMap = null; }
+  async function loadSynctex() {
+    if (syncMap || !syncRaw) return syncMap;
+    let text;
+    try { text = await new Response(new Blob([syncRaw]).stream().pipeThrough(new DecompressionStream('gzip'))).text(); }
+    catch (e) { return null; }
+    const inputs = {}, pages = [];
+    let unit = 1, page = null;
+    for (const l of text.split('\n')) {
+      const c = l[0];
+      if (c === 'I' && l.startsWith('Input:')) { const m = /^Input:(\d+):(.*)$/.exec(l); if (m) inputs[m[1]] = m[2]; }
+      else if (c === 'U' && l.startsWith('Unit:')) unit = +l.slice(5) || 1;
+      else if (c === '{') { page = []; pages[+l.slice(1) - 1] = page; }
+      else if (c === '}') page = null;
+      else if (page && '[(hvxkg$'.includes(c)) {
+        const m = /^.(\d+),(\d+):(-?\d+),(-?\d+)(?::(-?\d+),(-?\d+),(-?\d+))?/.exec(l); if (!m) continue;
+        const r = { k: c, tag: m[1], line: +m[2], x: +m[3] * unit / SP_PER_BP, y: +m[4] * unit / SP_PER_BP };
+        if (m[5] != null) { r.w = +m[5] * unit / SP_PER_BP; r.h = +m[6] * unit / SP_PER_BP; r.d = +m[7] * unit / SP_PER_BP; }
+        page.push(r);
+      }
+    }
+    // map engine paths (/home/web_user/project_dir/./sec/intro.tex) to project paths (sec/intro.tex)
+    const files = {};
+    for (const [tag, p] of Object.entries(inputs)) {
+      const m = /project_dir\/(.*)$/.exec(p); if (!m) continue;
+      const rel = normPath(m[1].replace(/(^|\/)\.\//g, '$1'));
+      if (P && P.files.has(rel)) files[tag] = rel;
+      else if (P && P.files.has(rel + '.tex')) files[tag] = rel + '.tex';
+    }
+    syncMap = { files, pages };
+    return syncMap;
+  }
+  function syncLookup(map, pageIdx, bx, by) {
+    const recs = (map.pages[pageIdx] || []).filter(r => map.files[r.tag]);
+    if (!recs.length) return null;
+    // innermost line box (hbox) that contains the point, then the last item on its baseline left of the click
+    let box = null;
+    for (const r of recs) {
+      if (r.k !== '(' || r.w == null) continue;
+      if (bx >= r.x - 1 && bx <= r.x + r.w + 1 && by >= r.y - r.h - 2 && by <= r.y + r.d + 2 && (!box || r.w * (r.h + r.d) <= box.w * (box.h + box.d))) box = r;
+    }
+    let best = null;
+    if (box) {
+      const onLine = recs.filter(r => r.k !== '(' && r.k !== '[' && Math.abs(r.y - box.y) < 0.5 && r.x >= box.x - 1 && r.x <= box.x + box.w + 1);
+      for (const r of onLine) if (r.x <= bx + 1 && (!best || r.x > best.x)) best = r;
+      if (!best && onLine.length) best = onLine.reduce((a, b) => Math.abs(a.x - bx) < Math.abs(b.x - bx) ? a : b);
+      if (!best) best = box;
+    }
+    if (!best) {
+      let bd = Infinity;
+      for (const r of recs) { const d = Math.abs(r.x - bx) + 3 * Math.abs(r.y - by); if (d < bd) { bd = d; best = r; } }
+    }
+    return best ? { path: map.files[best.tag], line: best.line } : null;
+  }
+  // the word under the pointer, read from the PDF text layer
+  async function pdfWordAt(v, bx, by) {
+    try {
+      const tc = await v.page.getTextContent(); const py = v.vp1.height - by;
+      for (const it of tc.items) {
+        if (!it.str || !it.width) continue;
+        const x = it.transform[4], y = it.transform[5], h = Math.abs(it.transform[3]) || it.height || 10;
+        if (bx < x || bx > x + it.width || py < y - h * 0.3 || py > y + h) continue;
+        const s = it.str.normalize('NFKC'); let i = Math.min(s.length - 1, Math.max(0, Math.floor((bx - x) / it.width * s.length)));
+        const isW = ch => /[\p{L}\p{N}]/u.test(ch);
+        if (!isW(s[i])) { if (i > 0 && isW(s[i - 1])) i--; else if (i + 1 < s.length && isW(s[i + 1])) i++; else return null; }
+        let a = i, b = i; while (a > 0 && isW(s[a - 1])) a--; while (b + 1 < s.length && isW(s[b + 1])) b++;
+        return s.slice(a, b + 1);
+      }
+    } catch (e) { }
+    return null;
+  }
+  async function syncFromPdf(v, ev) {
+    if (!syncRaw) { toast('Compila el proyecto para poder saltar del PDF al código.'); return; }
+    const map = await loadSynctex(); if (!map) return;
+    const rect = v.el.getBoundingClientRect();
+    const bx = (ev.clientX - rect.left) / rect.width * v.vp1.width, by = (ev.clientY - rect.top) / rect.height * v.vp1.height;
+    const hit = syncLookup(map, +v.el.dataset.i, bx, by);
+    if (!hit) { toast('No se encontró el código de esa parte del PDF.'); return; }
+    const word = await pdfWordAt(v, bx, by);
+    if (P.open !== hit.path) await openPath(hit.path);
+    if (!cm || P.open !== hit.path) return;
+    if (innerWidth <= 1000) setView('code');
+    else if (main.dataset.layout === 'pdf') setLayout('split');
+    const ln = Math.min(hit.line, cm.lineCount()) - 1;
+    let from = { line: ln, ch: 0 }, to = null;
+    if (word && word.length > 1) {
+      // the word may sit on the reported line or, for paragraphs, a line or two around it
+      const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      const w = fold(word);
+      for (const l of [ln, ln + 1, ln - 1, ln + 2, ln - 2]) {
+        if (l < 0 || l >= cm.lineCount()) continue;
+        const i = fold(cm.getLine(l)).indexOf(w);
+        if (i >= 0) {
+          // PDF text can split accented letters (OT1), so widen to the whole word in the source
+          const t = cm.getLine(l), isW = ch => /[\p{L}\p{N}]/u.test(ch);
+          let a = i, b = i + word.length; while (a > 0 && isW(t[a - 1])) a--; while (b < t.length && isW(t[b])) b++;
+          from = { line: l, ch: a }; to = { line: l, ch: b }; break;
+        }
+      }
+    }
+    cm.focus();
+    if (to) cm.setSelection(from, to); else cm.setCursor(from);
+    cm.scrollIntoView({ from, to: to || from }, Math.round(cm.getScrollInfo().clientHeight / 3));
+    const mark = cm.markText({ line: from.line, ch: 0 }, { line: from.line, ch: cm.getLine(from.line).length }, { className: 'cm-sync-flash' });
+    setTimeout(() => mark.clear(), 1200);
+  }
+  pagesEl.addEventListener('dblclick', ev => {
+    const el = ev.target.closest('.pdf-page'); if (!el || ev.target.closest('.annot a')) return;
+    const v = views[+el.dataset.i]; if (v) { ev.preventDefault(); syncFromPdf(v, ev); }
+  });
+
   function freeFarPages() {
     const rendered = views.filter(v => v.rendered && !v.visible);
     if (rendered.length <= 6) return;

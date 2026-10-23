@@ -82,6 +82,12 @@ onmessage = async ({ data }) => {
       const { files, misses, transfer } = collectNew(after.M);
       const out = { type: 'compiled', id, exit_code: res.exit_code, log: res.log || '', logs: (res.logs || []).map(l => ({ cmd: l.cmd, exit_code: l.exit_code })), newFiles: files, newMisses: misses, moduleReloaded: fresh };
       if (res.pdf && res.pdf.length) { const pdf = new Uint8Array(res.pdf); out.pdf = pdf; transfer.push(pdf.buffer); }
+      // SyncTeX map (PDF position → source line) for double-click navigation
+      try {
+        const { FS, PATH } = after.M;
+        const p = PATH.join(pipeline.project_dir, data.main.replace(/\.tex$/i, '.synctex.gz'));
+        if (FS.analyzePath(p).exists) { const st = new Uint8Array(FS.readFile(p)); out.synctex = st; transfer.push(st.buffer); }
+      } catch (e) { }
       send(out, transfer);
       return;
     }

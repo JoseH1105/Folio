@@ -1,94 +1,12 @@
 {
   "communities": {
     "0": [
-      "js_tex_engine",
-      "js_tex_engine_armidle",
-      "js_tex_engine_cachestats",
-      "js_tex_engine_call",
-      "js_tex_engine_clearcache",
-      "js_tex_engine_compile",
-      "js_tex_engine_db",
-      "js_tex_engine_deleteproject",
-      "js_tex_engine_emit",
-      "js_tex_engine_ensureversion",
-      "js_tex_engine_kvget",
-      "js_tex_engine_kvset",
-      "js_tex_engine_onmessage",
-      "js_tex_engine_onstate",
-      "js_tex_engine_projects",
-      "js_tex_engine_putproject",
-      "js_tex_engine_readcache",
-      "js_tex_engine_registercache",
-      "js_tex_engine_run",
-      "js_tex_engine_runcompile",
-      "js_tex_engine_start",
-      "js_tex_engine_state",
-      "js_tex_engine_terminate",
-      "js_tex_engine_trimcache",
-      "js_tex_engine_writecache"
-    ],
-    "1": [
-      "package",
-      "package_dependencies",
-      "package_dependencies_codemirror",
-      "package_dependencies_dompurify",
-      "package_dependencies_highlightjs_cdn_assets",
-      "package_dependencies_marked",
-      "package_dependencies_pdfjs_dist",
-      "package_description",
-      "package_license",
-      "package_name",
-      "package_private",
-      "package_version",
-      "ref_codemirror",
-      "ref_dompurify",
-      "ref_highlightjs_cdn_assets",
-      "ref_marked",
-      "ref_pdfjs_dist"
-    ],
-    "2": [
-      "ref_fs",
-      "ref_path",
-      "tools_build_mirror",
-      "tools_build_mirror_bare_name_formats",
-      "tools_build_mirror_basic",
-      "tools_build_mirror_cd_meta",
-      "tools_build_mirror_chunk",
-      "tools_build_mirror_data",
-      "tools_build_mirror_fmt",
-      "tools_build_mirror_formatsfor",
-      "tools_build_mirror_img",
-      "tools_build_mirror_loadmeta",
-      "tools_build_mirror_put",
-      "tools_build_mirror_read",
-      "tools_build_mirror_seen",
-      "tools_build_mirror_skip",
-      "tools_build_mirror_texlike",
-      "tools_build_mirror_tmp"
-    ],
-    "3": [
-      "js_tex",
-      "js_tex_detectmain",
-      "js_tex_dirhandlefor",
-      "js_tex_normpath",
-      "js_tex_openfilehandle",
-      "js_tex_openfolderdialog",
-      "js_tex_openproject",
-      "js_tex_projectidfor",
-      "js_tex_relfrom",
-      "js_tex_reopen",
-      "js_tex_scandir",
-      "js_tex_scandir_walk",
-      "js_tex_uniquepath",
-      "js_tex_verifypermission",
-      "js_tex_writefile"
-    ],
-    "4": [
       "js_markdown",
       "js_markdown_activate",
       "js_markdown_applyzoom",
       "js_markdown_boot",
       "js_markdown_buildtoc",
+      "js_markdown_carettop",
       "js_markdown_copytext",
       "js_markdown_download",
       "js_markdown_exporthtml",
@@ -126,6 +44,89 @@
       "js_markdown_tohtml",
       "js_markdown_wrap"
     ],
+    "1": [
+      "js_tex_engine",
+      "js_tex_engine_armidle",
+      "js_tex_engine_cachestats",
+      "js_tex_engine_call",
+      "js_tex_engine_clearcache",
+      "js_tex_engine_compile",
+      "js_tex_engine_db",
+      "js_tex_engine_deleteproject",
+      "js_tex_engine_emit",
+      "js_tex_engine_ensureversion",
+      "js_tex_engine_kvget",
+      "js_tex_engine_kvset",
+      "js_tex_engine_onmessage",
+      "js_tex_engine_onstate",
+      "js_tex_engine_projects",
+      "js_tex_engine_putproject",
+      "js_tex_engine_readcache",
+      "js_tex_engine_registercache",
+      "js_tex_engine_run",
+      "js_tex_engine_runcompile",
+      "js_tex_engine_start",
+      "js_tex_engine_state",
+      "js_tex_engine_terminate",
+      "js_tex_engine_trimcache",
+      "js_tex_engine_writecache"
+    ],
+    "2": [
+      "ref_fs",
+      "ref_path",
+      "tools_build_mirror",
+      "tools_build_mirror_bare_name_formats",
+      "tools_build_mirror_basic",
+      "tools_build_mirror_cd_meta",
+      "tools_build_mirror_chunk",
+      "tools_build_mirror_data",
+      "tools_build_mirror_fmt",
+      "tools_build_mirror_formatsfor",
+      "tools_build_mirror_img",
+      "tools_build_mirror_loadmeta",
+      "tools_build_mirror_put",
+      "tools_build_mirror_read",
+      "tools_build_mirror_seen",
+      "tools_build_mirror_skip",
+      "tools_build_mirror_texlike",
+      "tools_build_mirror_tmp"
+    ],
+    "3": [
+      "package",
+      "package_dependencies",
+      "package_dependencies_codemirror",
+      "package_dependencies_dompurify",
+      "package_dependencies_highlightjs_cdn_assets",
+      "package_dependencies_marked",
+      "package_dependencies_pdfjs_dist",
+      "package_description",
+      "package_license",
+      "package_name",
+      "package_private",
+      "package_version",
+      "ref_codemirror",
+      "ref_dompurify",
+      "ref_highlightjs_cdn_assets",
+      "ref_marked",
+      "ref_pdfjs_dist"
+    ],
+    "4": [
+      "js_tex",
+      "js_tex_detectmain",
+      "js_tex_dirhandlefor",
+      "js_tex_normpath",
+      "js_tex_openfilehandle",
+      "js_tex_openfolderdialog",
+      "js_tex_openproject",
+      "js_tex_projectidfor",
+      "js_tex_relfrom",
+      "js_tex_reopen",
+      "js_tex_scandir",
+      "js_tex_scandir_walk",
+      "js_tex_uniquepath",
+      "js_tex_verifypermission",
+      "js_tex_writefile"
+    ],
     "5": [
       "js_ui",
       "js_ui_applytheme",
@@ -139,15 +140,6 @@
       "js_ui_toast"
     ],
     "6": [
-      "busytex_folio_tex_worker",
-      "busytex_folio_tex_worker_collectnew",
-      "busytex_folio_tex_worker_currentmodule",
-      "busytex_folio_tex_worker_known",
-      "busytex_folio_tex_worker_knownmisses",
-      "busytex_folio_tex_worker_parseremotename",
-      "busytex_folio_tex_worker_send"
-    ],
-    "7": [
       "readme",
       "readme_1_publicarla_una_sola_vez_unos_10_minutos",
       "readme_2_instalarla_en_windows",
@@ -158,16 +150,16 @@
       "readme_folio_markdown_y_latex_en_tu_escritorio",
       "readme_licencia"
     ],
-    "8": [
-      "tools_minilz4",
-      "tools_minilz4_assert",
-      "tools_minilz4_compress",
-      "tools_minilz4_compressblock",
-      "tools_minilz4_compressbound",
-      "tools_minilz4_compresspackage",
-      "tools_minilz4_uncompress"
+    "7": [
+      "busytex_folio_tex_worker",
+      "busytex_folio_tex_worker_collectnew",
+      "busytex_folio_tex_worker_currentmodule",
+      "busytex_folio_tex_worker_known",
+      "busytex_folio_tex_worker_knownmisses",
+      "busytex_folio_tex_worker_parseremotename",
+      "busytex_folio_tex_worker_send"
     ],
-    "9": [
+    "8": [
       "design",
       "design_color",
       "design_disposición",
@@ -176,16 +168,7 @@
       "design_movimiento",
       "design_tipografía"
     ],
-    "10": [
-      "dml_insert",
-      "dml_update",
-      "texmf_extra_ieeetran"
-    ],
-    "11": [
-      "notice",
-      "notice_avisos_de_terceros"
-    ],
-    "12": [
+    "9": [
       "js_home",
       "js_home_ago",
       "js_home_openitem",
@@ -194,11 +177,29 @@
       "js_home_render",
       "js_home_row"
     ],
-    "13": [
+    "10": [
+      "tools_minilz4",
+      "tools_minilz4_assert",
+      "tools_minilz4_compress",
+      "tools_minilz4_compressblock",
+      "tools_minilz4_compressbound",
+      "tools_minilz4_compresspackage",
+      "tools_minilz4_uncompress"
+    ],
+    "11": [
       "js_shell",
       "js_shell_setws",
       "js_shell_setzen",
       "js_shell_ws"
+    ],
+    "12": [
+      "dml_insert",
+      "dml_update",
+      "texmf_extra_ieeetran"
+    ],
+    "13": [
+      "notice",
+      "notice_avisos_de_terceros"
     ],
     "14": [
       "sw",
@@ -210,20 +211,20 @@
     ]
   },
   "cohesion": {
-    "0": 0.21666666666666667,
-    "1": 0.11764705882352941,
+    "0": 0.10452961672473868,
+    "1": 0.21666666666666667,
     "2": 0.12418300653594772,
-    "3": 0.21904761904761905,
-    "4": 0.10853658536585366,
+    "3": 0.11764705882352941,
+    "4": 0.21904761904761905,
     "5": 0.24444444444444444,
-    "6": 0.3333333333333333,
-    "7": 0.2222222222222222,
-    "8": 0.38095238095238093,
-    "9": 0.2857142857142857,
-    "10": 0.6666666666666666,
-    "11": 1.0,
-    "12": 0.47619047619047616,
-    "13": 0.6666666666666666,
+    "6": 0.2222222222222222,
+    "7": 0.3333333333333333,
+    "8": 0.2857142857142857,
+    "9": 0.47619047619047616,
+    "10": 0.38095238095238093,
+    "11": 0.6666666666666666,
+    "12": 0.6666666666666666,
+    "13": 1.0,
     "14": 1.0,
     "15": 1.0
   },
@@ -259,6 +260,16 @@
       "degree": 7
     },
     {
+      "id": "js_markdown_replacerange",
+      "label": "replaceRange()",
+      "degree": 6
+    },
+    {
+      "id": "js_markdown_save",
+      "label": "save()",
+      "degree": 6
+    },
+    {
       "id": "js_tex_engine_emit",
       "label": "emit()",
       "degree": 6
@@ -267,29 +278,19 @@
       "id": "js_tex_engine_kvget",
       "label": "kvGet()",
       "degree": 6
-    },
-    {
-      "id": "js_tex_engine_kvset",
-      "label": "kvSet()",
-      "degree": 6
-    },
-    {
-      "id": "js_tex_engine_registercache",
-      "label": "registerCache()",
-      "degree": 6
     }
   ],
   "surprises": [],
   "questions": [
     {
       "type": "isolated_nodes",
-      "question": "What connects `codemirror`, `dompurify`, `@highlightjs/cdn-assets` to the rest of the system?",
+      "question": "What connects `insert`, `update`, `codemirror` to the rest of the system?",
       "why": "7 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `package.json` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected."
+      "question": "Should `tex-engine.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10452961672473868 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
@@ -298,8 +299,8 @@
     },
     {
       "type": "low_cohesion",
-      "question": "Should `markdown.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.10853658536585366 - nodes in this community are weakly interconnected."
+      "question": "Should `tex.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected."
     }
   ]
 }

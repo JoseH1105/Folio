@@ -424,6 +424,7 @@ svg{flex:none}
 .CodeMirror-hint{color:var(--ink);border-radius:5px;padding:4px 9px}
 li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-shadow:inset 2px 0 0 var(--accent)}
 .cm-searching{background:var(--mark)}
+.cm-sync-flash{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
 
 /* ---------- overlays ---------- */
 .drop{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--bg-0) 60%,transparent);display:grid;place-items:center;pointer-events:none;backdrop-filter:blur(3px)}
@@ -788,7 +789,7 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
         </div>
         <div class="proof-line" aria-hidden="true"></div>
         <div class="pdf-scroll" id="pdfScroll">
-          <div class="pdf-pages" id="pdfPages"></div>
+          <div class="pdf-pages" id="pdfPages" title="Doble clic en una palabra para ir a su código"></div>
           <div class="pdf-empty" id="pdfEmpty">
             <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9.2L22 8.8V18a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a4 4 0 0 1 4-4z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1"/><path d="M15.2 2v4.3a2.5 2.5 0 0 0 2.5 2.5H22" fill="none" stroke="var(--accent)" stroke-width="1"/><path d="M9.5 9.5v6l5-3z" fill="var(--accent)"/></svg>
             <h3>El PDF aparecerá aquí</h3>

@@ -68,6 +68,9 @@ documento de Inicio. La guía de uso y el proyecto de ejemplo están al pie de c
 - **Esquema:** debajo de los archivos aparecen las secciones del `.tex` abierto (y los
   archivos que incluye con `\input`); clic en una para saltar a ella. La sección donde
   está el cursor queda marcada.
+- **Del PDF al código:** doble clic en una palabra del PDF y el editor salta a la línea
+  donde está escrita, con la palabra seleccionada (como en Overleaf). En Markdown, el
+  doble clic en la hoja abre el texto fuente en esa misma palabra.
 - **Disposición:** en la barra superior elige **Editor**, **Dividido** o **PDF**.
 - **Modo enfoque:** el botón de las cuatro esquinas (o `Ctrl+.`) oculta todo menos el
   texto y el PDF; `Esc` lo cierra. También funciona en Markdown.
