@@ -834,7 +834,7 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
     bold: () => wrapCmd('textbf'), italic: () => wrapCmd('textit'),
     itemize: () => insertBlock('\\begin{itemize}\n  \\item Primer elemento\n  \\item \n\\end{itemize}', 'Primer elemento'),
     enumerate: () => insertBlock('\\begin{enumerate}\n  \\item Primer paso\n  \\item \n\\end{enumerate}', 'Primer paso'),
-    equation: () => insertBlock('\\begin{equation}\n  y = mx + b\n  \\label{eq:nueva}\n\\end{equation}', 'y = mx + b'),
+    equation: () => { if (editable()) openEqMenu($('#eqBtn')); },
     figure: () => { if (!P || !P.root) { toast('Abre la carpeta del proyecto para añadir imágenes.'); return; } $('#imgInput').click(); },
     table: () => { if (editable()) UI.pickTable($('#texTableBtn'), insertTexTable); },
     code: () => insertBlock(hasPkg('listings') ? '\\begin{lstlisting}[language=Python]\nprint("Hola")\n\\end{lstlisting}' : '\\begin{verbatim}\nprint("Hola")\n\\end{verbatim}', 'print("Hola")'),
@@ -848,6 +848,142 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
   }
   $('#insBar').addEventListener('mousedown', e => { if (e.target.closest('.tb')) e.preventDefault(); });
   $('#insBar').addEventListener('click', e => { const b = e.target.closest('[data-ins]'); if (b) INS[b.dataset.ins](); });
+
+  /* ---------- equation menu: environments, structures and symbols ----------
+     Templates mark editable fields as ⟨text⟩; ⟨*text⟩ is the field that receives the selected
+     code. Without a selection the first field is selected so typing replaces it; with one,
+     the selection fills its field and the next field is selected. */
+  const EQ = {
+    block: [
+      { id: 'equation', name: 'Numerada', glyph: '<i>x</i> = … <span class="eq-n">(1)</span>', tpl: '\\begin{equation}\n  ⟨y = mx + b⟩\n  \\label{eq:⟨nombre⟩}\n\\end{equation}' },
+      { id: 'display', name: 'Sin número', glyph: '<i>x</i> = …', tpl: '\\[\n  ⟨y = mx + b⟩\n\\]' },
+      { id: 'inline', name: 'En el texto', glyph: '$<i>x</i>$', tpl: '$⟨x⟩$', raw: true },
+      { id: 'align', name: 'Alineadas', glyph: '<span class="eq-col"><span>= …</span><span>= …</span></span>', tpl: '\\begin{align}\n  ⟨f(x)⟩ &= ⟨a⟩ \\\\\n         &= ⟨b⟩\n\\end{align}', pkg: 'amsmath' },
+      { id: 'cases', name: 'Por casos', glyph: '<i>f</i> = {', tpl: '\\begin{cases}\n  ⟨1⟩ & \\text{si } ⟨x > 0⟩ \\\\\n  ⟨0⟩ & \\text{si no}\n\\end{cases}', pkg: 'amsmath', display: true },
+      { id: 'matrix', name: 'Matriz 2×2', glyph: '( <span class="eq-col"><span>a b</span><span>c d</span></span> )', tpl: '\\begin{pmatrix} ⟨a⟩ & ⟨b⟩ \\\\ ⟨c⟩ & ⟨d⟩ \\end{pmatrix}', pkg: 'amsmath', display: true }
+    ],
+    struct: [
+      { id: 'frac', name: 'Fracción', glyph: '<span class="eq-fr"><i>a</i><i>b</i></span>', tpl: '\\frac{⟨a⟩}{⟨b⟩}' },
+      { id: 'pow', name: 'Potencia', glyph: '<i>x</i><sup>n</sup>', tpl: '⟨x⟩^{⟨n⟩}', base: true },
+      { id: 'sub', name: 'Subíndice', glyph: '<i>x</i><sub>i</sub>', tpl: '⟨x⟩_{⟨i⟩}', base: true },
+      { id: 'subsup', name: 'Sub y superíndice', glyph: '<i>x</i><span class="eq-ss"><sup>n</sup><sub>i</sub></span>', tpl: '⟨x⟩_{⟨i⟩}^{⟨n⟩}', base: true },
+      { id: 'sqrt', name: 'Raíz', glyph: '√<span class="eq-ov"><i>x</i></span>', tpl: '\\sqrt{⟨x⟩}' },
+      { id: 'root', name: 'Raíz n-ésima', glyph: '<sup>n</sup>√<span class="eq-ov"><i>x</i></span>', tpl: '\\sqrt[⟨n⟩]{⟨*x⟩}' },
+      { id: 'exp', name: 'Exponencial', glyph: '<i>e</i><sup>x</sup>', tpl: 'e^{⟨x⟩}' },
+      { id: 'ln', name: 'Logaritmo', glyph: 'ln(<i>x</i>)', tpl: '\\ln\\left(⟨x⟩\\right)' },
+      { id: 'int', name: 'Integral', glyph: '∫<span class="eq-ss"><sup>b</sup><sub>a</sub></span>', tpl: '\\int_{⟨a⟩}^{⟨b⟩} ⟨*f(x)⟩ \\, d⟨x⟩' },
+      { id: 'intu', name: 'Integral indefinida', glyph: '∫ <i>f</i> d<i>x</i>', tpl: '\\int ⟨*f(x)⟩ \\, d⟨x⟩' },
+      { id: 'iint', name: 'Integral doble', glyph: '∬', tpl: '\\iint_{⟨D⟩} ⟨*f(x,y)⟩ \\, dA', pkg: 'amsmath' },
+      { id: 'sum', name: 'Sumatoria', glyph: '∑<span class="eq-ss"><sup>n</sup><sub>i=1</sub></span>', tpl: '\\sum_{⟨i=1⟩}^{⟨n⟩} ⟨*a_i⟩' },
+      { id: 'prod', name: 'Productoria', glyph: '∏<span class="eq-ss"><sup>n</sup><sub>i=1</sub></span>', tpl: '\\prod_{⟨i=1⟩}^{⟨n⟩} ⟨*a_i⟩' },
+      { id: 'lim', name: 'Límite', glyph: 'lim<sub>x→a</sub>', tpl: '\\lim_{⟨x \\to a⟩} ⟨*f(x)⟩' },
+      { id: 'deriv', name: 'Derivada', glyph: '<span class="eq-fr"><i>dy</i><i>dx</i></span>', tpl: '\\frac{d⟨*y⟩}{d⟨x⟩}' },
+      { id: 'derivn', name: 'Derivada n-ésima', glyph: '<span class="eq-fr"><i>d<sup>n</sup>y</i><i>dx<sup>n</sup></i></span>', tpl: '\\frac{d^{⟨n⟩}⟨*y⟩}{d⟨x⟩^{⟨n⟩}}' },
+      { id: 'partial', name: 'Parcial', glyph: '<span class="eq-fr"><i>∂f</i><i>∂x</i></span>', tpl: '\\frac{\\partial ⟨*f⟩}{\\partial ⟨x⟩}' },
+      { id: 'dot', name: 'Derivada temporal', glyph: '<span class="eq-acc">˙</span><i>x</i>', tpl: '\\dot{⟨x⟩}' },
+      { id: 'vec', name: 'Vector', glyph: '<span class="eq-acc">→</span><i>v</i>', tpl: '\\vec{⟨v⟩}' },
+      { id: 'bar', name: 'Barra / media', glyph: '<span class="eq-ov"><i>x</i></span>', tpl: '\\bar{⟨x⟩}' },
+      { id: 'hat', name: 'Sombrero', glyph: '<span class="eq-acc">^</span><i>x</i>', tpl: '\\hat{⟨x⟩}' },
+      { id: 'paren', name: 'Paréntesis', glyph: '( <i>x</i> )', tpl: '\\left( ⟨x⟩ \\right)' },
+      { id: 'abs', name: 'Valor absoluto', glyph: '| <i>x</i> |', tpl: '\\left| ⟨x⟩ \\right|' },
+      { id: 'text', name: 'Texto', glyph: 'Aa', tpl: '\\text{⟨texto⟩}', pkg: 'amsmath' }
+    ],
+    sym: [['α', 'alpha'], ['β', 'beta'], ['γ', 'gamma'], ['δ', 'delta'], ['ε', 'varepsilon'], ['θ', 'theta'], ['λ', 'lambda'], ['μ', 'mu'], ['π', 'pi'], ['ρ', 'rho'],
+      ['σ', 'sigma'], ['τ', 'tau'], ['φ', 'varphi'], ['ω', 'omega'], ['Δ', 'Delta'], ['Σ', 'Sigma'], ['Ω', 'Omega'], ['∞', 'infty'], ['±', 'pm'], ['×', 'times'],
+      ['·', 'cdot'], ['÷', 'div'], ['≤', 'leq'], ['≥', 'geq'], ['≠', 'neq'], ['≈', 'approx'], ['≡', 'equiv'], ['∝', 'propto'], ['→', 'to'], ['⇒', 'Rightarrow'],
+      ['∂', 'partial'], ['∇', 'nabla'], ['∈', 'in'], ['∀', 'forall'], ['∃', 'exists'], ['°', 'circ']]
+  };
+  const eqPop = $('#eqPop');
+  eqPop.innerHTML = `
+    <div class="eq-sec"><div class="eq-h">Entornos</div><div class="eq-grid">${EQ.block.map(it => `<button class="eq-item" data-eq="block:${it.id}" title="${esc(it.tpl.replace(/[⟨⟩*]/g, ''))}"><span class="eq-g">${it.glyph}</span><span class="eq-name">${it.name}</span></button>`).join('')}</div></div>
+    <div class="eq-sec"><div class="eq-h">Estructuras</div><div class="eq-grid">${EQ.struct.map(it => `<button class="eq-item" data-eq="struct:${it.id}" title="${esc(it.tpl.replace(/[⟨⟩*]/g, ''))}"><span class="eq-g">${it.glyph}</span><span class="eq-name">${it.name}</span></button>`).join('')}</div></div>
+    <div class="eq-sec"><div class="eq-h">Símbolos</div><div class="eq-syms">${EQ.sym.map(([g, c]) => `<button class="eq-sym" data-eq="sym:${c}" title="\\${c}">${g}</button>`).join('')}</div></div>
+    <p class="eq-tip">Con código seleccionado, el formato se aplica sobre él. Fuera de una ecuación, las estructuras y los símbolos se envuelven en <code>$…$</code>.</p>`;
+  function openEqMenu(anchor) {
+    const r = anchor.getBoundingClientRect(); eqPop.hidden = false;
+    eqPop.style.left = Math.max(12, Math.min(r.left, innerWidth - eqPop.offsetWidth - 12)) + 'px';
+    eqPop.style.top = Math.min(r.bottom + 6, Math.max(12, innerHeight - eqPop.offsetHeight - 12)) + 'px';
+  }
+  const closeEqMenu = () => { eqPop.hidden = true; };
+  eqPop.addEventListener('mousedown', e => e.preventDefault());   // keep the editor's selection
+  document.addEventListener('mousedown', e => { if (!eqPop.hidden && !eqPop.contains(e.target) && !e.target.closest('#eqBtn')) closeEqMenu(); });
+  eqPop.addEventListener('keydown', e => { if (e.key === 'Escape') { closeEqMenu(); cm && cm.focus(); } });
+  eqPop.addEventListener('click', e => {
+    const b = e.target.closest('[data-eq]'); if (!b) return;
+    const [kind, id] = b.dataset.eq.split(':');
+    closeEqMenu();
+    if (!editable()) return;
+    if (kind === 'sym') insertMathSymbol(id);
+    else applyEqTemplate(EQ[kind].find(it => it.id === id), kind === 'block');
+  });
+
+  // is pos inside math ($…$, \(…\), \[…\] or a math environment)?
+  function inMath(pos) {
+    const doc = cm.getDoc(), idx = doc.indexFromPos(pos);
+    const before = stripComment(doc.getLine(pos.line).slice(0, pos.ch));
+    let dollars = 0; for (let i = 0; i < before.length; i++) { if (before[i] === '\\') { i++; continue; } if (before[i] === '$') dollars++; }
+    if (dollars % 2) return true;
+    const text = doc.getValue().slice(0, idx), re = /\\(begin|end)\{(equation|align|gather|multline|flalign|alignat|eqnarray|math|displaymath)\*?\}|\\\[|\\\]|\\\(|\\\)/g;
+    let depth = 0, m;
+    while ((m = re.exec(text))) { if (m[1] === 'begin' || m[0] === '\\[' || m[0] === '\\(') depth++; else if (depth) depth--; }
+    return depth > 0;
+  }
+  // expand ⟨fields⟩; returns the text and the field ranges inside it
+  function fillTemplate(tpl, sel) {
+    const parts = tpl.split(/⟨(\*?)([^⟩]*)⟩/);
+    const starIdx = /⟨\*/.test(tpl) ? null : 0; let fieldNo = 0, text = '', used = -1;
+    const fields = [];
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 3 === 0) { text += parts[i]; continue; }
+      const star = parts[i] === '*', def = parts[i + 1]; i++;
+      const takesSel = sel != null && used < 0 && (star || (starIdx === 0 && fieldNo === 0));
+      const val = takesSel ? sel : def;
+      fields.push({ start: text.length, end: text.length + val.length, sel: takesSel });
+      if (takesSel) used = fields.length - 1;
+      text += val; fieldNo++;
+    }
+    return { text, fields };
+  }
+  function applyEqTemplate(it, isBlock) {
+    if (!it) return;
+    if (it.pkg && !hasPkg(it.pkg)) toast(`Esta estructura necesita \\usepackage{${it.pkg}} en el preámbulo.`);
+    let from = cm.getCursor('from'), to = cm.getCursor('to');
+    let raw = cm.getSelection();
+    // inside an equation, a power or subscript with nothing selected applies to the symbol just typed (K → K^{n})
+    if (!raw && it.base && inMath(from)) {
+      const m = /(\\[A-Za-z]+|[A-Za-z0-9])$/.exec(cm.getLine(from.line).slice(0, from.ch));
+      if (m) { from = { line: from.line, ch: from.ch - m[1].length }; raw = m[1]; }
+    }
+    const sel = raw.length ? raw : null;
+    const { text, fields } = fillTemplate(it.tpl, sel);
+    let pre = '', post = '';
+    if (it.display) {   // math-only environments get a display wrapper, on their own line
+      if (!inMath(from)) {
+        pre = (cm.getLine(from.line).slice(0, from.ch).trim() ? '\n' : '') + '\\[ ';
+        post = ' \\]' + (cm.getLine(to.line).slice(to.ch).trim() ? '\n' : '');
+      }
+    } else if (isBlock && !it.raw) {
+      const line = cm.getLine(from.line), endLine = cm.getLine(to.line);
+      if (line.slice(0, from.ch).trim()) pre = '\n';
+      if (endLine.slice(to.ch).trim()) post = '\n';
+      if (!sel && !pre) { // nothing selected on an empty or indented line: behave like the old block insert
+        const target = fields[0]; insertBlock(text, text.slice(target.start, target.end)); return;
+      }
+    } else if (!isBlock && !inMath(from)) { pre = '$'; post = '$'; }
+    const base = cm.indexFromPos(from) + pre.length;
+    cm.replaceRange(pre + text + post, from, to);
+    const target = sel != null ? fields.find(f => !f.sel) : fields[0];
+    if (target) cm.setSelection(cm.posFromIndex(base + target.start), cm.posFromIndex(base + target.end));
+    else cm.setCursor(cm.posFromIndex(base + text.length + post.length));
+    cm.focus();
+  }
+  function insertMathSymbol(name) {
+    const at = cm.getCursor('to'), math = inMath(at);
+    const next = cm.getRange(at, { line: at.line, ch: at.ch + 1 });
+    const cmd = '\\' + name + (math && /[A-Za-z]/.test(next) ? ' ' : '');
+    const out = math ? cmd : '$' + cmd + '$';
+    cm.replaceRange(out, at); cm.setCursor(cm.posFromIndex(cm.indexFromPos(at) + out.length)); cm.focus();
+  }
 
   /* ---------- autocomplete ---------- */
   const COMMANDS = ['section{}', 'subsection{}', 'subsubsection{}', 'paragraph{}', 'textbf{}', 'textit{}', 'emph{}', 'underline{}', 'texttt{}', 'textsc{}',

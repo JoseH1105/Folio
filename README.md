@@ -68,6 +68,11 @@ documento de Inicio. La guía de uso y el proyecto de ejemplo están al pie de c
 - **Esquema:** debajo de los archivos aparecen las secciones del `.tex` abierto (y los
   archivos que incluye con `\input`); clic en una para saltar a ella. La sección donde
   está el cursor queda marcada.
+- **Ecuaciones:** el botón *f(x)* abre un menú con entornos (numerada, sin número, en
+  el texto, alineadas, por casos, matriz), estructuras (fracción, potencia, subíndice,
+  raíz, integral, sumatoria, límite, derivadas, vector, valor absoluto…) y símbolos
+  (letras griegas, ≤, ≠, ∞…). Con código seleccionado, el formato se aplica sobre él;
+  fuera de una ecuación, las estructuras se envuelven en `$…$` solas.
 - **Del PDF al código:** doble clic en una palabra del PDF y el editor salta a la línea
   donde está escrita, con la palabra seleccionada (como en Overleaf). En Markdown, el
   doble clic en la hoja abre el texto fuente en esa misma palabra.

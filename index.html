@@ -432,6 +432,30 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
 .drop strong{display:block;font:600 19px var(--f-ui);letter-spacing:-.01em;margin-top:12px}
 .drop span{color:var(--ink-2)}
 .pop{position:fixed;z-index:40;background:var(--bg-2);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow-2);padding:12px;animation:pop .14s var(--ease)}
+.eq-pop{width:min(452px,calc(100vw - 24px));max-height:min(74vh,640px);overflow:auto;padding:12px 12px 10px}
+.eq-sec+.eq-sec{margin-top:12px}
+.eq-h{font:600 10.5px/1 var(--f-ui);text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin:2px 2px 8px}
+.eq-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.eq-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:62px;padding:8px 4px 6px;border:1px solid var(--line);border-radius:8px;background:var(--bg-1);cursor:pointer;color:var(--ink);transition:background .15s,border-color .15s}
+.eq-item:hover,.eq-item:focus-visible{background:var(--bg-3);border-color:var(--accent-line)}
+.eq-g{font:16px/1 var(--f-doc);display:inline-flex;align-items:center;gap:1px;min-height:24px;white-space:nowrap}
+.eq-g i{font-style:italic}
+.eq-g sup,.eq-g sub{font-size:.62em;line-height:0}
+.eq-name{font-size:11px;color:var(--ink-2);text-align:center;line-height:1.2}
+.eq-fr{display:inline-flex;flex-direction:column;align-items:center;font-size:.78em;line-height:1.05}
+.eq-fr i:first-child{border-bottom:1px solid currentColor;padding:0 2px}
+.eq-ss{display:inline-flex;flex-direction:column;justify-content:center;font-size:.62em;line-height:1;margin-left:1px}
+.eq-ss sup,.eq-ss sub{font-size:1em;line-height:1}
+.eq-ov{border-top:1px solid currentColor;padding:0 1px;line-height:1.1}
+.eq-acc{display:inline-block;width:0;transform:translate(.25em,-.62em);font-size:.75em}
+.eq-col{display:inline-flex;flex-direction:column;font-size:.7em;line-height:1.15}
+.eq-n{font:12px var(--f-ui);color:var(--ink-3);margin-left:4px}
+.eq-syms{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.eq-sym{height:30px;border:1px solid transparent;border-radius:6px;background:none;cursor:pointer;color:var(--ink);font:15px/1 var(--f-doc)}
+.eq-sym:hover,.eq-sym:focus-visible{background:var(--bg-3);border-color:var(--line-2)}
+.eq-tip{margin:12px 2px 0;font-size:11.5px;color:var(--ink-3);line-height:1.45}
+.eq-tip code{font:11px var(--f-mono);background:var(--bg-3);padding:1px 4px;border-radius:4px}
+@media (max-width:480px){.eq-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.eq-syms{grid-template-columns:repeat(9,minmax(0,1fr))}}
 .grid{display:grid;grid-template-columns:repeat(8,20px);gap:3px;margin:8px 0}
 .grid span{width:20px;height:20px;border:1px solid var(--line-2);border-radius:4px;background:var(--bg-1);cursor:pointer}
 .grid span.on{background:var(--accent-soft);border-color:var(--accent)}
@@ -749,7 +773,7 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
           <button class="tb" data-ins="itemize" title="Lista con viñetas"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 4h8M6 8h8M6 12h8"/><circle cx="2.8" cy="4" r=".9" fill="currentColor"/><circle cx="2.8" cy="8" r=".9" fill="currentColor"/><circle cx="2.8" cy="12" r=".9" fill="currentColor"/></svg></button>
           <button class="tb" data-ins="enumerate" title="Lista numerada"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6.5 4h7.5M6.5 8h7.5M6.5 12h7.5"/><text x="1" y="5.6" font-size="5" fill="currentColor" stroke="none" font-family="sans-serif">1</text><text x="1" y="9.6" font-size="5" fill="currentColor" stroke="none" font-family="sans-serif">2</text><text x="1" y="13.6" font-size="5" fill="currentColor" stroke="none" font-family="sans-serif">3</text></svg></button>
           <span class="sep"></span>
-          <button class="tb serif" data-ins="equation" title="Ecuación numerada"><i>f(x)</i></button>
+          <button class="tb serif" id="eqBtn" data-ins="equation" title="Ecuaciones: fracciones, potencias, integrales, derivadas, símbolos…" aria-haspopup="dialog"><i>f(x)</i><svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="width:10px;height:10px;margin-left:-2px"><path d="m4 6 4 4 4-4"/></svg></button>
           <button class="tb txt" data-ins="figure" title="Insertar imagen (también puedes arrastrarla o pegarla)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="m2.5 11.5 3.5-3.5 3 3 2-2 2.5 2.5"/><circle cx="10.5" cy="6" r="1"/></svg>Figura</button>
           <button class="tb txt" id="texTableBtn" data-ins="table" title="Insertar tabla"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="2.8" width="12.4" height="10.4" rx="1.5"/><path d="M1.8 6.3h12.4M1.8 9.8h12.4M6 2.8v10.4M10 2.8v10.4"/></svg>Tabla</button>
           <button class="tb txt" data-ins="code" title="Bloque de código (listings)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/></svg>Código</button>
@@ -820,6 +844,8 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
     <button class="btn primary" id="tInsert">Insertar</button>
   </div>
 </div>
+
+<div class="pop eq-pop" id="eqPop" hidden role="dialog" aria-label="Insertar ecuación"></div>
 
 <div class="modal-bg" id="modal" hidden><div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
   <h3 id="modalTitle" hidden></h3><p id="modalMsg"></p>

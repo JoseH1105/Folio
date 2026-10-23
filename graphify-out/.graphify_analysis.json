@@ -45,33 +45,6 @@
       "js_markdown_wrap"
     ],
     "1": [
-      "js_tex",
-      "js_tex_applylinemarks",
-      "js_tex_editable",
-      "js_tex_enginedialog",
-      "js_tex_figuresnippet",
-      "js_tex_forget",
-      "js_tex_insertblock",
-      "js_tex_insertheading",
-      "js_tex_inserttextable",
-      "js_tex_latexhint",
-      "js_tex_loadsynctex",
-      "js_tex_openpdf",
-      "js_tex_parselog",
-      "js_tex_pdfwordat",
-      "js_tex_project",
-      "js_tex_recents",
-      "js_tex_relfrom",
-      "js_tex_renderloglist",
-      "js_tex_setlayout",
-      "js_tex_showproblems",
-      "js_tex_syncfrompdf",
-      "js_tex_synclookup",
-      "js_tex_togglelog",
-      "js_tex_translate",
-      "js_tex_wrapcmd"
-    ],
-    "2": [
       "js_tex_engine",
       "js_tex_engine_armidle",
       "js_tex_engine_cachestats",
@@ -98,7 +71,7 @@
       "js_tex_engine_trimcache",
       "js_tex_engine_writecache"
     ],
-    "3": [
+    "2": [
       "ref_fs",
       "ref_path",
       "tools_build_mirror",
@@ -125,23 +98,50 @@
       "tools_minilz4_compresspackage",
       "tools_minilz4_uncompress"
     ],
+    "3": [
+      "js_tex",
+      "js_tex_clearpdf",
+      "js_tex_collectfiles",
+      "js_tex_compile",
+      "js_tex_enginedialog",
+      "js_tex_figuresnippet",
+      "js_tex_forget",
+      "js_tex_indexproject",
+      "js_tex_insertfigure",
+      "js_tex_latexhint",
+      "js_tex_markstale",
+      "js_tex_onkey",
+      "js_tex_openeqmenu",
+      "js_tex_openpdf",
+      "js_tex_outsideblocks",
+      "js_tex_parselog",
+      "js_tex_project",
+      "js_tex_recents",
+      "js_tex_relfrom",
+      "js_tex_saveandcompile",
+      "js_tex_setcompiling",
+      "js_tex_setsynctex",
+      "js_tex_translate"
+    ],
     "4": [
       "js_tex_addfiles",
       "js_tex_addimage",
+      "js_tex_deletepath",
+      "js_tex_detectmain",
       "js_tex_dirhandlefor",
       "js_tex_newfile",
       "js_tex_newfolder",
       "js_tex_nodemenu",
       "js_tex_normpath",
-      "js_tex_refresh",
+      "js_tex_ondrop",
       "js_tex_renamepath",
       "js_tex_renderheader",
       "js_tex_rendertree",
+      "js_tex_resolveinput",
       "js_tex_savefile",
       "js_tex_savepdf",
-      "js_tex_scandir",
-      "js_tex_scandir_walk",
       "js_tex_setmain",
+      "js_tex_showemptyeditor",
       "js_tex_uniquepath",
       "js_tex_writefile"
     ],
@@ -165,62 +165,53 @@
       "ref_pdfjs_dist"
     ],
     "6": [
-      "js_tex_clearpdf",
-      "js_tex_collectfiles",
-      "js_tex_compile",
-      "js_tex_enter",
-      "js_tex_indexproject",
-      "js_tex_init",
-      "js_tex_initeditor",
-      "js_tex_markstale",
-      "js_tex_onkey",
-      "js_tex_saveall",
-      "js_tex_saveandcompile",
-      "js_tex_setcompiling",
-      "js_tex_setsynctex",
-      "js_tex_togglecomment",
-      "js_tex_updatefilehead"
+      "js_tex_addlinks",
+      "js_tex_cssscale",
+      "js_tex_freefarpages",
+      "js_tex_godest",
+      "js_tex_loadsynctex",
+      "js_tex_pdfwordat",
+      "js_tex_relayout",
+      "js_tex_renderpage",
+      "js_tex_setlayout",
+      "js_tex_setview",
+      "js_tex_showpdf",
+      "js_tex_stepzoom",
+      "js_tex_syncfrompdf",
+      "js_tex_synclookup",
+      "js_tex_updatepagenum",
+      "js_tex_updatezoomlabel"
     ],
     "7": [
+      "js_tex_applylinemarks",
+      "js_tex_bracedarg",
+      "js_tex_enter",
+      "js_tex_init",
+      "js_tex_initeditor",
+      "js_tex_openpath",
+      "js_tex_outlineactive",
+      "js_tex_renderloglist",
+      "js_tex_renderoutline",
+      "js_tex_showproblems",
+      "js_tex_togglecomment",
+      "js_tex_togglelog",
+      "js_tex_updatefilehead"
+    ],
+    "8": [
       "js_tex_copyprojecttofolder",
       "js_tex_newproject",
-      "js_tex_ondrop",
       "js_tex_openfilehandle",
       "js_tex_openfolderdialog",
       "js_tex_openfromlaunch",
       "js_tex_openproject",
       "js_tex_projectidfor",
+      "js_tex_refresh",
       "js_tex_renderbanner",
-      "js_tex_reopen",
-      "js_tex_show",
-      "js_tex_verifypermission"
-    ],
-    "8": [
-      "js_tex_addlinks",
-      "js_tex_cssscale",
-      "js_tex_freefarpages",
-      "js_tex_godest",
-      "js_tex_relayout",
-      "js_tex_renderpage",
-      "js_tex_setview",
-      "js_tex_showpdf",
-      "js_tex_stepzoom",
-      "js_tex_updatepagenum",
-      "js_tex_updatezoomlabel"
+      "js_tex_saveall",
+      "js_tex_scandir",
+      "js_tex_scandir_walk"
     ],
     "9": [
-      "js_tex_bracedarg",
-      "js_tex_deletepath",
-      "js_tex_detectmain",
-      "js_tex_insertfigure",
-      "js_tex_openpath",
-      "js_tex_outlineactive",
-      "js_tex_outsideblocks",
-      "js_tex_renderoutline",
-      "js_tex_resolveinput",
-      "js_tex_showemptyeditor"
-    ],
-    "10": [
       "js_ui",
       "js_ui_applytheme",
       "js_ui_bindmenu",
@@ -231,6 +222,17 @@
       "js_ui_picktable",
       "js_ui_set",
       "js_ui_toast"
+    ],
+    "10": [
+      "js_tex_applyeqtemplate",
+      "js_tex_editable",
+      "js_tex_filltemplate",
+      "js_tex_inmath",
+      "js_tex_insertblock",
+      "js_tex_insertheading",
+      "js_tex_insertmathsymbol",
+      "js_tex_inserttextable",
+      "js_tex_wrapcmd"
     ],
     "11": [
       "readme",
@@ -271,16 +273,19 @@
       "js_home_row"
     ],
     "15": [
+      "js_tex_appdir",
+      "js_tex_opensample",
+      "js_tex_reopen",
+      "js_tex_resetsample",
+      "js_tex_sampleplotpng",
+      "js_tex_show",
+      "js_tex_verifypermission"
+    ],
+    "16": [
       "js_shell",
       "js_shell_setws",
       "js_shell_setzen",
       "js_shell_ws"
-    ],
-    "16": [
-      "js_tex_appdir",
-      "js_tex_opensample",
-      "js_tex_resetsample",
-      "js_tex_sampleplotpng"
     ],
     "17": [
       "dml_insert",
@@ -302,21 +307,21 @@
   },
   "cohesion": {
     "0": 0.10452961672473868,
-    "1": 0.13,
-    "2": 0.21666666666666667,
-    "3": 0.09333333333333334,
-    "4": 0.22875816993464052,
+    "1": 0.21666666666666667,
+    "2": 0.09333333333333334,
+    "3": 0.15019762845849802,
+    "4": 0.21578947368421053,
     "5": 0.11764705882352941,
-    "6": 0.19047619047619047,
-    "7": 0.30303030303030304,
-    "8": 0.2545454545454545,
-    "9": 0.2222222222222222,
-    "10": 0.24444444444444444,
+    "6": 0.15833333333333333,
+    "7": 0.20512820512820512,
+    "8": 0.25757575757575757,
+    "9": 0.24444444444444444,
+    "10": 0.25,
     "11": 0.2222222222222222,
     "12": 0.3333333333333333,
     "13": 0.2857142857142857,
     "14": 0.47619047619047616,
-    "15": 0.6666666666666666,
+    "15": 0.38095238095238093,
     "16": 0.6666666666666666,
     "17": 0.6666666666666666,
     "18": 1.0,
@@ -365,13 +370,13 @@
       "degree": 9
     },
     {
-      "id": "js_tex_normpath",
-      "label": "normPath()",
+      "id": "js_tex_insertfigure",
+      "label": "insertFigure()",
       "degree": 9
     },
     {
-      "id": "js_tex_renamepath",
-      "label": "renamePath()",
+      "id": "js_tex_normpath",
+      "label": "normPath()",
       "degree": 9
     }
   ],
@@ -385,57 +390,57 @@
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 1 → community 6"
+      "note": "Bridges community 3 → community 7"
     },
     {
-      "source": "resolveInput()",
-      "target": "normPath()",
-      "source_files": [
-        "js/tex.js",
-        "js/tex.js"
-      ],
-      "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 4 → community 9"
-    },
-    {
-      "source": "openPath()",
-      "target": "applyLineMarks()",
+      "source": "insertFigure()",
+      "target": "insertBlock()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 1 → community 9"
+      "note": "Bridges community 10 → community 3"
     },
     {
-      "source": "loadSynctex()",
-      "target": "normPath()",
+      "source": "initEditor()",
+      "target": "wrapCmd()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 1 → community 4"
+      "note": "Bridges community 10 → community 7"
     },
     {
-      "source": "openProject()",
-      "target": "showProblems()",
+      "source": "openSample()",
+      "target": "openProject()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 1 → community 7"
+      "note": "Bridges community 15 → community 8"
+    },
+    {
+      "source": "openSample()",
+      "target": "showEmptyEditor()",
+      "source_files": [
+        "js/tex.js",
+        "js/tex.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "note": "Bridges community 15 → community 4"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `scanDir()` connect `markdown.js` to `package.json`, `Folio — Markdown y LaTeX en tu escritorio`?",
+      "question": "Why does `scanDir()` connect `minilz4.cjs` to `tex.js`?",
       "why": "High betweenness centrality (0.003) - this node is a cross-community bridge."
     },
     {
@@ -450,17 +455,12 @@
     },
     {
       "type": "bridge_node",
-      "question": "Why does `openProject()` connect `Folio — Markdown y LaTeX en tu escritorio` to `package.json`, `markdown.js`, `folio-tex-worker.js`, `Folio — sistema visual`, `openSample`?",
+      "question": "Why does `openProject()` connect `minilz4.cjs` to `tex.js`, `markdown.js`, `build-site.sh`, `Folio — Markdown y LaTeX en tu escritorio`?",
       "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `package.json` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.13 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `tex.js` be split into smaller, more focused modules?",
+      "question": "Should `build-mirror.cjs` be split into smaller, more focused modules?",
       "why": "Cohesion score 0.09333333333333334 - nodes in this community are weakly interconnected."
     },
     {
