@@ -175,8 +175,9 @@
   /* draggable divider between the source and the sheet (Editar mode); double-click resets it */
   const mdSplit = $('#mdSplit');
   mdSplit.addEventListener('pointerdown', e => {
-    e.preventDefault(); mdSplit.setPointerCapture(e.pointerId); mdSplit.classList.add('drag');
     const rect = $('#work').getBoundingClientRect();
+    if (rect.width < 600) return;
+    e.preventDefault(); mdSplit.setPointerCapture(e.pointerId); mdSplit.classList.add('drag');
     const move = ev => { const w = Math.min(rect.width - 280, Math.max(260, ev.clientX - rect.left)); app.style.setProperty('--md-ed', w + 'px'); };
     const up = () => { mdSplit.classList.remove('drag'); mdSplit.removeEventListener('pointermove', move); mdSplit.removeEventListener('pointerup', up); store.set('folio.md.split', app.style.getPropertyValue('--md-ed')); cmd.refresh(); };
     mdSplit.addEventListener('pointermove', move); mdSplit.addEventListener('pointerup', up);

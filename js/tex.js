@@ -1521,10 +1521,11 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
 
   /* ================= layout: splitters, narrow view ================= */
   const main = $('#texMain');
-  document.querySelectorAll('.splitter').forEach(sp => {
+  main.querySelectorAll(':scope > .splitter').forEach(sp => {
     sp.addEventListener('pointerdown', e => {
-      e.preventDefault(); sp.setPointerCapture(e.pointerId); sp.classList.add('drag');
       const rect = main.getBoundingClientRect();
+      if (rect.width < 600) return;
+      e.preventDefault(); sp.setPointerCapture(e.pointerId); sp.classList.add('drag');
       const move = ev => {
         if (sp.dataset.split === 'tree') { const w = Math.min(420, Math.max(150, ev.clientX - rect.left)); main.style.setProperty('--tree-w', w + 'px'); }
         else { const w = Math.min(rect.width - 320, Math.max(260, rect.right - ev.clientX)); main.style.setProperty('--pdf-w', w + 'px'); }
@@ -1534,7 +1535,14 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
       sp.addEventListener('pointermove', move); sp.addEventListener('pointerup', up);
     });
   });
-  const lay = store.get('folio.tex.layout'); if (lay) { if (lay.tree) main.style.setProperty('--tree-w', lay.tree); if (lay.pdf) main.style.setProperty('--pdf-w', lay.pdf); }
+  // saved panel widths; anything out of range (an older build could store a negative width) is dropped
+  const lay = store.get('folio.tex.layout');
+  const okW = v => /^\d+(\.\d+)?(px|%)$/.test(v || '') && parseFloat(v) >= (/%$/.test(v) ? 15 : 150);
+  if (lay) {
+    if (okW(lay.tree)) main.style.setProperty('--tree-w', lay.tree);
+    if (okW(lay.pdf)) main.style.setProperty('--pdf-w', lay.pdf);
+    if (!okW(lay.tree) || !okW(lay.pdf)) store.set('folio.tex.layout', { tree: okW(lay.tree) ? lay.tree : '', pdf: okW(lay.pdf) ? lay.pdf : '' });
+  }
   $('#treeToggle').addEventListener('click', () => { if (innerWidth <= 1000) { setView(main.dataset.view === 'files' ? 'code' : 'files'); return; } main.classList.toggle('tree-off'); store.set('folio.tex.tree', !main.classList.contains('tree-off')); setTimeout(() => cm && cm.refresh(), 0); });
   if (store.get('folio.tex.tree') === false) main.classList.add('tree-off');
   function setView(v) { main.dataset.view = v; document.querySelectorAll('#texViewSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v))); if (v === 'code' && cm) setTimeout(() => cm.refresh(), 0); if (v === 'pdf') relayout(); }
