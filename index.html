@@ -228,8 +228,17 @@ svg{flex:none}
 .md-cm{flex:1;min-height:0;position:relative}
 .md-cm .CodeMirror{position:absolute;inset:0;height:auto;font:13.5px/1.75 var(--f-mono)}
 .md-cm .CodeMirror-lines{padding:28px 0 40vh}
-.md-cm .CodeMirror pre.CodeMirror-line,.md-cm .CodeMirror pre.CodeMirror-line-like{padding:0 24px 0 28px}
-.ws-md[data-mode="source"] .md-cm .CodeMirror-lines{max-width:880px;margin:0 auto}
+.md-cm .CodeMirror pre.CodeMirror-line,.md-cm .CodeMirror pre.CodeMirror-line-like{padding:0 4px}
+.md-cm .CodeMirror .CodeMirror-lines{max-width:var(--md-measure,720px);margin:0 auto}
+/* measure handles: one on each edge of the text column, resize symmetrically */
+.md-mh{position:absolute;top:0;bottom:0;width:18px;z-index:6;cursor:ew-resize;touch-action:none;outline:none}
+.md-mh::before{content:"";position:absolute;top:0;bottom:0;left:8px;width:2px;border-radius:2px;background:var(--accent);opacity:0;transition:opacity .15s}
+.md-mh::after{content:"";position:absolute;top:50%;left:5px;width:8px;height:40px;margin-top:-20px;border-radius:5px;border:1px solid var(--line-2);background:var(--bg-3);opacity:0;transition:opacity .15s,background .15s}
+.md-cm:hover .md-mh::after{opacity:.9}
+.md-mh:hover::before,.md-mh:focus-visible::before,.md-mh.drag::before{opacity:.55}
+.md-mh:hover::after,.md-mh:focus-visible::after,.md-mh.drag::after{opacity:1;background:var(--accent);border-color:var(--accent)}
+.md-mtip{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:7;font:500 12px/1 var(--f-ui);color:var(--ink);background:var(--bg-3);border:1px solid var(--line-2);border-radius:6px;padding:6px 9px;box-shadow:var(--shadow-1);pointer-events:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (hover:none){.md-mh::after{opacity:.9}}
 .md-cm .cm-header{color:var(--ink);font-weight:700}
 .md-cm .cm-formatting{color:var(--ink-3)}
 .md-cm .cm-strong{font-weight:700} .md-cm .cm-em{font-style:italic} .md-cm .cm-strikethrough{text-decoration:line-through}
@@ -307,7 +316,10 @@ svg{flex:none}
 .tex-main[data-layout="pdf"] .code-pane,.tex-main[data-layout="pdf"] .splitter[data-split="pdf"]{visibility:hidden}
 .splitter{cursor:col-resize;background:var(--line);position:relative;z-index:4;transition:background .15s}
 .splitter:hover,.splitter.drag{background:var(--accent)}
-.splitter::after{content:"";position:absolute;inset:0 -4px}
+.splitter::after{content:"";position:absolute;inset:0 -5px}
+.splitter::before{content:"";position:absolute;top:50%;left:-3px;width:7px;height:36px;margin-top:-18px;border-radius:4px;background:var(--line-2);opacity:0;transition:opacity .15s,background .15s;z-index:1}
+.splitter:hover::before,.splitter:focus-visible::before,.splitter.drag::before{opacity:1;background:var(--accent)}
+.splitter:focus-visible{outline:none;background:var(--accent)}
 .tree-pane{background:var(--bg-1);display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
 .side-sec{display:flex;flex-direction:column;min-height:0;flex:1 1 50%}
 .side-sec+.side-sec{border-top:1px solid var(--line)}
@@ -460,7 +472,7 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
 .vis-seg button{height:28px;padding:0 12px;font-size:14px}
 .vis-seg button[aria-pressed="true"][data-v="visual"]{background:var(--accent);color:var(--accent-ink)}
 .cm-visual.CodeMirror{font:16.5px/1.7 var(--f-doc)}
-.cm-visual .CodeMirror-lines{max-width:820px;margin:0 auto}
+.cm-visual-tex .CodeMirror-lines{max-width:820px;margin:0 auto}
 .cm-visual .cm-tag,.cm-visual .cm-bracket,.cm-visual .cm-keyword,.cm-visual .cm-variable-2,.cm-visual .cm-atom,.cm-visual .cm-builtin,.cm-visual .cm-number{font-family:var(--f-mono);font-size:.82em}
 .cm-visual-md .cm-variable-2,.cm-visual-md .cm-variable-3,.cm-visual-md .cm-keyword,.cm-visual-md .cm-number{font-family:inherit;font-size:inherit}
 .cm-visual-md .cm-comment,.cm-visual-md .cm-formatting{font-family:var(--f-mono);font-size:.84em}
@@ -817,7 +829,7 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
       <nav class="toc" id="toc" aria-label="Índice"><h2>Índice</h2><ol id="tocList"></ol></nav>
       <div class="backdrop" id="backdrop"></div>
       <section class="editor-pane" aria-label="Texto fuente"><div class="md-cm" id="mdEditor"></div></section>
-      <div class="splitter md-split" id="mdSplit" role="separator" aria-orientation="vertical" aria-label="Ajustar ancho del texto fuente" title="Arrastra para ajustar · doble clic para centrar"></div>
+      <div class="splitter md-split" id="mdSplit" role="separator" aria-orientation="vertical" aria-label="Ajustar ancho del texto fuente" tabindex="0" title="Arrastra o usa las flechas para repartir el espacio · doble clic para mitad y mitad"></div>
       <section class="viewer" id="viewer" aria-label="Vista del documento">
         <article class="page" id="pageWrap"><div class="doc" id="page"></div><div class="page-foot"><span id="footName"></span><span id="footInfo"></span></div></article>
         <div class="empty" id="empty" hidden>

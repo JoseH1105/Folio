@@ -4,12 +4,12 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 322 nodes · 599 edges · 24 communities (20 shown, 4 thin omitted)
-- Extraction: 89% EXTRACTED · 11% INFERRED · 0% AMBIGUOUS · INFERRED: 63 edges (avg confidence: 0.84)
+- 324 nodes · 602 edges · 24 communities (20 shown, 4 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 63 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e68d1aee`
+- Built from commit: `219ce510`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -43,9 +43,9 @@
 1. `openProject()` - 19 edges
 2. `compile()` - 15 edges
 3. `renderTree()` - 13 edges
-4. `initEditor()` - 11 edges
-5. `runCompile()` - 11 edges
-6. `openPath()` - 11 edges
+4. `runCompile()` - 11 edges
+5. `openPath()` - 11 edges
+6. `initEditor()` - 11 edges
 7. `db()` - 10 edges
 8. `normPath()` - 10 edges
 9. `activate()` - 9 edges
@@ -53,15 +53,15 @@
 
 ## Surprising Connections (you probably didn't know these)
 - `initEditor()` --indirect_call--> `latexHint()`  [INFERRED]
-  js/tex.js → js/tex.js  _Bridges community 10 → community 19_
+  js/tex.js → js/tex.js  _Bridges community 19 → community 8_
 - `resolveInput()` --indirect_call--> `normPath()`  [INFERRED]
-  js/tex.js → js/tex.js  _Bridges community 10 → community 5_
-- `init()` --calls--> `showProblems()`  [EXTRACTED]
+  js/tex.js → js/tex.js  _Bridges community 5 → community 8_
+- `syncFromPdf()` --calls--> `setView()`  [EXTRACTED]
   js/tex.js → js/tex.js  _Bridges community 10 → community 4_
-- `show()` --calls--> `init()`  [EXTRACTED]
-  js/tex.js → js/tex.js  _Bridges community 10 → community 7_
-- `initEditor()` --calls--> `compile()`  [EXTRACTED]
-  js/tex.js → js/tex.js  _Bridges community 10 → community 8_
+- `compile()` --calls--> `showPdf()`  [EXTRACTED]
+  js/tex.js → js/tex.js  _Bridges community 10 → community 9_
+- `wrapCmd()` --calls--> `editable()`  [EXTRACTED]
+  js/tex.js → js/tex.js  _Bridges community 14 → community 8_
 
 ## Import Cycles
 - None detected.
@@ -70,7 +70,7 @@
 
 ### Community 0 - "tex-engine.js"
 Cohesion: 0.07
-Nodes (37): activate(), applyZoom(), boot(), buildToc(), copyText(), download(), exportHtml(), formatRows() (+29 more)
+Nodes (39): activate(), applyMeasure(), applyZoom(), boot(), buildToc(), copyText(), download(), exportHtml() (+31 more)
 
 ### Community 1 - "package.json"
 Cohesion: 0.06
@@ -102,15 +102,15 @@ Nodes (14): copyProjectToFolder(), detectMain(), newProject(), openFileHandle(),
 
 ### Community 8 - "minilz4.cjs"
 Cohesion: 0.21
-Nodes (12): clearPdf(), collectFiles(), compile(), indexProject(), markStale(), onKey(), parseLog(), saveAll() (+4 more)
+Nodes (12): bracedArg(), enter(), init(), initEditor(), outlineActive(), renderOutline(), resolveInput(), showEmptyEditor() (+4 more)
 
 ### Community 9 - "Folio — sistema visual"
-Cohesion: 0.25
-Nodes (11): addLinks(), cssScale(), freeFarPages(), goDest(), relayout(), renderPage(), setView(), showPdf() (+3 more)
+Cohesion: 0.21
+Nodes (12): clearPdf(), collectFiles(), compile(), indexProject(), markStale(), onKey(), parseLog(), saveAll() (+4 more)
 
 ### Community 10 - "IEEEtran.cls"
-Cohesion: 0.24
-Nodes (11): bracedArg(), enter(), init(), initEditor(), outlineActive(), renderOutline(), resolveInput(), showEmptyEditor() (+3 more)
+Cohesion: 0.25
+Nodes (11): addLinks(), cssScale(), freeFarPages(), goDest(), relayout(), renderPage(), setView(), showPdf() (+3 more)
 
 ### Community 11 - "NOTICE.md"
 Cohesion: 0.31
@@ -121,12 +121,12 @@ Cohesion: 0.24
 Nodes (3): applyTheme(), initTheme(), toast()
 
 ### Community 13 - "shell.js"
-Cohesion: 0.25
-Nodes (9): applyEqTemplate(), editable(), fillTemplate(), inMath(), insertBlock(), insertHeading(), insertMathSymbol(), insertTexTable() (+1 more)
-
-### Community 14 - "sw.js"
 Cohesion: 0.22
 Nodes (8): 1. Publicarla (una sola vez, unos 10 minutos), 2. Instalarla en Windows, 3. Uso, Abrir archivos con clic derecho, Actualizar, Descargas y memoria, Folio — Markdown y LaTeX en tu escritorio, Licencia
+
+### Community 14 - "sw.js"
+Cohesion: 0.29
+Nodes (8): applyEqTemplate(), editable(), fillTemplate(), inMath(), insertBlock(), insertHeading(), insertMathSymbol(), insertTexTable()
 
 ### Community 15 - "build-site.sh"
 Cohesion: 0.33
@@ -156,12 +156,10 @@ Nodes (5): figureSnippet(), insertFigure(), latexHint(), outsideBlocks(), relFro
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Are the 2 inferred relationships involving `initEditor()` (e.g. with `latexHint()` and `visualImage()`) actually correct?**
-  _`initEditor()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `insert`, `update` to the rest of the system?**
   _2 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `tex-engine.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.06868686868686869 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06578947368421052 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Should `tex.js` be split into smaller, more focused modules?**

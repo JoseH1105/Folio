@@ -172,18 +172,83 @@
   }
   document.querySelectorAll('#modeSeg button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
 
-  /* draggable divider between the source and the sheet (Editar mode); double-click resets it */
+  /* divider between the source and the sheet (Editar mode): drag, arrow keys, double-click = half and half */
   const mdSplit = $('#mdSplit');
+  const setSplit = w => {
+    const rect = $('#work').getBoundingClientRect(); if (rect.width < 600) return;
+    w = Math.min(rect.width - 300, Math.max(300, w));
+    app.style.setProperty('--md-ed', w + 'px');
+    mdSplit.setAttribute('aria-valuenow', String(Math.round(w / rect.width * 100)));
+    placeHandles();
+  };
+  const saveSplit = () => { store.set('folio.md.split', app.style.getPropertyValue('--md-ed') || null); cmd.refresh(); placeHandles(); };
   mdSplit.addEventListener('pointerdown', e => {
     const rect = $('#work').getBoundingClientRect();
     if (rect.width < 600) return;
     e.preventDefault(); mdSplit.setPointerCapture(e.pointerId); mdSplit.classList.add('drag');
-    const move = ev => { const w = Math.min(rect.width - 280, Math.max(260, ev.clientX - rect.left)); app.style.setProperty('--md-ed', w + 'px'); };
-    const up = () => { mdSplit.classList.remove('drag'); mdSplit.removeEventListener('pointermove', move); mdSplit.removeEventListener('pointerup', up); store.set('folio.md.split', app.style.getPropertyValue('--md-ed')); cmd.refresh(); };
+    const move = ev => setSplit(ev.clientX - rect.left);
+    const up = () => { mdSplit.classList.remove('drag'); mdSplit.removeEventListener('pointermove', move); mdSplit.removeEventListener('pointerup', up); saveSplit(); };
     mdSplit.addEventListener('pointermove', move); mdSplit.addEventListener('pointerup', up);
   });
-  mdSplit.addEventListener('dblclick', () => { app.style.removeProperty('--md-ed'); store.set('folio.md.split', null); cmd.refresh(); });
+  mdSplit.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    setSplit($('.editor-pane').getBoundingClientRect().width + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 80 : 24)); saveSplit();
+  });
+  mdSplit.addEventListener('dblclick', () => { app.style.removeProperty('--md-ed'); saveSplit(); });
   if (store.get('folio.md.split')) app.style.setProperty('--md-ed', store.get('folio.md.split'));
+
+  /* text column: centered in the editor, width adjustable from either edge (symmetric) */
+  const host = $('#mdEditor'), MEASURE_DEFAULT = 720;
+  let pref = +store.get('folio.md.measure') || MEASURE_DEFAULT;   // the width the user chose
+  let measure = pref;                                               // the width that fits right now
+  const grips = ['l', 'r'].map(side => {
+    const h = document.createElement('div');
+    h.className = 'md-mh ' + side; h.tabIndex = 0;
+    h.setAttribute('role', 'separator'); h.setAttribute('aria-orientation', 'vertical');
+    h.setAttribute('aria-label', 'Ancho de la columna de texto');
+    h.title = 'Arrastra para cambiar el ancho del texto · doble clic para el ancho de lectura';
+    host.appendChild(h); return h;
+  });
+  const tip = document.createElement('div'); tip.className = 'md-mtip'; tip.hidden = true; host.appendChild(tip);
+  const maxMeasure = () => Math.max(320, host.clientWidth - 48);
+  function applyMeasure(w, show) {
+    if (!host.clientWidth) return;   // hidden (another workspace): keep the preference untouched
+    measure = Math.round(Math.min(maxMeasure(), Math.max(320, w)));
+    host.style.setProperty('--md-measure', measure + 'px');
+    placeHandles();
+    if (show) { tip.hidden = false; tip.textContent = `${Math.round(measure / cmd.defaultCharWidth())} caracteres por línea`; }
+  }
+  function placeHandles() {
+    const lines = host.querySelector('.CodeMirror-lines'); if (!lines) return;
+    const hr = host.getBoundingClientRect(), lr = lines.getBoundingClientRect();
+    if (!hr.width) return;
+    grips[0].style.left = (lr.left - hr.left - 9) + 'px';
+    grips[1].style.left = (lr.right - hr.left - 9) + 'px';
+  }
+  grips.forEach(h => {
+    const dir = h.classList.contains('r') ? 1 : -1;
+    h.addEventListener('pointerdown', e => {
+      e.preventDefault(); h.setPointerCapture(e.pointerId); h.classList.add('drag');
+      const x0 = e.clientX, w0 = measure;
+      let raf = 0, last = w0;
+      const move = ev => { last = w0 + dir * 2 * (ev.clientX - x0); applyMeasure(last, true); cancelAnimationFrame(raf); raf = requestAnimationFrame(() => cmd.refresh()); };
+      const up = () => { cancelAnimationFrame(raf); applyMeasure(last); h.classList.remove('drag'); tip.hidden = true; h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); pref = measure; store.set('folio.md.measure', pref); cmd.refresh(); placeHandles(); };
+      h.addEventListener('pointermove', move); h.addEventListener('pointerup', up);
+    });
+    h.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      const grow = (e.key === 'ArrowRight') === (dir === 1);
+      applyMeasure(measure + (grow ? 1 : -1) * (e.shiftKey ? 80 : 24), true); pref = measure; store.set('folio.md.measure', pref); cmd.refresh();
+      clearTimeout(h._t); h._t = setTimeout(() => { tip.hidden = true; }, 900);
+    });
+    h.addEventListener('dblclick', () => { applyMeasure(MEASURE_DEFAULT, true); pref = MEASURE_DEFAULT; store.set('folio.md.measure', pref); cmd.refresh(); setTimeout(() => { tip.hidden = true; }, 900); });
+  });
+  new ResizeObserver(() => applyMeasure(pref)).observe(host);
+  cmd.on('refresh', placeHandles);
+  host.style.setProperty('--md-measure', pref + 'px');
+  applyMeasure(pref);
 
   /* ---------- editor ---------- */
   let lastDirty = null;

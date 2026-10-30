@@ -6,10 +6,10 @@
     "semantic_hash": "9fca8685124e2d87c9cb2c3b46122f8c"
   },
   "js/markdown.js": {
-    "mtime": 1793339835.5874734,
-    "seen": 1793340130.8372517,
-    "ast_hash": "646039515414ca42f8f08151efc10477",
-    "semantic_hash": "646039515414ca42f8f08151efc10477"
+    "mtime": 1793344261.3659768,
+    "seen": 1793344320.2605195,
+    "ast_hash": "44e9f3a1c143cd6fb2555c75bd0ad4bc",
+    "semantic_hash": "44e9f3a1c143cd6fb2555c75bd0ad4bc"
   },
   "js/shell.js": {
     "mtime": 1793339850.231988,
@@ -24,10 +24,10 @@
     "semantic_hash": "e8d84074d76fc1826cbc11c8a85eee2f"
   },
   "js/tex.js": {
-    "mtime": 1793339791.0988853,
-    "seen": 1793340130.8372517,
-    "ast_hash": "0c5d00e5d249b5560203024dd4678574",
-    "semantic_hash": "0c5d00e5d249b5560203024dd4678574"
+    "mtime": 1793340889.500913,
+    "seen": 1793344320.2610195,
+    "ast_hash": "11f26fa4e00355abd490614609b6c7b4",
+    "semantic_hash": "11f26fa4e00355abd490614609b6c7b4"
   },
   "js/ui.js": {
     "mtime": 1792646119.9265873,

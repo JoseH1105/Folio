@@ -3,6 +3,7 @@
     "0": [
       "js_markdown",
       "js_markdown_activate",
+      "js_markdown_applymeasure",
       "js_markdown_applyzoom",
       "js_markdown_boot",
       "js_markdown_buildtoc",
@@ -33,6 +34,7 @@
       "js_markdown_openfile",
       "js_markdown_parserow",
       "js_markdown_persisthandles",
+      "js_markdown_placehandles",
       "js_markdown_prefixlines",
       "js_markdown_removedoc",
       "js_markdown_render",
@@ -226,6 +228,20 @@
       "js_tex_verifypermission"
     ],
     "8": [
+      "js_tex_bracedarg",
+      "js_tex_enter",
+      "js_tex_init",
+      "js_tex_initeditor",
+      "js_tex_outlineactive",
+      "js_tex_renderoutline",
+      "js_tex_resolveinput",
+      "js_tex_showemptyeditor",
+      "js_tex_togglecomment",
+      "js_tex_updatefilehead",
+      "js_tex_visualimage",
+      "js_tex_wrapcmd"
+    ],
+    "9": [
       "js_tex_clearpdf",
       "js_tex_collectfiles",
       "js_tex_compile",
@@ -239,7 +255,7 @@
       "js_tex_setsynctex",
       "js_tex_translate"
     ],
-    "9": [
+    "10": [
       "js_tex_addlinks",
       "js_tex_cssscale",
       "js_tex_freefarpages",
@@ -251,19 +267,6 @@
       "js_tex_stepzoom",
       "js_tex_updatepagenum",
       "js_tex_updatezoomlabel"
-    ],
-    "10": [
-      "js_tex_bracedarg",
-      "js_tex_enter",
-      "js_tex_init",
-      "js_tex_initeditor",
-      "js_tex_outlineactive",
-      "js_tex_renderoutline",
-      "js_tex_resolveinput",
-      "js_tex_showemptyeditor",
-      "js_tex_togglecomment",
-      "js_tex_updatefilehead",
-      "js_tex_visualimage"
     ],
     "11": [
       "js_visual",
@@ -291,17 +294,6 @@
       "js_ui_toast"
     ],
     "13": [
-      "js_tex_applyeqtemplate",
-      "js_tex_editable",
-      "js_tex_filltemplate",
-      "js_tex_inmath",
-      "js_tex_insertblock",
-      "js_tex_insertheading",
-      "js_tex_insertmathsymbol",
-      "js_tex_inserttextable",
-      "js_tex_wrapcmd"
-    ],
-    "14": [
       "readme",
       "readme_1_publicarla_una_sola_vez_unos_10_minutos",
       "readme_2_instalarla_en_windows",
@@ -311,6 +303,16 @@
       "readme_descargas_y_memoria",
       "readme_folio_markdown_y_latex_en_tu_escritorio",
       "readme_licencia"
+    ],
+    "14": [
+      "js_tex_applyeqtemplate",
+      "js_tex_editable",
+      "js_tex_filltemplate",
+      "js_tex_inmath",
+      "js_tex_insertblock",
+      "js_tex_insertheading",
+      "js_tex_insertmathsymbol",
+      "js_tex_inserttextable"
     ],
     "15": [
       "busytex_folio_tex_worker",
@@ -372,7 +374,7 @@
     ]
   },
   "cohesion": {
-    "0": 0.06868686868686869,
+    "0": 0.06578947368421052,
     "1": 0.06451612903225806,
     "2": 0.21666666666666667,
     "3": 0.09333333333333334,
@@ -381,12 +383,12 @@
     "6": 0.14035087719298245,
     "7": 0.2087912087912088,
     "8": 0.21212121212121213,
-    "9": 0.2545454545454545,
-    "10": 0.23636363636363636,
+    "9": 0.21212121212121213,
+    "10": 0.2545454545454545,
     "11": 0.3090909090909091,
     "12": 0.24444444444444444,
-    "13": 0.25,
-    "14": 0.2222222222222222,
+    "13": 0.2222222222222222,
+    "14": 0.2857142857142857,
     "15": 0.3333333333333333,
     "16": 0.2857142857142857,
     "17": 0.47619047619047616,
@@ -414,11 +416,6 @@
       "degree": 13
     },
     {
-      "id": "js_tex_initeditor",
-      "label": "initEditor()",
-      "degree": 11
-    },
-    {
       "id": "js_tex_engine_runcompile",
       "label": "runCompile()",
       "degree": 11
@@ -426,6 +423,11 @@
     {
       "id": "js_tex_openpath",
       "label": "openPath()",
+      "degree": 11
+    },
+    {
+      "id": "js_tex_initeditor",
+      "label": "initEditor()",
       "degree": 11
     },
     {
@@ -459,7 +461,7 @@
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 10 → community 19"
+      "note": "Bridges community 19 → community 8"
     },
     {
       "source": "resolveInput()",
@@ -470,11 +472,11 @@
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 10 → community 5"
+      "note": "Bridges community 5 → community 8"
     },
     {
-      "source": "init()",
-      "target": "showProblems()",
+      "source": "syncFromPdf()",
+      "target": "setView()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
@@ -484,34 +486,29 @@
       "note": "Bridges community 10 → community 4"
     },
     {
-      "source": "show()",
-      "target": "init()",
+      "source": "compile()",
+      "target": "showPdf()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 10 → community 7"
+      "note": "Bridges community 10 → community 9"
     },
     {
-      "source": "initEditor()",
-      "target": "compile()",
+      "source": "wrapCmd()",
+      "target": "editable()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 10 → community 8"
+      "note": "Bridges community 14 → community 8"
     }
   ],
   "questions": [
-    {
-      "type": "verify_inferred",
-      "question": "Are the 2 inferred relationships involving `initEditor()` (e.g. with `latexHint()` and `visualImage()`) actually correct?",
-      "why": "`initEditor()` has 2 INFERRED edges - model-reasoned connections that need verification."
-    },
     {
       "type": "isolated_nodes",
       "question": "What connects `insert`, `update` to the rest of the system?",
@@ -520,7 +517,7 @@
     {
       "type": "low_cohesion",
       "question": "Should `tex-engine.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.06868686868686869 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.06578947368421052 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",

@@ -61,9 +61,12 @@ tareas que se marcan con un clic, citas, referencias, imágenes y ecuaciones dib
 (KaTeX). En LaTeX el preámbulo se pliega en una fila y `\maketitle` muestra el título. La
 línea donde está el cursor siempre enseña su código, así que se edita igual que antes.
 
-**Markdown:** lectura tipo hoja, edición con vista previa (arrastra la línea entre el texto
-y la hoja para cambiar el ancho; doble clic sobre ella la centra), tablas y `Ctrl+S`
-guarda sobre el archivo original.
+**Markdown:** lectura tipo hoja, edición con vista previa, tablas y `Ctrl+S` guarda sobre
+el archivo original. El texto se escribe en una columna centrada: pasa el ratón por el
+editor y aparecen dos tiradores, uno en cada borde; arrastra cualquiera para ensanchar o
+estrechar la columna (se muestra cuántos caracteres caben por línea; doble clic vuelve al
+ancho de lectura). En **Editar**, la línea entre el texto y la hoja reparte el espacio
+(también con las flechas del teclado; doble clic la deja a la mitad).
 
 **LaTeX** (pestaña LaTeX):
 
