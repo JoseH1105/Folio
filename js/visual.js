@@ -40,6 +40,7 @@
 
   function attach(cm, kind, opts = {}) {
     let on = false, marks = [], lineCls = [], timer = null, lastCursorKey = '';
+    const imgCache = new Map();
     const doc = () => cm.getDoc();
 
     function clear() {
@@ -56,7 +57,14 @@
     const api = {
       hide(line, a, b) { if (b > a) marks.push(cm.markText({ line, ch: a }, { line, ch: b }, { replacedWith: el('span', 'cm-v-hidden'), handleMouseEvents: false })); },
       style(line, a, b, cls) { if (b > a) marks.push(cm.markText({ line, ch: a }, { line, ch: b }, { className: cls })); },
-      widget(from, to, node) { node.classList.add('cm-v-widget'); marks.push(cm.markText(from, to, { replacedWith: node, handleMouseEvents: false })); },
+      widget(from, to, node) { node.classList.add('cm-v-widget'); const m = cm.markText(from, to, { replacedWith: node, handleMouseEvents: false }); marks.push(m); return m; },
+      // an image inside a widget: resolved sources are remembered so redecorating never reloads them,
+      // and a load only re-measures its own line (a full refresh would redecorate and loop)
+      image(box, mark, key, resolve, alt) {
+        const put = url => { const img = el('img'); img.alt = alt; img.onload = () => mark.changed(); img.src = url; box.replaceChildren(img); };
+        if (imgCache.has(key)) { const url = imgCache.get(key); if (url) put(url); return; }
+        Promise.resolve(resolve()).then(url => { imgCache.set(key, url || ''); if (url && mark.find()) put(url); }).catch(() => imgCache.set(key, ''));
+      },
       line(line, cls) { const d = doc(), h = d.getLineHandle(line); if (!h) return; d.addLineClass(h, 'wrap', cls); lineCls.push([d, h, cls]); },
       el, renderMath, cleanMath, closeBrace, commentAt, cm, opts
     };
@@ -76,7 +84,7 @@
     const schedule = ms => { if (!on) return; clearTimeout(timer); timer = setTimeout(pass, ms); };
     cm.on('viewportChange', () => schedule(60));
     cm.on('changes', () => schedule(160));
-    cm.on('swapDoc', () => { marks = []; lineCls = []; schedule(0); });
+    cm.on('swapDoc', () => { marks = []; lineCls = []; imgCache.clear(); schedule(0); });
     cm.on('cursorActivity', () => { if (on && [...cursorLines()].join(',') !== lastCursorKey) schedule(0); });
 
     return {
@@ -256,8 +264,8 @@
         if (!free(mg.index, mg.index + mg[0].length)) continue;
         const box = el('span', 'cm-v-img');
         box.append(el('span', 'cm-v-muted', mg[1]));
-        if (v.opts.image) v.opts.image(mg[1]).then(url => { if (!url) return; const img = el('img'); img.src = url; img.alt = mg[1]; box.replaceChildren(img); v.cm.refresh(); }).catch(() => { });
-        v.widget({ line: i, ch: mg.index }, { line: i, ch: mg.index + mg[0].length }, box);
+        const mark = v.widget({ line: i, ch: mg.index }, { line: i, ch: mg.index + mg[0].length }, box);
+        if (v.opts.image) v.image(box, mark, mg[1], () => v.opts.image(mg[1]), mg[1]);
         busy.push([mg.index, mg.index + mg[0].length]);
       }
       // escaped characters: show the character, not the backslash
@@ -316,9 +324,10 @@
       while ((m = reImg.exec(s))) {
         if (!free(m.index, m.index + m[0].length)) continue;
         const box = el('span', 'cm-v-img');
-        if (/^(https?:|data:image\/)/.test(m[2])) { const img = el('img'); img.src = m[2]; img.alt = m[1]; img.onload = () => cm.refresh(); box.append(img); }
-        else box.append(el('span', 'cm-v-muted', 'Imagen: ' + (m[1] || m[2])));
-        v.widget({ line: i, ch: m.index }, { line: i, ch: m.index + m[0].length }, box); busy.push([m.index, m.index + m[0].length]);
+        box.append(el('span', 'cm-v-muted', 'Imagen: ' + (m[1] || m[2])));
+        const mark = v.widget({ line: i, ch: m.index }, { line: i, ch: m.index + m[0].length }, box);
+        if (/^(https?:|data:image\/)/.test(m[2])) v.image(box, mark, m[2], () => m[2], m[1]);
+        busy.push([m.index, m.index + m[0].length]);
       }
       const reLink = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
       while ((m = reLink.exec(s))) {

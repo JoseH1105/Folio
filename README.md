@@ -1,123 +1,189 @@
-# Folio — Markdown y LaTeX en tu escritorio
+# Folio
 
-Folio es una app web instalable (PWA). Se publica gratis en GitHub Pages y luego se
-instala desde Edge como una aplicación normal: ícono en el escritorio, aparece en
-**clic derecho › Abrir con** para `.md`, `.tex` y `.bib`, y funciona sin internet.
-Windows no la bloquea porque no usa scripts: Edge hace la instalación.
+**Editor de Markdown y LaTeX que se instala en tu computadora y funciona sin internet.**
+Escribe apuntes, informes y artículos con vista previa al lado, compila tus `.tex` a PDF
+como en Overleaf y abre tus archivos con doble clic desde el Explorador.
 
-## 1. Publicarla (una sola vez, unos 10 minutos)
+**[Abrir Folio](https://joseh1105.github.io/Folio/)** · gratis, sin cuenta, tus archivos se
+quedan en tu equipo.
 
-1. Entra a <https://github.com> e inicia sesión (o crea una cuenta).
-2. Arriba a la derecha: **+ › New repository**.
-   - Nombre: `folio`
-   - Visibilidad: **Public** (Pages gratis requiere repositorio público; con GitHub
-     Student Developer Pack también puedes usar uno privado).
-   - Pulsa **Create repository**.
-3. En la página del repositorio vacío, pulsa **uploading an existing file**.
-4. Abre la carpeta descomprimida `folio` en el Explorador, selecciona **todo su
-   contenido** (incluida la carpeta `.github`) y arrástralo a la página. Pulsa
-   **Commit changes**.
-5. Comprueba que existe el archivo `.github/workflows/publicar.yml`. Si no se subió
-   (a veces las carpetas que empiezan con punto se omiten):
-   **Add file › Create new file**, escribe `.github/workflows/publicar.yml` como
-   nombre, pega el contenido de ese archivo y pulsa **Commit changes**.
-6. Ve a **Settings › Pages**. En **Build and deployment › Source**, elige
-   **GitHub Actions**.
-7. Ve a la pestaña **Actions**. Verás «Publicar Folio» en ejecución (3 a 5 minutos).
-   Si aparece en rojo porque corrió antes del paso 6, ábrelo y pulsa
-   **Re-run all jobs**.
-8. Cuando termine en verde, tu app queda en `https://TU-USUARIO.github.io/folio/`.
+![Inicio de Folio con documentos Markdown y proyectos LaTeX recientes](docs/capturas/inicio.png)
 
-## 2. Instalarla en Windows
+## Para qué sirve
 
-1. Abre esa dirección en **Microsoft Edge**.
-2. En la barra de direcciones aparece el ícono **Instalar** (un cuadrado con un +).
-   También está en **⋯ › Aplicaciones › Instalar Folio**.
-3. Marca **Crear acceso directo en el escritorio** y **Anclar a la barra de tareas** si
-   lo quieres.
+- **Documentos Markdown (`.md`):** apuntes, informes, guías o notas de reunión. Escribes a
+  la izquierda y ves la hoja formateada a la derecha, con tablas, listas de tareas, código y
+  citas. Se guarda directamente sobre tu archivo.
+- **Proyectos LaTeX (`.tex`):** artículos, tesis e informes técnicos. Compila un PDF real
+  (pdfLaTeX de TeX Live) dentro de la app, con errores explicados en español, bibliografía,
+  figuras y ecuaciones.
+- **Todo en un solo lugar:** la pantalla de **Inicio** reúne tus documentos y proyectos
+  recientes para retomarlos con un clic.
 
-### Abrir archivos con clic derecho
+No necesitas instalar TeX Live, ni tener cuenta en ningún servicio, ni conexión una vez
+configurado: el motor se descarga la primera vez y queda guardado en la app.
 
-- Clic derecho en un `.md` o `.tex` › **Abrir con** › **Folio**. La primera vez Edge
-  pregunta si Folio puede abrir ese tipo de archivo: acepta.
-- Para que el doble clic abra siempre con Folio: **Abrir con › Elegir otra aplicación ›
-  Folio › Siempre**.
+## Cómo se ve
 
-## 3. Uso
+### Inicio
 
-**Inicio:** la app abre en una vista con tus documentos Markdown y tus proyectos LaTeX
-recientes, en dos columnas. Clic en uno para abrirlo; **Nuevo** y **Abrir** crean o abren
-otros; el buscador filtra por nombre. El icono de papelera los quita de Folio: los archivos
-de tu equipo nunca se borran (solo se pierde el contenido de un documento que exista
-únicamente dentro de Folio, y la app avisa antes). Cerrar una pestaña no quita el
-documento de Inicio. La guía de uso y el proyecto de ejemplo están al pie de cada columna.
+Al abrir Folio ves tus documentos Markdown y tus proyectos LaTeX recientes en dos columnas
+(la primera imagen de esta página).
+Desde aquí creas uno nuevo, abres uno de tu equipo, buscas por nombre o quitas los que ya
+no usas (los archivos de tu equipo nunca se borran).
 
-**Abrir con doble clic:** si Folio es la app predeterminada para `.md` o `.tex`, el
-archivo se abre directamente en su modo, sin pasar por Inicio.
+### Markdown
 
-**Modo Visual (Markdown y LaTeX):** el selector **Código / Visual** al inicio de la barra
-de atajos oculta la sintaxis y muestra el documento con formato: títulos, negritas, listas,
-tareas que se marcan con un clic, citas, referencias, imágenes y ecuaciones dibujadas
-(KaTeX). En LaTeX el preámbulo se pliega en una fila y `\maketitle` muestra el título. La
-línea donde está el cursor siempre enseña su código, así que se edita igual que antes.
+![Editor de Markdown en modo Visual junto a la vista de la hoja](docs/capturas/markdown.png)
 
-**Markdown:** lectura tipo hoja, edición con vista previa, tablas y `Ctrl+S` guarda sobre
-el archivo original. El texto se escribe en una columna centrada: pasa el ratón por el
-editor y aparecen dos tiradores, uno en cada borde; arrastra cualquiera para ensanchar o
-estrechar la columna (se muestra cuántos caracteres caben por línea; doble clic vuelve al
-ancho de lectura). En **Editar**, la línea entre el texto y la hoja reparte el espacio
-(también con las flechas del teclado; doble clic la deja a la mitad).
+A la izquierda está el texto en modo **Visual**: los títulos, negritas y listas se ven con
+formato y la sintaxis se oculta. La línea donde está el cursor muestra el código, así que
+editar sigue siendo exacto. A la derecha está la hoja tal como quedará. Con **Código**
+vuelves a ver el Markdown completo.
 
-**LaTeX** (pestaña LaTeX):
+### LaTeX
 
-- **Menú del proyecto › Proyecto nuevo con tu preámbulo** crea `main.tex` y
-  `figuras/` en la carpeta que elijas.
-- **Abrir carpeta de proyecto** abre un proyecto existente (como en Overleaf).
-  También puedes arrastrar la carpeta a la ventana.
-- El PDF se compila solo unos segundos después de dejar de escribir
-  (interruptor «Compilar al escribir»), o con **Compilar** / `Ctrl+Enter`.
-- **Imágenes:** arrástralas o pégalas (`Ctrl+V`, sirve para capturas de pantalla) en el
-  editor. Se copian a `figuras/` y se inserta el bloque `figure` donde está el cursor.
-- **Esquema:** debajo de los archivos aparecen las secciones del `.tex` abierto (y los
-  archivos que incluye con `\input`); clic en una para saltar a ella. La sección donde
-  está el cursor queda marcada.
-- **Ecuaciones:** el botón *f(x)* abre un menú con entornos (numerada, sin número, en
-  el texto, alineadas, por casos, matriz), estructuras (fracción, potencia, subíndice,
-  raíz, integral, sumatoria, límite, derivadas, vector, valor absoluto…) y símbolos
-  (letras griegas, ≤, ≠, ∞…). Con código seleccionado, el formato se aplica sobre él;
-  fuera de una ecuación, las estructuras se envuelven en `$…$` solas.
-- **Del PDF al código:** doble clic en una palabra del PDF y el editor salta a la línea
-  donde está escrita, con la palabra seleccionada (como en Overleaf). En Markdown, el
-  doble clic en la hoja abre el texto fuente en esa misma palabra.
-- **Disposición:** en la barra superior elige **Editor**, **Dividido** o **PDF**.
-- **Modo enfoque:** el botón de las cuatro esquinas (o `Ctrl+.`) oculta todo menos el
-  texto y el PDF; `Esc` lo cierra. También funciona en Markdown.
-- **Registro:** muestra los errores en español; clic en uno te lleva a la línea.
-- **Guardar PDF:** botón de descarga sobre el PDF o menú junto a Compilar.
+![Proyecto LaTeX: archivos y esquema, editor en modo Visual y PDF compilado](docs/capturas/latex.png)
 
-## Descargas y memoria
+Como en Overleaf: a la izquierda los archivos del proyecto y el **esquema** de secciones, en
+el centro el editor y a la derecha el PDF. En modo **Visual** el preámbulo se pliega,
+`\maketitle` muestra el título y el autor, las secciones se ven como títulos y las
+ecuaciones se dibujan. El PDF se vuelve a compilar solo unos segundos después de que dejas
+de escribir.
 
-- La primera compilación descarga el motor y la base de TeX Live (unos 125 MB).
+## Instalarlo en tu computadora
+
+Folio es una aplicación web instalable: el navegador la instala como un programa normal,
+con su ícono, su ventana propia y acceso sin conexión. No hay instalador que descargar.
+
+### Windows (Microsoft Edge o Google Chrome)
+
+1. Abre **<https://joseh1105.github.io/Folio/>** en Edge o Chrome.
+2. En la barra de direcciones aparece el botón **Instalar** (un monitor con una flecha o un
+   cuadrado con un +). También está en el menú **⋯ › Aplicaciones › Instalar Folio** (Edge)
+   o **⋮ › Transmitir, guardar y compartir › Instalar página como aplicación** (Chrome).
+3. Pulsa **Instalar**. Si te lo ofrece, marca **Crear acceso directo en el escritorio** y
+   **Anclar a la barra de tareas**.
+
+Folio queda en el menú Inicio de Windows como cualquier otro programa.
+
+### Abrir tus archivos con doble clic
+
+1. En el Explorador, clic derecho en un archivo `.md` o `.tex` › **Abrir con** ›
+   **Elegir otra aplicación**.
+2. Elige **Folio** y marca **Usar siempre esta aplicación**.
+3. La primera vez el navegador pregunta si Folio puede abrir ese tipo de archivo: acepta.
+
+Desde entonces, el doble clic abre el archivo directamente en Folio, en su modo.
+
+### macOS y Linux
+
+Funciona igual con Chrome o Edge: abre la dirección y usa **Instalar**. En Safari usa
+**Archivo › Añadir al Dock**. Para abrir archivos con doble clic, elige Folio en
+**Abrir con** del Finder o del gestor de archivos.
+
+### Actualizar y desinstalar
+
+- **Actualizar:** es automático. Cuando hay una versión nueva, Folio la usa la próxima vez
+  que la abres.
+- **Desinstalar:** dentro de Folio, menú del navegador (**⋯** arriba a la derecha) ›
+  **Desinstalar Folio**, o desde **Configuración › Aplicaciones** de Windows.
+
+## Primeros pasos
+
+- **Markdown:** en Inicio pulsa **Nuevo** (columna Markdown) o **Abrir…** para elegir un
+  `.md`. También puedes soltar el archivo sobre la ventana. Arriba eliges **Leer**,
+  **Editar** (texto y hoja lado a lado) o **Fuente** (solo texto). `Ctrl+S` guarda.
+- **LaTeX:** en Inicio pulsa **Nuevo** (columna LaTeX) y elige una carpeta: Folio crea
+  `main.tex` con un preámbulo listo y la carpeta `figuras/`. Para un proyecto que ya tienes,
+  usa **Abrir carpeta…** o suelta la carpeta en la ventana. El **Proyecto de ejemplo**
+  enseña todas las funciones.
+
+## Funciones
+
+### Markdown
+
+- Vista de hoja para leer, con índice de secciones a la izquierda.
+- Barra de formato: títulos, negrita, cursiva, enlaces, imágenes, listas, tareas, citas,
+  bloques de código y tablas (insertar, añadir filas y columnas, alinear).
+- Modo **Visual** o **Código** en el editor.
+- **Columna de texto ajustable:** pasa el ratón por el editor y arrastra cualquiera de los
+  dos tiradores laterales; la columna se mantiene centrada.
+- La línea entre el texto y la hoja reparte el espacio (también con las flechas del teclado).
+- **Doble clic en la hoja** abre el texto en esa misma palabra.
+- Exportar como HTML, imprimir o guardar en PDF.
+
+### LaTeX
+
+- **Compilación real a PDF** (pdfLaTeX + BibTeX) dentro de la app, automática al escribir o
+  con **Compilar** (`Ctrl+Enter`).
+- **Errores en español** en el panel de problemas; clic en uno y saltas a la línea.
+- **Doble clic en el PDF** salta a la línea del código donde está esa palabra (SyncTeX).
+- **Esquema** de secciones y de los archivos incluidos con `\input`.
+- **Menú de ecuaciones** (*f(x)*): fracciones, potencias, subíndices, raíces, integrales,
+  sumatorias, límites, derivadas, matrices y símbolos. Si tienes código seleccionado, el
+  formato se aplica sobre él.
+- **Imágenes:** arrástralas o pégalas (`Ctrl+V`) en el editor; se copian a `figuras/` y se
+  inserta la figura.
+- Autocompletado de comandos, `\ref`, `\cite` y archivos.
+- Disposición **Editor**, **Dividido** o **PDF**, y **modo enfoque** (`Ctrl+.`).
+- Incluye la clase **IEEEtran** con sus estilos de bibliografía.
+
+### General
+
+- Tema oscuro y claro.
+- Funciona sin internet una vez instalado.
+- Tus archivos se leen y guardan directamente en tu equipo; no se suben a ningún servidor.
+
+## Atajos de teclado
+
+| Acción | Atajo |
+| --- | --- |
+| Guardar | `Ctrl+S` |
+| Guardar como (Markdown) | `Ctrl+Shift+S` |
+| Abrir | `Ctrl+O` |
+| Alternar leer y editar (Markdown) | `Ctrl+E` |
+| Negrita / cursiva | `Ctrl+B` / `Ctrl+I` |
+| Enlace (Markdown) | `Ctrl+K` |
+| Compilar (LaTeX) | `Ctrl+Enter` |
+| Autocompletar comando (LaTeX) | `Ctrl+Espacio` |
+| Comentar líneas (LaTeX) | `Ctrl+/` |
+| Ir a la línea (LaTeX) | `Ctrl+G` |
+| Modo enfoque | `Ctrl+.` (salir con `Esc`) |
+
+## Sin conexión y almacenamiento
+
+- La primera compilación de LaTeX descarga el motor y la base de TeX Live (unos 125 MB).
   Queda guardada en la app y no se vuelve a descargar.
-- Los paquetes que no están en la base (por ejemplo `booktabs`, `listings`,
-  `subcaption`, `xurl`, `babel` en español) se descargan archivo por archivo la
-  primera vez que un documento los pide (pocos KB cada uno) y se reutilizan en todos
-  tus proyectos.
-- Después de eso compila sin internet.
-- Folio trae las colecciones habituales de TeX Live, pero no todas las clases de revistas y
-  congresos (las de Overleaf vienen de TeX Live completo). Incluye **IEEEtran** con sus
-  estilos de bibliografía. Si una plantilla usa otra clase (`elsarticle`, `acmart`,
-  `llncs`…), copia su archivo `.cls` (viene en la plantilla de la revista o en CTAN) a la
+- Los paquetes que no están en la base (por ejemplo `booktabs`, `listings` o `babel` en
+  español) se descargan uno a uno la primera vez que un documento los pide y se reutilizan
+  en todos tus proyectos. Después de eso, Folio compila sin internet.
+- **Motor y paquetes descargados…** (menú junto a Compilar) muestra cuánto ocupa y permite
+  borrarlo.
+- Folio no trae todas las clases de revistas y congresos que tiene Overleaf. Si una
+  plantilla usa otra clase (`elsarticle`, `acmart`, `llncs`…), copia su archivo `.cls` a la
   carpeta del proyecto, junto al archivo principal.
-- El motor se reinicia solo cada 30 compilaciones y se apaga tras 10 minutos sin uso
-  para liberar memoria. **Motor y paquetes descargados…** (menú junto a Compilar)
-  muestra cuánto ocupa y permite borrarlo.
 
-## Actualizar
+## Para desarrolladores
 
-Sube los archivos nuevos al repositorio; la acción vuelve a publicar sola. La app
-instalada usa la versión nueva la próxima vez que la abras.
+Folio es HTML, CSS y JavaScript sin framework, con
+[CodeMirror 5](https://codemirror.net/5/), [PDF.js](https://mozilla.github.io/pdf.js/),
+[KaTeX](https://katex.org/) y el motor [BusyTeX](https://github.com/TeXlyre/texlyre-busytex)
+(TeX Live en WebAssembly).
+
+- `index.html`: interfaz y estilos. El sistema visual está descrito en [DESIGN.md](DESIGN.md).
+- `js/`: `home.js` (Inicio), `markdown.js`, `tex.js` y `tex-engine.js` (LaTeX), `visual.js`
+  (modo Visual), `shell.js` (arranque y apertura de archivos), `ui.js` (utilidades).
+- `tools/build-site.sh`: construye el sitio completo con el motor y el espejo de paquetes.
+  Lo ejecuta la acción de GitHub [`publicar.yml`](.github/workflows/publicar.yml) en cada
+  `push` a `main` y lo publica en GitHub Pages.
+- `graphify-out/`: mapa del código generado con graphify.
+
+**Publicar tu propia copia:** haz un fork, ve a **Settings › Pages › Source** y elige
+**GitHub Actions**. La acción construye y publica el sitio en
+`https://TU-USUARIO.github.io/Folio/`.
 
 ## Licencia
 
-AGPL-3.0-or-later, por el motor BusyTeX (ver `LICENSE` y `NOTICE.md`).
+AGPL-3.0-or-later, por el motor BusyTeX. Ver [LICENSE](LICENSE) y los avisos de terceros en
+[NOTICE.md](NOTICE.md).
