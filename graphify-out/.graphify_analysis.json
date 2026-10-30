@@ -6,11 +6,15 @@
       "js_markdown_applyzoom",
       "js_markdown_boot",
       "js_markdown_buildtoc",
-      "js_markdown_carettop",
+      "js_markdown_clientheight",
       "js_markdown_copytext",
+      "js_markdown_disabled",
       "js_markdown_download",
       "js_markdown_exporthtml",
+      "js_markdown_focus",
+      "js_markdown_forget",
       "js_markdown_formatrows",
+      "js_markdown_hasfocus",
       "js_markdown_hasunsavedondisk",
       "js_markdown_heading",
       "js_markdown_insertblock",
@@ -33,18 +37,61 @@
       "js_markdown_removedoc",
       "js_markdown_render",
       "js_markdown_rendertabs",
+      "js_markdown_replace",
       "js_markdown_replacerange",
       "js_markdown_save",
+      "js_markdown_scrollheight",
+      "js_markdown_scrolltop",
+      "js_markdown_select",
+      "js_markdown_selectionend",
+      "js_markdown_selectionstart",
       "js_markdown_setmode",
+      "js_markdown_setselectionrange",
+      "js_markdown_showdoc",
       "js_markdown_status",
       "js_markdown_tableatcaret",
       "js_markdown_tableop",
       "js_markdown_tocactive",
       "js_markdown_toggletoc",
       "js_markdown_tohtml",
+      "js_markdown_value",
       "js_markdown_wrap"
     ],
     "1": [
+      "github_workflows_publicar",
+      "github_workflows_publicar_build_runs_on",
+      "github_workflows_publicar_build_steps",
+      "github_workflows_publicar_concurrency",
+      "github_workflows_publicar_concurrency_cancel_in_progress",
+      "github_workflows_publicar_concurrency_group",
+      "github_workflows_publicar_deploy_environment",
+      "github_workflows_publicar_deploy_needs",
+      "github_workflows_publicar_deploy_runs_on",
+      "github_workflows_publicar_deploy_steps",
+      "github_workflows_publicar_environment_name",
+      "github_workflows_publicar_environment_url",
+      "github_workflows_publicar_jobs",
+      "github_workflows_publicar_jobs_build",
+      "github_workflows_publicar_jobs_deploy",
+      "github_workflows_publicar_name",
+      "github_workflows_publicar_on",
+      "github_workflows_publicar_on_push",
+      "github_workflows_publicar_on_workflow_dispatch",
+      "github_workflows_publicar_permissions",
+      "github_workflows_publicar_permissions_contents",
+      "github_workflows_publicar_permissions_id_token",
+      "github_workflows_publicar_permissions_pages",
+      "github_workflows_publicar_push_branches",
+      "github_workflows_publicar_steps_id",
+      "github_workflows_publicar_steps_name",
+      "github_workflows_publicar_steps_run",
+      "github_workflows_publicar_steps_uses",
+      "github_workflows_publicar_steps_with",
+      "github_workflows_publicar_with_key",
+      "github_workflows_publicar_with_node_version",
+      "github_workflows_publicar_with_path"
+    ],
+    "2": [
       "js_tex_engine",
       "js_tex_engine_armidle",
       "js_tex_engine_cachestats",
@@ -71,7 +118,7 @@
       "js_tex_engine_trimcache",
       "js_tex_engine_writecache"
     ],
-    "2": [
+    "3": [
       "ref_fs",
       "ref_path",
       "tools_build_mirror",
@@ -98,59 +145,56 @@
       "tools_minilz4_compresspackage",
       "tools_minilz4_uncompress"
     ],
-    "3": [
+    "4": [
       "js_tex",
-      "js_tex_clearpdf",
-      "js_tex_collectfiles",
-      "js_tex_compile",
+      "js_tex_appdir",
+      "js_tex_applylinemarks",
       "js_tex_enginedialog",
-      "js_tex_figuresnippet",
       "js_tex_forget",
-      "js_tex_indexproject",
-      "js_tex_insertfigure",
-      "js_tex_latexhint",
-      "js_tex_markstale",
-      "js_tex_onkey",
+      "js_tex_loadsynctex",
       "js_tex_openeqmenu",
       "js_tex_openpdf",
-      "js_tex_outsideblocks",
-      "js_tex_parselog",
+      "js_tex_opensample",
+      "js_tex_pdfwordat",
       "js_tex_project",
       "js_tex_recents",
-      "js_tex_relfrom",
-      "js_tex_saveandcompile",
-      "js_tex_setcompiling",
-      "js_tex_setsynctex",
-      "js_tex_translate"
+      "js_tex_renderloglist",
+      "js_tex_resetsample",
+      "js_tex_sampleplotpng",
+      "js_tex_setlayout",
+      "js_tex_showproblems",
+      "js_tex_syncfrompdf",
+      "js_tex_synclookup",
+      "js_tex_togglelog"
     ],
-    "4": [
+    "5": [
       "js_tex_addfiles",
       "js_tex_addimage",
       "js_tex_deletepath",
-      "js_tex_detectmain",
       "js_tex_dirhandlefor",
       "js_tex_newfile",
       "js_tex_newfolder",
       "js_tex_nodemenu",
       "js_tex_normpath",
       "js_tex_ondrop",
+      "js_tex_openpath",
+      "js_tex_refresh",
       "js_tex_renamepath",
       "js_tex_renderheader",
       "js_tex_rendertree",
-      "js_tex_resolveinput",
       "js_tex_savefile",
       "js_tex_savepdf",
       "js_tex_setmain",
-      "js_tex_showemptyeditor",
       "js_tex_uniquepath",
       "js_tex_writefile"
     ],
-    "5": [
+    "6": [
       "package",
       "package_dependencies",
       "package_dependencies_codemirror",
       "package_dependencies_dompurify",
       "package_dependencies_highlightjs_cdn_assets",
+      "package_dependencies_katex",
       "package_dependencies_marked",
       "package_dependencies_pdfjs_dist",
       "package_description",
@@ -161,57 +205,80 @@
       "ref_codemirror",
       "ref_dompurify",
       "ref_highlightjs_cdn_assets",
+      "ref_katex",
       "ref_marked",
       "ref_pdfjs_dist"
     ],
-    "6": [
-      "js_tex_addlinks",
-      "js_tex_cssscale",
-      "js_tex_freefarpages",
-      "js_tex_godest",
-      "js_tex_loadsynctex",
-      "js_tex_pdfwordat",
-      "js_tex_relayout",
-      "js_tex_renderpage",
-      "js_tex_setlayout",
-      "js_tex_setview",
-      "js_tex_showpdf",
-      "js_tex_stepzoom",
-      "js_tex_syncfrompdf",
-      "js_tex_synclookup",
-      "js_tex_updatepagenum",
-      "js_tex_updatezoomlabel"
-    ],
     "7": [
-      "js_tex_applylinemarks",
-      "js_tex_bracedarg",
-      "js_tex_enter",
-      "js_tex_init",
-      "js_tex_initeditor",
-      "js_tex_openpath",
-      "js_tex_outlineactive",
-      "js_tex_renderloglist",
-      "js_tex_renderoutline",
-      "js_tex_showproblems",
-      "js_tex_togglecomment",
-      "js_tex_togglelog",
-      "js_tex_updatefilehead"
-    ],
-    "8": [
       "js_tex_copyprojecttofolder",
+      "js_tex_detectmain",
       "js_tex_newproject",
       "js_tex_openfilehandle",
       "js_tex_openfolderdialog",
       "js_tex_openfromlaunch",
       "js_tex_openproject",
       "js_tex_projectidfor",
-      "js_tex_refresh",
       "js_tex_renderbanner",
-      "js_tex_saveall",
+      "js_tex_reopen",
       "js_tex_scandir",
-      "js_tex_scandir_walk"
+      "js_tex_scandir_walk",
+      "js_tex_show",
+      "js_tex_verifypermission"
+    ],
+    "8": [
+      "js_tex_clearpdf",
+      "js_tex_collectfiles",
+      "js_tex_compile",
+      "js_tex_indexproject",
+      "js_tex_markstale",
+      "js_tex_onkey",
+      "js_tex_parselog",
+      "js_tex_saveall",
+      "js_tex_saveandcompile",
+      "js_tex_setcompiling",
+      "js_tex_setsynctex",
+      "js_tex_translate"
     ],
     "9": [
+      "js_tex_addlinks",
+      "js_tex_cssscale",
+      "js_tex_freefarpages",
+      "js_tex_godest",
+      "js_tex_relayout",
+      "js_tex_renderpage",
+      "js_tex_setview",
+      "js_tex_showpdf",
+      "js_tex_stepzoom",
+      "js_tex_updatepagenum",
+      "js_tex_updatezoomlabel"
+    ],
+    "10": [
+      "js_tex_bracedarg",
+      "js_tex_enter",
+      "js_tex_init",
+      "js_tex_initeditor",
+      "js_tex_outlineactive",
+      "js_tex_renderoutline",
+      "js_tex_resolveinput",
+      "js_tex_showemptyeditor",
+      "js_tex_togglecomment",
+      "js_tex_updatefilehead",
+      "js_tex_visualimage"
+    ],
+    "11": [
+      "js_visual",
+      "js_visual_attach",
+      "js_visual_attach_clear",
+      "js_visual_attach_cursorlines",
+      "js_visual_attach_pass",
+      "js_visual_bindtoggle",
+      "js_visual_closebrace",
+      "js_visual_decoratemd",
+      "js_visual_decoratetex",
+      "js_visual_rendermath",
+      "js_visual_titleblock"
+    ],
+    "12": [
       "js_ui",
       "js_ui_applytheme",
       "js_ui_bindmenu",
@@ -223,7 +290,7 @@
       "js_ui_set",
       "js_ui_toast"
     ],
-    "10": [
+    "13": [
       "js_tex_applyeqtemplate",
       "js_tex_editable",
       "js_tex_filltemplate",
@@ -234,7 +301,7 @@
       "js_tex_inserttextable",
       "js_tex_wrapcmd"
     ],
-    "11": [
+    "14": [
       "readme",
       "readme_1_publicarla_una_sola_vez_unos_10_minutos",
       "readme_2_instalarla_en_windows",
@@ -245,7 +312,7 @@
       "readme_folio_markdown_y_latex_en_tu_escritorio",
       "readme_licencia"
     ],
-    "12": [
+    "15": [
       "busytex_folio_tex_worker",
       "busytex_folio_tex_worker_collectnew",
       "busytex_folio_tex_worker_currentmodule",
@@ -254,7 +321,7 @@
       "busytex_folio_tex_worker_parseremotename",
       "busytex_folio_tex_worker_send"
     ],
-    "13": [
+    "16": [
       "design",
       "design_color",
       "design_disposición",
@@ -263,7 +330,7 @@
       "design_movimiento",
       "design_tipografía"
     ],
-    "14": [
+    "17": [
       "js_home",
       "js_home_ago",
       "js_home_openitem",
@@ -272,61 +339,63 @@
       "js_home_render",
       "js_home_row"
     ],
-    "15": [
-      "js_tex_appdir",
-      "js_tex_opensample",
-      "js_tex_reopen",
-      "js_tex_resetsample",
-      "js_tex_sampleplotpng",
-      "js_tex_show",
-      "js_tex_verifypermission"
-    ],
-    "16": [
+    "18": [
       "js_shell",
+      "js_shell_openlaunched",
       "js_shell_setws",
       "js_shell_setzen",
       "js_shell_ws"
     ],
-    "17": [
+    "19": [
+      "js_tex_figuresnippet",
+      "js_tex_insertfigure",
+      "js_tex_latexhint",
+      "js_tex_outsideblocks",
+      "js_tex_relfrom"
+    ],
+    "20": [
       "dml_insert",
       "dml_update",
       "texmf_extra_ieeetran"
     ],
-    "18": [
+    "21": [
       "notice",
       "notice_avisos_de_terceros"
     ],
-    "19": [
+    "22": [
       "sw",
       "sw_shell_files"
     ],
-    "20": [
+    "23": [
       "tools_build_site",
       "tools_build_site_sh__entry"
     ]
   },
   "cohesion": {
-    "0": 0.10452961672473868,
-    "1": 0.21666666666666667,
-    "2": 0.09333333333333334,
-    "3": 0.15019762845849802,
-    "4": 0.21578947368421053,
-    "5": 0.11764705882352941,
-    "6": 0.15833333333333333,
-    "7": 0.20512820512820512,
-    "8": 0.25757575757575757,
-    "9": 0.24444444444444444,
-    "10": 0.25,
-    "11": 0.2222222222222222,
-    "12": 0.3333333333333333,
-    "13": 0.2857142857142857,
-    "14": 0.47619047619047616,
-    "15": 0.38095238095238093,
-    "16": 0.6666666666666666,
-    "17": 0.6666666666666666,
-    "18": 1.0,
-    "19": 1.0,
-    "20": 1.0
+    "0": 0.06868686868686869,
+    "1": 0.06451612903225806,
+    "2": 0.21666666666666667,
+    "3": 0.09333333333333334,
+    "4": 0.15789473684210525,
+    "5": 0.2573099415204678,
+    "6": 0.14035087719298245,
+    "7": 0.2087912087912088,
+    "8": 0.21212121212121213,
+    "9": 0.2545454545454545,
+    "10": 0.23636363636363636,
+    "11": 0.3090909090909091,
+    "12": 0.24444444444444444,
+    "13": 0.25,
+    "14": 0.2222222222222222,
+    "15": 0.3333333333333333,
+    "16": 0.2857142857142857,
+    "17": 0.47619047619047616,
+    "18": 0.6,
+    "19": 0.4,
+    "20": 0.6666666666666666,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0
   },
   "gods": [
     {
@@ -345,6 +414,11 @@
       "degree": 13
     },
     {
+      "id": "js_tex_initeditor",
+      "label": "initEditor()",
+      "degree": 11
+    },
+    {
       "id": "js_tex_engine_runcompile",
       "label": "runCompile()",
       "degree": 11
@@ -360,8 +434,8 @@
       "degree": 10
     },
     {
-      "id": "js_tex_initeditor",
-      "label": "initEditor()",
+      "id": "js_tex_normpath",
+      "label": "normPath()",
       "degree": 10
     },
     {
@@ -372,11 +446,6 @@
     {
       "id": "js_tex_insertfigure",
       "label": "insertFigure()",
-      "degree": 9
-    },
-    {
-      "id": "js_tex_normpath",
-      "label": "normPath()",
       "degree": 9
     }
   ],
@@ -390,22 +459,33 @@
       ],
       "confidence": "INFERRED",
       "relation": "indirect_call",
-      "note": "Bridges community 3 → community 7"
+      "note": "Bridges community 10 → community 19"
     },
     {
-      "source": "insertFigure()",
-      "target": "insertBlock()",
+      "source": "resolveInput()",
+      "target": "normPath()",
+      "source_files": [
+        "js/tex.js",
+        "js/tex.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "indirect_call",
+      "note": "Bridges community 10 → community 5"
+    },
+    {
+      "source": "init()",
+      "target": "showProblems()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 10 → community 3"
+      "note": "Bridges community 10 → community 4"
     },
     {
-      "source": "initEditor()",
-      "target": "wrapCmd()",
+      "source": "show()",
+      "target": "init()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
@@ -415,58 +495,47 @@
       "note": "Bridges community 10 → community 7"
     },
     {
-      "source": "openSample()",
-      "target": "openProject()",
+      "source": "initEditor()",
+      "target": "compile()",
       "source_files": [
         "js/tex.js",
         "js/tex.js"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 15 → community 8"
-    },
-    {
-      "source": "openSample()",
-      "target": "showEmptyEditor()",
-      "source_files": [
-        "js/tex.js",
-        "js/tex.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 15 → community 4"
+      "note": "Bridges community 10 → community 8"
     }
   ],
   "questions": [
     {
-      "type": "bridge_node",
-      "question": "Why does `scanDir()` connect `minilz4.cjs` to `tex.js`?",
-      "why": "High betweenness centrality (0.003) - this node is a cross-community bridge."
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `initEditor()` (e.g. with `latexHint()` and `visualImage()`) actually correct?",
+      "why": "`initEditor()` has 2 INFERRED edges - model-reasoned connections that need verification."
     },
     {
       "type": "isolated_nodes",
-      "question": "What connects `insert`, `update`, `codemirror` to the rest of the system?",
-      "why": "7 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "question": "What connects `insert`, `update` to the rest of the system?",
+      "why": "2 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
       "question": "Should `tex-engine.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.10452961672473868 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "bridge_node",
-      "question": "Why does `openProject()` connect `minilz4.cjs` to `tex.js`, `markdown.js`, `build-site.sh`, `Folio — Markdown y LaTeX en tu escritorio`?",
-      "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
+      "why": "Cohesion score 0.06868686868686869 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `build-mirror.cjs` be split into smaller, more focused modules?",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `tex.js` be split into smaller, more focused modules?",
       "why": "Cohesion score 0.09333333333333334 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `ui.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected."
+      "question": "Should `folio-tex-worker.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14035087719298245 - nodes in this community are weakly interconnected."
     }
   ]
 }

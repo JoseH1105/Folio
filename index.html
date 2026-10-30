@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="vendor/codemirror/codemirror.css">
 <link rel="stylesheet" href="vendor/codemirror/dialog.css">
 <link rel="stylesheet" href="vendor/codemirror/show-hint.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
 <script>
   /* apply the saved theme before first paint (dark unless the user chose otherwise) */
   try { const t = localStorage.getItem('folio.theme'); if (t !== 'system') document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark'; } catch (e) { document.documentElement.dataset.theme = 'dark'; }
@@ -206,7 +207,9 @@ svg{flex:none}
 .work{display:grid;min-height:0;position:relative}
 .ws-md[data-mode="read"] .work{grid-template-columns:248px minmax(0,1fr)}
 .ws-md[data-mode="read"].toc-off .work{grid-template-columns:minmax(0,1fr)}
-.ws-md[data-mode="edit"] .work{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.ws-md[data-mode="edit"] .work{grid-template-columns:var(--md-ed,minmax(0,1fr)) 1px minmax(0,1fr)}
+.md-split{display:none}
+.ws-md[data-mode="edit"] .md-split{display:block}
 .ws-md[data-mode="source"] .work{grid-template-columns:minmax(0,1fr)}
 .ws-md:not([data-mode="read"]) .toc,.ws-md.toc-off .toc{display:none}
 .ws-md[data-mode="read"] .editor-pane{display:none}
@@ -221,11 +224,21 @@ svg{flex:none}
 .toc .l2{padding-left:22px}
 .toc .l3{padding-left:34px;font-size:12.5px}
 .toc .none{color:var(--ink-3);font-size:13px;padding:0 10px}
-.editor-pane{display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--line);background:var(--bg-2)}
-.ws-md[data-mode="source"] .editor-pane{border-right:0}
-#editor{flex:1;width:100%;min-height:0;border:0;resize:none;background:var(--bg-2);color:var(--ink);caret-color:var(--accent);
-  font:13.5px/1.75 var(--f-mono);tab-size:2;padding:28px max(20px,env(safe-area-inset-right,0px)) 40vh max(28px,env(safe-area-inset-left,0px));outline:none}
-.ws-md[data-mode="source"] #editor{max-width:880px;margin:0 auto;padding-left:max(32px,env(safe-area-inset-left,0px))}
+.editor-pane{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg-2)}
+.md-cm{flex:1;min-height:0;position:relative}
+.md-cm .CodeMirror{position:absolute;inset:0;height:auto;font:13.5px/1.75 var(--f-mono)}
+.md-cm .CodeMirror-lines{padding:28px 0 40vh}
+.md-cm .CodeMirror pre.CodeMirror-line,.md-cm .CodeMirror pre.CodeMirror-line-like{padding:0 24px 0 28px}
+.ws-md[data-mode="source"] .md-cm .CodeMirror-lines{max-width:880px;margin:0 auto}
+.md-cm .cm-header{color:var(--ink);font-weight:700}
+.md-cm .cm-formatting{color:var(--ink-3)}
+.md-cm .cm-strong{font-weight:700} .md-cm .cm-em{font-style:italic} .md-cm .cm-strikethrough{text-decoration:line-through}
+.md-cm .cm-link{color:var(--accent)} .md-cm .cm-url,.md-cm .cm-string.cm-url{color:var(--ink-3)}
+.md-cm .cm-quote{color:var(--ink-2);font-style:italic}
+.md-cm .cm-s-default .cm-variable-2,.md-cm .cm-s-default .cm-variable-3,.md-cm .cm-s-default .cm-keyword{color:inherit}
+.md-cm .cm-s-default .cm-formatting-list{color:var(--hl-env)}
+.md-cm .cm-s-default .cm-comment{color:var(--hl-math);font-style:normal}
+.md-cm .cm-hr{color:var(--ink-3)}
 .viewer{overflow:auto;min-width:0;min-height:0;position:relative;background:var(--bg-0);
   padding:36px max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px))}
 .page{zoom:var(--zoom);width:100%;max-width:794px;min-height:min(1123px,140vw);margin:0 auto;background:var(--page);box-shadow:var(--sheet-shadow);padding:76px 88px 100px;border-radius:4px;position:relative}
@@ -442,6 +455,68 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
 .cm-searching{background:var(--mark)}
 .cm-sync-flash{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
 
+/* ---------- Visual mode (decorated editor) ---------- */
+.vis-seg{margin-right:4px}
+.vis-seg button{height:28px;padding:0 12px;font-size:14px}
+.vis-seg button[aria-pressed="true"][data-v="visual"]{background:var(--accent);color:var(--accent-ink)}
+.cm-visual.CodeMirror{font:16.5px/1.7 var(--f-doc)}
+.cm-visual .CodeMirror-lines{max-width:820px;margin:0 auto}
+.cm-visual .cm-tag,.cm-visual .cm-bracket,.cm-visual .cm-keyword,.cm-visual .cm-variable-2,.cm-visual .cm-atom,.cm-visual .cm-builtin,.cm-visual .cm-number{font-family:var(--f-mono);font-size:.82em}
+.cm-visual-md .cm-variable-2,.cm-visual-md .cm-variable-3,.cm-visual-md .cm-keyword,.cm-visual-md .cm-number{font-family:inherit;font-size:inherit}
+.cm-visual-md .cm-comment,.cm-visual-md .cm-formatting{font-family:var(--f-mono);font-size:.84em}
+.cm-visual .CodeMirror-activeline-background{background:color-mix(in srgb,var(--bg-3) 55%,transparent)}
+.cm-v-hidden{display:none}
+.cm-v-widget{cursor:text}
+.cm-v-b{font-weight:700} .cm-v-i{font-style:italic} .cm-v-u{text-decoration:underline;text-underline-offset:3px} .cm-v-s{text-decoration:line-through;color:var(--ink-2)}
+.cm-v-sc{font-variant:small-caps;letter-spacing:.03em}
+.cm-v-tt{font-family:var(--f-mono);font-size:.84em;background:var(--code-bg);border-radius:4px;padding:.1em .3em}
+.cm-v-link{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.cm-v-caption{font-style:italic;color:var(--ink-2)}
+.cm-v-h0 .CodeMirror-line,.cm-v-h1{font-size:1.75em;font-weight:700;letter-spacing:-.015em}
+.cm-v-h0,.cm-v-h1{padding-top:.6em}
+.cm-v-h2{font-size:1.42em;font-weight:700;padding-top:.55em;letter-spacing:-.01em}
+.cm-v-h3{font-size:1.2em;font-weight:700;padding-top:.4em}
+.cm-v-h4,.cm-v-h5{font-size:1.05em;font-weight:700;padding-top:.3em}
+.cm-v-md-h1{font-size:1.9em;font-weight:700;letter-spacing:-.02em;padding-top:.4em}
+.cm-v-md-h2{font-size:1.45em;font-weight:700;padding-top:.5em;border-bottom:1px solid var(--line)}
+.cm-v-md-h3{font-size:1.2em;font-weight:700;padding-top:.35em}
+.cm-v-md-h4,.cm-v-md-h5,.cm-v-md-h6{font-size:1.02em;font-weight:700}
+.cm-v-title{font-size:1.6em;font-weight:600;text-align:center;letter-spacing:-.01em}
+.cm-v-author,.cm-v-date{text-align:center;color:var(--ink-2)}
+.cm-v-quote{border-left:3px solid var(--accent-line);padding-left:12px!important;color:var(--ink-2);font-style:italic}
+.cm-v-comment-line,.cm-v-comment{opacity:.45}
+.cm-v-table{font-family:var(--f-mono);font-size:.82em}
+.cm-v-codeline{font-family:var(--f-mono);font-size:.82em;background:var(--code-bg)}
+.cm-v-fence{font-family:var(--f-mono);font-size:.78em;color:var(--ink-3);background:var(--code-bg)}
+.cm-v-done{color:var(--ink-3);text-decoration:line-through}
+.cm-v-bullet{display:inline-block;min-width:1.4em;color:var(--accent);font-weight:600}
+.cm-v-bullet.named{min-width:0;margin-right:.4em;font-weight:700;color:var(--ink)}
+.cm-v-task{display:inline-block;width:.95em;height:.95em;margin:0 .45em -.1em 0;border:1.5px solid var(--ink-3);border-radius:3px;cursor:pointer;vertical-align:baseline}
+.cm-v-task.done{background:var(--accent);border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--bg-2)}
+.cm-v-env{display:inline-block;font:500 11px/1 var(--f-ui);color:var(--ink-3);background:var(--bg-3);border:1px solid var(--line);border-radius:5px;padding:4px 8px;letter-spacing:.02em}
+.cm-v-env.end{opacity:.7}
+.cm-v-pill{font:600 10.5px/1 var(--f-ui);text-transform:uppercase;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:4px 6px;margin-right:10px}
+.cm-v-muted{font:12px var(--f-ui);color:var(--ink-3)}
+.cm-v-preamble{display:flex;align-items:center;padding:8px 12px;margin:2px 0 10px;border:1px dashed var(--line-2);border-radius:8px;background:var(--bg-1)}
+.cm-v-abstract{text-align:center;font-weight:700;font-size:1.05em;padding:.6em 0 .2em;letter-spacing:.02em}
+.cm-v-rule{height:1px;background:var(--line-2);margin:.8em 0}
+.cm-v-ref{font:500 .78em var(--f-ui);border-radius:4px;padding:.12em .4em;white-space:nowrap}
+.cm-v-ref.cite{color:var(--info);background:color-mix(in srgb,var(--info) 13%,transparent)}
+.cm-v-ref.ref{color:var(--accent);background:var(--accent-soft)}
+.cm-v-ref.label{color:var(--ink-3);background:var(--bg-3)}
+.cm-v-math{font-size:1.02em;padding:0 .1em}
+.cm-v-eq{position:relative;padding:.5em 3em;margin:.2em 0;border-radius:8px;text-align:center;overflow-x:auto}
+.cm-v-eq:hover,.cm-v-img:hover{background:var(--bg-3)}
+.cm-v-eqlabel{position:absolute;right:10px;top:50%;transform:translateY(-50%);font:11px var(--f-mono);color:var(--ink-3)}
+.cm-v-img{display:inline-block;max-width:100%;border-radius:6px;padding:4px}
+.cm-v-img img{display:block;max-width:min(100%,520px);max-height:320px;border-radius:4px;background:#fff}
+.katex{color:var(--ink)}
+.CodeMirror :focus-visible{outline:none}
+.cm-v-titleblock{text-align:center;padding:.8em 0 1em}
+.cm-v-tb-title{font-size:1.6em;font-weight:600;line-height:1.25;letter-spacing:-.01em;white-space:pre-line}
+.cm-v-tb-author{margin-top:.5em;color:var(--ink-2);white-space:pre-line}
+.cm-v-tb-date{margin-top:.3em;color:var(--ink-3);font-size:.92em}
+
 /* ---------- overlays ---------- */
 .drop{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--bg-0) 60%,transparent);display:grid;place-items:center;pointer-events:none;backdrop-filter:blur(3px)}
 .drop div{background:var(--bg-2);border:1.5px dashed var(--accent);border-radius:16px;padding:34px 48px;text-align:center;box-shadow:var(--shadow-2);max-width:90vw}
@@ -578,7 +653,8 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
   .bar-div{display:none}
   .btn .lbl-long,.ws-seg .lbl-long{display:none}
   .ws-md[data-mode="edit"] .work{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr)}
-  .ws-md[data-mode="edit"] .editor-pane{border-right:0;border-bottom:1px solid var(--line)}
+  .ws-md[data-mode="edit"] .editor-pane{border-bottom:1px solid var(--line)}
+  .ws-md[data-mode="edit"] .md-split{display:none}
   .page{padding:40px 26px 72px}
   .page-foot{left:26px;right:26px;bottom:22px}
   .doc{font-size:16px}
@@ -710,6 +786,8 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
   <!-- ================= Markdown workspace ================= -->
   <div class="ws ws-md" id="app" data-mode="read">
     <div class="toolbar" id="toolbar" role="toolbar" aria-label="Formato">
+      <div class="seg vis-seg" role="group" aria-label="Modo del editor" id="mdVisSeg" title="Visual oculta el código y muestra el formato; la línea del cursor sigue mostrando el código"><button data-v="code" aria-pressed="true">Código</button><button data-v="visual" aria-pressed="false">Visual</button></div>
+      <span class="sep"></span>
       <button class="tb txt" data-cmd="h1" title="Título 1">H1</button>
       <button class="tb txt" data-cmd="h2" title="Título 2">H2</button>
       <button class="tb txt" data-cmd="h3" title="Título 3">H3</button>
@@ -738,7 +816,8 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
     <main class="work" id="work">
       <nav class="toc" id="toc" aria-label="Índice"><h2>Índice</h2><ol id="tocList"></ol></nav>
       <div class="backdrop" id="backdrop"></div>
-      <section class="editor-pane" aria-label="Texto fuente"><textarea id="editor" spellcheck="true" aria-label="Texto Markdown"></textarea></section>
+      <section class="editor-pane" aria-label="Texto fuente"><div class="md-cm" id="mdEditor"></div></section>
+      <div class="splitter md-split" id="mdSplit" role="separator" aria-orientation="vertical" aria-label="Ajustar ancho del texto fuente" title="Arrastra para ajustar · doble clic para centrar"></div>
       <section class="viewer" id="viewer" aria-label="Vista del documento">
         <article class="page" id="pageWrap"><div class="doc" id="page"></div><div class="page-foot"><span id="footName"></span><span id="footInfo"></span></div></article>
         <div class="empty" id="empty" hidden>
@@ -781,6 +860,8 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
       <section class="code-pane" aria-label="Código">
         <div class="file-head" id="fileHead"></div>
         <div class="ins-bar" id="insBar" role="toolbar" aria-label="Insertar en LaTeX">
+          <div class="seg vis-seg" role="group" aria-label="Modo del editor" id="texVisSeg" title="Visual oculta el código y muestra el formato; la línea del cursor sigue mostrando el código"><button data-v="code" aria-pressed="true">Código</button><button data-v="visual" aria-pressed="false">Visual</button></div>
+          <span class="sep"></span>
           <button class="tb txt" data-ins="section" title="Sección">Sección</button>
           <button class="tb txt" data-ins="subsection" title="Subsección">Subsección</button>
           <span class="sep"></span>
@@ -926,6 +1007,8 @@ def promedio(lecturas):
 <script src="vendor/highlight.min.js"></script>
 <script src="vendor/codemirror/codemirror.js"></script>
 <script src="vendor/codemirror/stex.js"></script>
+<script src="vendor/codemirror/markdown.js"></script>
+<script src="vendor/katex/katex.min.js"></script>
 <script src="vendor/codemirror/matchbrackets.js"></script>
 <script src="vendor/codemirror/closebrackets.js"></script>
 <script src="vendor/codemirror/active-line.js"></script>
@@ -936,6 +1019,7 @@ def promedio(lecturas):
 <script src="vendor/codemirror/show-hint.js"></script>
 <script src="vendor/pdfjs/pdf.min.js"></script>
 <script src="js/ui.js"></script>
+<script src="js/visual.js"></script>
 <script src="js/markdown.js"></script>
 <script src="js/tex-engine.js"></script>
 <script src="js/tex.js"></script>

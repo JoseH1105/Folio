@@ -585,12 +585,33 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
       else if (t === '{' && /\\(ref|eqref|autoref|cref|Cref|pageref|cite[a-zA-Z]*|includegraphics(\[[^\]]*\])?|input|include|begin)\{$/.test(line)) c.showHint({ hint: latexHint, completeSingle: false });
       else if (t === ',' && /\\cite[a-zA-Z]*(\[[^\]]*\])*\{[^}]*$/.test(line)) c.showHint({ hint: latexHint, completeSingle: false });
     });
+    texVisual = FolioVisual.attach(cm, 'tex', {
+      abstractName: () => /\\usepackage(\[[^\]]*\])?\{[^}]*\bbabel\b/.test(preambleText()) && /spanish/.test(preambleText()) ? 'Resumen' : 'Abstract',
+      image: visualImage
+    });
+    FolioVisual.bindToggle($('#texVisSeg'), texVisual, 'folio.tex.visual');
     cm.on('paste', (c, e) => {
       const items = [...(e.clipboardData && e.clipboardData.items || [])].filter(i => i.kind === 'file' && /^image\//.test(i.type));
       if (!items.length) return;
       e.preventDefault();
       items.forEach(i => { const f = i.getAsFile(); if (f) addImage(f, null); });
     });
+  }
+  // image preview for the Visual mode: resolves \includegraphics paths against the project
+  let texVisual = null;
+  const imgUrls = new Map();
+  async function visualImage(ref) {
+    if (!P) return null;
+    const base = dirname(P.main || P.open || '');
+    const exts = /\.\w+$/.test(ref) ? [''] : ['.png', '.jpg', '.jpeg'];
+    for (const dir of [base, '']) for (const ext of exts) {
+      const path = normPath(joinPath(dir, ref + ext));
+      if (!P.files.has(path) || !IMG_EXT.test(path)) continue;
+      const key = P.id + ':' + path;
+      if (!imgUrls.has(key)) imgUrls.set(key, P.files.get(path).handle.getFile().then(f => URL.createObjectURL(f)));
+      return imgUrls.get(key);
+    }
+    return null;
   }
   function toggleComment(c) {
     const from = c.getCursor('from').line, to = c.getCursor('to').line;

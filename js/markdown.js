@@ -2,7 +2,45 @@
 (function () {
   'use strict';
   const { $, esc, debounce, store, inFrame, toast, ask } = UI;
-  const app = $('#app'), editor = $('#editor'), page = $('#page'), viewer = $('#viewer');
+  const app = $('#app'), page = $('#page'), viewer = $('#viewer');
+
+  /* ---------- source editor: CodeMirror behind a textarea-like adapter ----------
+     The rest of this file works with offsets (value / selectionStart / setSelectionRange),
+     so the adapter keeps that interface while CodeMirror gives highlighting, undo per
+     document and the Visual mode decorations. */
+  const cmd = CodeMirror($('#mdEditor'), {
+    mode: { name: 'markdown', highlightFormatting: true, fencedCodeBlockHighlighting: false }, lineWrapping: true,
+    lineNumbers: false, indentUnit: 2, tabSize: 2, indentWithTabs: false, spellcheck: true, inputStyle: 'contenteditable', readOnly: 'nocursor'
+  });
+  const cmDocs = new Map();          // doc id → CodeMirror.Doc (keeps each document's undo history)
+  let silent = 0;                    // programmatic changes that must not count as typing
+  const pos = i => cmd.posFromIndex(i), idx = p => cmd.indexFromPos(p);
+  const editor = {
+    get value() { return cmd.getValue(); },
+    set value(v) { if (cmd.getValue() === v) return; silent++; try { cmd.setValue(v); } finally { silent--; } },
+    get selectionStart() { return idx(cmd.getCursor('from')); },
+    get selectionEnd() { return idx(cmd.getCursor('to')); },
+    setSelectionRange(a, b) { cmd.setSelection(pos(a), pos(b ?? a)); },
+    replace(start, end, text) { cmd.replaceRange(text, pos(start), pos(end)); },
+    focus() { cmd.focus(); },
+    select() { cmd.execCommand('selectAll'); },
+    set disabled(v) { cmd.setOption('readOnly', v ? 'nocursor' : false); },
+    get scrollTop() { return cmd.getScrollInfo().top; },
+    set scrollTop(v) { cmd.scrollTo(null, v); },
+    get scrollHeight() { return cmd.getScrollInfo().height; },
+    get clientHeight() { return cmd.getScrollInfo().clientHeight; },
+    hasFocus() { return cmd.hasFocus(); },
+    showDoc(id, text) {
+      let d = cmDocs.get(id);
+      if (!d || d.getValue() !== text) { d = CodeMirror.Doc(text, cmd.getOption('mode')); cmDocs.set(id, d); }
+      silent++; try { cmd.swapDoc(d); } finally { silent--; }
+    },
+    forget(id) { cmDocs.delete(id); }
+  };
+  cmd.on('changes', () => { if (!silent) onInput(); });
+  cmd.on('cursorActivity', () => status());
+  const mdVisual = FolioVisual.attach(cmd, 'md');
+  FolioVisual.bindToggle($('#mdVisSeg'), mdVisual, 'folio.md.visual');
   const SAMPLE = $('#sample').textContent.replace(/^\n/, '');
   const MD_RE = /\.(md|markdown|mdown|mkd|txt)$/i;
 
@@ -117,9 +155,10 @@
   function activate(id) {
     active = id; const d = cur();
     if (d) { d.closed = false; d.opened = Date.now(); }
-    editor.value = d ? d.content : '';
+    if (d) editor.showDoc(d.id, d.content); else editor.showDoc('', '');
     renderTabs(); render(); persist();
     viewer.scrollTop = 0; editor.scrollTop = 0;
+    setTimeout(() => cmd.refresh(), 0);
   }
 
   /* ---------- modes ---------- */
@@ -128,10 +167,22 @@
     document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
     app.classList.remove('toc-open');
     store.set('folio.mode', m);
-    if (m !== 'read' && cur() && Shell.ws() === 'md') setTimeout(() => editor.focus({ preventScroll: true }), 0);
+    if (m !== 'read' && cur() && Shell.ws() === 'md') setTimeout(() => { cmd.refresh(); editor.focus(); }, 0);
     status();
   }
   document.querySelectorAll('#modeSeg button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  /* draggable divider between the source and the sheet (Editar mode); double-click resets it */
+  const mdSplit = $('#mdSplit');
+  mdSplit.addEventListener('pointerdown', e => {
+    e.preventDefault(); mdSplit.setPointerCapture(e.pointerId); mdSplit.classList.add('drag');
+    const rect = $('#work').getBoundingClientRect();
+    const move = ev => { const w = Math.min(rect.width - 280, Math.max(260, ev.clientX - rect.left)); app.style.setProperty('--md-ed', w + 'px'); };
+    const up = () => { mdSplit.classList.remove('drag'); mdSplit.removeEventListener('pointermove', move); mdSplit.removeEventListener('pointerup', up); store.set('folio.md.split', app.style.getPropertyValue('--md-ed')); cmd.refresh(); };
+    mdSplit.addEventListener('pointermove', move); mdSplit.addEventListener('pointerup', up);
+  });
+  mdSplit.addEventListener('dblclick', () => { app.style.removeProperty('--md-ed'); store.set('folio.md.split', null); cmd.refresh(); });
+  if (store.get('folio.md.split')) app.style.setProperty('--md-ed', store.get('folio.md.split'));
 
   /* ---------- editor ---------- */
   let lastDirty = null;
@@ -141,17 +192,12 @@
     const nd = dirty(d); if (nd !== lastDirty) { lastDirty = nd; renderTabs(); }
     renderSoon(); persist(); status();
   }
-  editor.addEventListener('input', onInput);
-  editor.addEventListener('keyup', status); editor.addEventListener('click', status);
-
   function replaceRange(start, end, text, selA, selB) {
     editor.focus();
-    editor.setSelectionRange(start, end);
-    let ok = false;
-    try { ok = document.execCommand('insertText', false, text); } catch (e) { }
-    if (!ok || editor.value.slice(start, start + text.length) !== text) editor.setRangeText(text, start, end, 'end');
-    if (selA != null) editor.setSelectionRange(start + selA, start + (selB ?? selA));
-    onInput();
+    cmd.operation(() => {
+      editor.replace(start, end, text);
+      editor.setSelectionRange(start + (selA ?? text.length), start + (selB ?? selA ?? text.length));
+    });
   }
   function wrap(b, a, ph) {
     const s = editor.selectionStart, e = editor.selectionEnd, v = editor.value;
@@ -255,7 +301,7 @@
   $('#toolbar').addEventListener('mousedown', e => { if (e.target.closest('.tb')) e.preventDefault(); });
   $('#toolbar').addEventListener('click', e => { const b = e.target.closest('[data-cmd]'); if (b && cur()) commands[b.dataset.cmd](); });
 
-  editor.addEventListener('keydown', e => {
+  cmd.on('keydown', (c, e) => {
     if (e.key === 'Tab' && !e.ctrlKey && !e.altKey) {
       e.preventDefault();
       const s = editor.selectionStart, ee = editor.selectionEnd;
@@ -406,13 +452,6 @@
   });
   viewer.addEventListener('scroll', debounce(tocActive, 60));
   /* double-click on the sheet: open the source at the same word */
-  function caretTop(pos) {
-    const cs = getComputedStyle(editor), m = document.createElement('div');
-    for (const p of ['font', 'letterSpacing', 'tabSize', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'lineHeight']) m.style[p] = cs[p];
-    Object.assign(m.style, { position: 'absolute', visibility: 'hidden', top: '0', left: '-9999px', boxSizing: 'border-box', width: editor.clientWidth + 'px', whiteSpace: 'pre-wrap', overflowWrap: 'break-word' });
-    m.textContent = editor.value.slice(0, pos); const mark = document.createElement('span'); mark.textContent = '​'; m.appendChild(mark);
-    document.body.appendChild(m); const top = mark.offsetTop; m.remove(); return top;
-  }
   page.addEventListener('dblclick', e => {
     const d = cur(); if (!d) return;
     const blk = e.target.closest('[data-line]');
@@ -433,14 +472,14 @@
     }
     if (app.dataset.mode === 'read') setMode('edit');
     setTimeout(() => {
-      editor.focus({ preventScroll: true });
+      cmd.refresh(); editor.focus();
       editor.setSelectionRange(pos, pos + len);
-      editor.scrollTop = Math.max(0, caretTop(pos) - editor.clientHeight / 3);
+      cmd.scrollIntoView({ from: cmd.posFromIndex(pos), to: cmd.posFromIndex(pos + len) }, Math.round(editor.clientHeight / 3));
       status();
     }, 0);
   });
   let syncing = false;
-  editor.addEventListener('scroll', () => {
+  cmd.on('scroll', () => {
     if (app.dataset.mode !== 'edit' || syncing) return;
     const r = editor.scrollTop / Math.max(1, editor.scrollHeight - editor.clientHeight);
     syncing = true; viewer.scrollTop = r * (viewer.scrollHeight - viewer.clientHeight);
@@ -459,7 +498,7 @@
     if (k === 's') { e.preventDefault(); save(e.shiftKey); }
     else if (k === 'o') { e.preventDefault(); openDialog(); }
     else if (k === 'e') { e.preventDefault(); setMode(app.dataset.mode === 'read' ? 'edit' : 'read'); }
-    else if (document.activeElement === editor && !e.shiftKey && !e.altKey) {
+    else if (editor.hasFocus() && !e.shiftKey && !e.altKey) {
       if (k === 'b') { e.preventDefault(); commands.bold(); }
       else if (k === 'i') { e.preventDefault(); commands.italic(); }
       else if (k === 'k') { e.preventDefault(); commands.link(); }
@@ -524,7 +563,7 @@
       : `¿Eliminar “${d.name}”? Solo existe dentro de Folio, así que su contenido se perderá.`;
     if (!(await ask(msg, onDisk ? 'Quitar' : 'Eliminar', true))) return false;
     const wasActive = id === active;
-    docs.splice(docs.indexOf(d), 1); handles.delete(id); persistHandles();
+    docs.splice(docs.indexOf(d), 1); handles.delete(id); editor.forget(id); persistHandles();
     if (wasActive) { const next = openDocs().sort((a, b) => b.opened - a.opened)[0]; activate(next ? next.id : null); }
     else { renderTabs(); persist(); }
     toast(onDisk ? `“${d.name}” ya no aparece en Folio.` : `“${d.name}” eliminado.`);

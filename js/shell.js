@@ -63,21 +63,25 @@
     if (ws() === 'tex') Tex.onDrop(entries, e); else Markdown.onDrop(entries);
   });
 
-  /* ---------- launching files (installed app: "Abrir con" / file handlers) ---------- */
-  if ('launchQueue' in window) {
-    launchQueue.setConsumer(async params => {
-      if (!params.files || !params.files.length) return;
-      for (const h of params.files) {
-        if (h.kind !== 'file') continue;
-        if (window.Tex && Tex.isTex(h.name)) await Tex.openFromLaunch(h);
-        else { setWs('md'); await Markdown.openFile(await h.getFile(), h); }
-      }
-    });
-  }
-
-  /* ---------- boot: always start on Inicio, unless a file was handed to the app ---------- */
+  /* ---------- boot: start on Inicio, unless a file was handed to the app ---------- */
   Markdown.boot(window.__FOLIO_FILE__);
   setWs(window.__FOLIO_FILE__ ? 'md' : 'home');
+
+  /* ---------- launching files (installed app: double-click, "Abrir con", file handlers) ----------
+     Registered after boot: Chromium may deliver the files synchronously inside setConsumer,
+     and the boot above would otherwise send the window back to Inicio. */
+  async function openLaunched(h) {
+    try {
+      if (window.Tex && Tex.isTex(h.name)) await Tex.openFromLaunch(h);
+      else { setWs('md'); await Markdown.openFile(await h.getFile(), h); setWs('md'); }
+    } catch (e) { toast(`No se pudo abrir ${h.name}: ${e.message}`); }
+  }
+  if ('launchQueue' in window) {
+    launchQueue.setConsumer(async params => {
+      const files = (params.files || []).filter(h => h.kind === 'file');
+      for (const h of files) await openLaunched(h);
+    });
+  }
 
   /* ---------- service worker (offline + updates) ---------- */
   if ('serviceWorker' in navigator && !inFrame && location.protocol !== 'file:') {

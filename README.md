@@ -52,8 +52,18 @@ de tu equipo nunca se borran (solo se pierde el contenido de un documento que ex
 únicamente dentro de Folio, y la app avisa antes). Cerrar una pestaña no quita el
 documento de Inicio. La guía de uso y el proyecto de ejemplo están al pie de cada columna.
 
-**Markdown:** igual que antes: lectura tipo hoja, edición con vista previa, tablas y
-`Ctrl+S` guarda sobre el archivo original.
+**Abrir con doble clic:** si Folio es la app predeterminada para `.md` o `.tex`, el
+archivo se abre directamente en su modo, sin pasar por Inicio.
+
+**Modo Visual (Markdown y LaTeX):** el selector **Código / Visual** al inicio de la barra
+de atajos oculta la sintaxis y muestra el documento con formato: títulos, negritas, listas,
+tareas que se marcan con un clic, citas, referencias, imágenes y ecuaciones dibujadas
+(KaTeX). En LaTeX el preámbulo se pliega en una fila y `\maketitle` muestra el título. La
+línea donde está el cursor siempre enseña su código, así que se edita igual que antes.
+
+**Markdown:** lectura tipo hoja, edición con vista previa (arrastra la línea entre el texto
+y la hoja para cambiar el ancho; doble clic sobre ella la centra), tablas y `Ctrl+S`
+guarda sobre el archivo original.
 
 **LaTeX** (pestaña LaTeX):
 

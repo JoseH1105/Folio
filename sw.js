@@ -12,10 +12,11 @@ const FONTS = 'folio-fonts';
 
 const SHELL_FILES = [
   './', 'index.html', 'manifest.webmanifest',
-  'js/ui.js', 'js/markdown.js', 'js/tex-engine.js', 'js/tex.js', 'js/home.js', 'js/shell.js',
+  'js/ui.js', 'js/visual.js', 'js/markdown.js', 'js/tex-engine.js', 'js/tex.js', 'js/home.js', 'js/shell.js',
   'icons/icon-192.png', 'icons/icon-512.png',
   'vendor/marked.min.js', 'vendor/purify.min.js', 'vendor/highlight.min.js',
-  'vendor/codemirror/codemirror.js', 'vendor/codemirror/codemirror.css', 'vendor/codemirror/stex.js',
+  'vendor/codemirror/codemirror.js', 'vendor/codemirror/codemirror.css', 'vendor/codemirror/stex.js', 'vendor/codemirror/markdown.js',
+  'vendor/katex/katex.min.js', 'vendor/katex/katex.min.css',
   'vendor/codemirror/matchbrackets.js', 'vendor/codemirror/closebrackets.js', 'vendor/codemirror/active-line.js',
   'vendor/codemirror/searchcursor.js', 'vendor/codemirror/search.js', 'vendor/codemirror/jump-to-line.js',
   'vendor/codemirror/dialog.js', 'vendor/codemirror/dialog.css', 'vendor/codemirror/show-hint.js', 'vendor/codemirror/show-hint.css',

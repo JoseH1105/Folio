@@ -29,12 +29,15 @@ V="$OUT/vendor"
 mkdir -p "$V/codemirror" "$V/pdfjs"
 cp node_modules/marked/marked.min.js node_modules/dompurify/dist/purify.min.js node_modules/@highlightjs/cdn-assets/highlight.min.js "$V/"
 CM=node_modules/codemirror
-cp "$CM/lib/codemirror.js" "$CM/lib/codemirror.css" "$CM/mode/stex/stex.js" \
+cp "$CM/lib/codemirror.js" "$CM/lib/codemirror.css" "$CM/mode/stex/stex.js" "$CM/mode/markdown/markdown.js" \
    "$CM/addon/edit/matchbrackets.js" "$CM/addon/edit/closebrackets.js" "$CM/addon/selection/active-line.js" \
    "$CM/addon/search/searchcursor.js" "$CM/addon/search/search.js" "$CM/addon/search/jump-to-line.js" \
    "$CM/addon/dialog/dialog.js" "$CM/addon/dialog/dialog.css" "$CM/addon/hint/show-hint.js" "$CM/addon/hint/show-hint.css" \
    "$V/codemirror/"
 cp node_modules/pdfjs-dist/build/pdf.min.js node_modules/pdfjs-dist/build/pdf.worker.min.js "$V/pdfjs/"
+mkdir -p "$V/katex"
+cp node_modules/katex/dist/katex.min.js node_modules/katex/dist/katex.min.css "$V/katex/"
+cp -r node_modules/katex/dist/fonts "$V/katex/"
 
 echo "== Motor LaTeX"
 B="$OUT/busytex"
