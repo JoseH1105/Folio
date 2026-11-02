@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .cache
-          key: busytex-1.4.1
+          key: busytex-1.4.1-4f63731f
       - name: Construir el sitio
         run: bash tools/build-site.sh _site
       - uses: actions/configure-pages@v5

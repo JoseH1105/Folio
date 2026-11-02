@@ -8,7 +8,6 @@ const BUILD = '__BUILD__';
 const ENGINE_VERSION = 'busytex-1.4.1';
 const SHELL = 'folio-shell-' + BUILD;
 const ENGINE = 'folio-engine-' + ENGINE_VERSION;
-const FONTS = 'folio-fonts';
 
 const SHELL_FILES = [
   './', 'index.html', 'manifest.webmanifest',
@@ -17,6 +16,9 @@ const SHELL_FILES = [
   'vendor/marked.min.js', 'vendor/purify.min.js', 'vendor/highlight.min.js',
   'vendor/codemirror/codemirror.js', 'vendor/codemirror/codemirror.css', 'vendor/codemirror/stex.js', 'vendor/codemirror/markdown.js',
   'vendor/katex/katex.min.js', 'vendor/katex/katex.min.css',
+  'vendor/fonts/geist/wght.css', 'vendor/fonts/jetbrains-mono/wght.css', 'vendor/fonts/source-serif-4/opsz.css', 'vendor/fonts/source-serif-4/opsz-italic.css',
+  'vendor/fonts/geist/files/geist-latin-wght-normal.woff2', 'vendor/fonts/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2',
+  'vendor/fonts/source-serif-4/files/source-serif-4-latin-opsz-normal.woff2', 'vendor/fonts/source-serif-4/files/source-serif-4-latin-opsz-italic.woff2',
   'vendor/codemirror/matchbrackets.js', 'vendor/codemirror/closebrackets.js', 'vendor/codemirror/active-line.js',
   'vendor/codemirror/searchcursor.js', 'vendor/codemirror/search.js', 'vendor/codemirror/jump-to-line.js',
   'vendor/codemirror/dialog.js', 'vendor/codemirror/dialog.css', 'vendor/codemirror/show-hint.js', 'vendor/codemirror/show-hint.css',
@@ -32,7 +34,7 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
     for (const k of await caches.keys()) {
-      if (k !== SHELL && k !== ENGINE && k !== FONTS) await caches.delete(k);
+      if (k !== SHELL && k !== ENGINE) await caches.delete(k);
     }
     await self.clients.claim();
   })());
@@ -43,14 +45,6 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
-    e.respondWith(caches.open(FONTS).then(async c => {
-      const hit = await c.match(req);
-      const net = fetch(req).then(r => { if (r.ok) c.put(req, r.clone()); return r; }).catch(() => hit);
-      return hit || net;
-    }));
-    return;
-  }
   if (url.origin !== self.location.origin) return;
   if (url.pathname.includes('/texmf/') || url.pathname.endsWith('.data')) return;   // handled by IndexedDB in the page
 

@@ -326,7 +326,10 @@
         const box = el('span', 'cm-v-img');
         box.append(el('span', 'cm-v-muted', 'Imagen: ' + (m[1] || m[2])));
         const mark = v.widget({ line: i, ch: m.index }, { line: i, ch: m.index + m[0].length }, box);
-        if (/^(https?:|data:image\/)/.test(m[2])) v.image(box, mark, m[2], () => m[2], m[1]);
+        // remote images only load once the document's images were allowed (see markdown.js)
+        const remote = /^(https?:)?\/\//i.test(m[2]);
+        if (remote && !(v.opts.allowRemote && v.opts.allowRemote())) box.firstChild.textContent = 'Imagen de internet sin cargar: ' + (m[1] || m[2]);
+        else if (remote || /^data:image\//.test(m[2])) v.image(box, mark, m[2], () => m[2], m[1]);
         busy.push([m.index, m.index + m[0].length]);
       }
       const reLink = /\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;

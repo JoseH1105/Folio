@@ -6,6 +6,8 @@ Folio incluye o descarga los siguientes componentes:
 - **TeX Live 2026** — cada paquete conserva su propia licencia (mayoritariamente LPPL). https://tug.org/texlive/
 - **babel-spanish** (spanish.ldf, romanidx.sty) — LPPL 1.3. Javier Bezos. Se incluye porque no está en las colecciones de BusyTeX.
 - **IEEEtran** (IEEEtran.cls, IEEEtrantools.sty, IEEEtran*.bst, IEEEabrv.bib, IEEEfull.bib) — LPPL 1.3. Michael Shell. https://ctan.org/pkg/ieeetran — Se incluye sin modificar porque no está en las colecciones de BusyTeX.
+- **KaTeX** — MIT. https://katex.org/
+- **Fuentes** (incluidas en la app, empaquetadas por Fontsource): **Geist** (Vercel), **JetBrains Mono** (JetBrains) y **Source Serif 4** (Adobe) — SIL Open Font License 1.1.
 - **CodeMirror 5** — MIT. https://codemirror.net/5/
 - **PDF.js** — Apache-2.0. https://mozilla.github.io/pdf.js/
 - **marked** — MIT · **DOMPurify** — Apache-2.0 / MPL-2.0 · **highlight.js** — BSD-3-Clause

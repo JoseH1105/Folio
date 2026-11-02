@@ -39,7 +39,7 @@
   };
   cmd.on('changes', () => { if (!silent) onInput(); });
   cmd.on('cursorActivity', () => status());
-  const mdVisual = FolioVisual.attach(cmd, 'md');
+  const mdVisual = FolioVisual.attach(cmd, 'md', { allowRemote: () => { const d = cur(); return !!(d && d.allowRemote); } });
   FolioVisual.bindToggle($('#mdVisSeg'), mdVisual, 'folio.md.visual');
   const SAMPLE = $('#sample').textContent.replace(/^\n/, '');
   const MD_RE = /\.(md|markdown|mdown|mkd|txt)$/i;
@@ -58,9 +58,32 @@
       }
     });
   }
+  /* Sanitizing: documents may come from someone else. Beyond DOMPurify's defaults, nothing in
+     the sheet may collect input (forms, text fields), draw over the app (fixed/sticky styles,
+     <style>) or reach the network on its own (remote images until allowed, CSS url(), media). */
+  const PURIFY = {
+    ADD_ATTR: ['target'],
+    FORBID_TAGS: ['form', 'button', 'textarea', 'select', 'option', 'optgroup', 'fieldset', 'dialog', 'style', 'video', 'audio', 'source', 'track', 'picture'],
+    FORBID_ATTR: ['action', 'formaction', 'autofocus', 'srcset', 'ping', 'background', 'poster']
+  };
+  let remoteAllowed = false, remoteBlocked = 0;
+  const isRemote = url => /^\s*(https?:)?\/\//i.test(url || '');
   if (window.DOMPurify) {
+    DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+      // task lists need checkboxes; any other <input> is dropped
+      if (data.tagName === 'input' && (node.getAttribute('type') || '').toLowerCase() !== 'checkbox') node.remove();
+    });
     DOMPurify.addHook('afterSanitizeAttributes', node => {
       if (node.tagName === 'A' && node.getAttribute('href') && !node.getAttribute('href').startsWith('#')) { node.setAttribute('target', '_blank'); node.setAttribute('rel', 'noopener noreferrer'); }
+      const st = node.getAttribute && node.getAttribute('style');
+      if (st && (/position\s*:\s*(fixed|sticky)/i.test(st) || /url\s*\(/i.test(st) || /@import/i.test(st))) node.removeAttribute('style');
+      if (node.tagName === 'IMG' && isRemote(node.getAttribute('src')) && !remoteAllowed) {
+        remoteBlocked++;
+        node.setAttribute('data-blocked-src', node.getAttribute('src'));
+        node.removeAttribute('src');
+        node.classList.add('img-blocked');
+        if (!node.getAttribute('alt')) node.setAttribute('alt', 'Imagen externa');
+      }
     });
   }
   if (window.hljs) hljs.configure({ ignoreUnescapedHTML: true });
@@ -75,7 +98,8 @@
       if (t.type === 'space') continue;
       raw += marked.parser(Object.assign([t], { links: tokens.links })).replace(/^(\s*<[a-zA-Z][\w-]*)/, `$1 data-line="${start}" data-end="${line}"`);
     }
-    return window.DOMPurify ? DOMPurify.sanitize(raw, { ADD_ATTR: ['target'] }) : raw;
+    // fail closed: without the sanitizer the document is shown as plain text
+    return window.DOMPurify ? DOMPurify.sanitize(raw, PURIFY) : '<pre>' + esc(md) + '</pre>';
   }
 
   /* ---------- documents ---------- */
@@ -87,7 +111,7 @@
   const makeDoc = (name, content, opts = {}) => ({ id: newId(), name, content, saved: opts.saved ?? content, path: opts.path || '', isSample: !!opts.isSample, opened: Date.now(), closed: false });
   const openDocs = () => docs.filter(d => !d.closed);
   const persist = debounce(() => {
-    store.set('folio.docs', docs.map(({ id, name, content, saved, path, isSample, opened, closed }) => ({ id, name, content, saved, path, isSample, opened, closed })));
+    store.set('folio.docs', docs.map(({ id, name, content, saved, path, isSample, opened, closed, allowRemote }) => ({ id, name, content, saved, path, isSample, opened, closed, allowRemote })));
     store.set('folio.active', active);
   }, 300);
   /* file handles survive restarts in IndexedDB, so a document opened from disk keeps saving to its file */
@@ -107,7 +131,15 @@
     $('#empty').hidden = !!d; $('#pageWrap').hidden = !d; $('#zoomBox').hidden = !d;
     editor.disabled = !d;
     if (!d) { editor.value = ''; buildToc(); status(); return; }
+    remoteAllowed = !!d.allowRemote; remoteBlocked = 0;
     page.innerHTML = d.content.trim() ? toHtml(d.content) : '<p class="empty-doc">Documento vacío. Escribe en el editor o suelta un archivo .md aquí.</p>';
+    if (remoteBlocked) {
+      // remote images wait for consent, so whoever wrote the document can't tell when it is opened
+      const note = document.createElement('div'); note.className = 'remote-note';
+      note.innerHTML = `<span>${remoteBlocked === 1 ? 'Hay 1 imagen' : `Hay ${remoteBlocked} imágenes`} de internet sin cargar. Se bloquean para que quien escribió el documento no sepa cuándo lo abres.</span><button class="btn" type="button">Mostrar imágenes</button>`;
+      note.querySelector('button').addEventListener('click', () => { d.allowRemote = true; persist(); render(); mdVisual.refresh(); });
+      page.prepend(note);
+    }
     page.querySelectorAll('table').forEach(t => { const w = document.createElement('div'); w.className = 'tbl'; t.replaceWith(w); w.appendChild(t); });
     page.querySelectorAll('input[type=checkbox]').forEach((cb, i) => { cb.disabled = false; cb.dataset.i = i; cb.setAttribute('aria-label', 'Marcar tarea'); });
     if (window.hljs) page.querySelectorAll('pre code').forEach(el => { try { hljs.highlightElement(el); } catch (e) { } });
