@@ -106,6 +106,11 @@ Funciona igual con Chrome o Edge: abre la dirección y usa **Instalar**. En Safa
 - Vista de hoja para leer, con índice de secciones a la izquierda.
 - Barra de formato: títulos, negrita, cursiva, enlaces, imágenes, listas, tareas, citas,
   bloques de código y tablas (insertar, añadir filas y columnas, alinear).
+- **Ecuaciones:** escribe `$…$` para una fórmula en el texto y `$$…$$` para una en su
+  propia línea (también en varias líneas), con la sintaxis de LaTeX: fracciones, matrices
+  (`bmatrix`), integrales, letras griegas… Se dibujan en la hoja, en el modo Visual y en el
+  HTML exportado. Un precio como `$5` no se confunde con una fórmula, y `\$` escribe un
+  dólar literal.
 - Modo **Visual** o **Código** en el editor.
 - **Columna de texto ajustable:** pasa el ratón por el editor y arrastra cualquiera de los
   dos tiradores laterales; la columna se mantiene centrada.

@@ -284,10 +284,29 @@
       if (fence) { code.add(i); if (m && m[1] === fence) { fence = null; } continue; }
       if (m) { fence = m[1]; fenceStart = i; code.add(i); }
     }
+    // $$ blocks spanning several lines: rendered as one formula unless the cursor is inside
+    const done = new Set();
+    for (let i = 0, open = -1; i < Math.min(cm.lineCount(), to + 200); i++) {
+      if (code.has(i)) continue;
+      const s = L(i), count = (s.match(/(?<!\\)\$\$/g) || []).length;
+      if (open < 0 && count === 1 && /^\s*\$\$/.test(s)) { open = i; continue; }
+      if (open >= 0 && count >= 1) {
+        const a = open, b = i; open = -1;
+        if (b < from || a >= to) continue;
+        let touched = false; for (let l = a; l <= b; l++) if (cur.has(l)) touched = true;
+        if (touched) continue;
+        const lines = []; for (let l = a; l <= b; l++) lines.push(L(l));
+        const tex = lines.join('\n').replace(/^\s*\$\$/, '').replace(/\$\$\s*$/, '').trim();
+        const w = tex && v.renderMath(tex, true); if (!w) continue;
+        const box = el('div', 'cm-v-eq'); box.append(w);
+        v.widget({ line: a, ch: 0 }, { line: b, ch: L(b).length }, box);
+        for (let l = a; l <= b; l++) done.add(l);
+      }
+    }
     for (let i = from; i < to; i++) {
       const s = L(i);
       if (code.has(i)) { v.line(i, /^\s*(```|~~~)/.test(s) ? 'cm-v-fence' : 'cm-v-codeline'); continue; }
-      if (cur.has(i)) continue;
+      if (cur.has(i) || done.has(i)) continue;
       // headings
       const h = /^(#{1,6})\s+/.exec(s);
       if (h) { v.line(i, 'cm-v-md-h' + h[1].length); v.hide(i, 0, h[0].length); }
@@ -319,6 +338,16 @@
       // inline code first: nothing inside it is formatted
       const reCode = /(`+)([^`]+?)\1/g; let m;
       while ((m = reCode.exec(s))) { if (m.index < start) continue; const k = m[1].length; v.hide(i, m.index, m.index + k); v.style(i, m.index + k, m.index + m[0].length - k, 'cm-v-tt'); v.hide(i, m.index + m[0].length - k, m.index + m[0].length); busy.push([m.index, m.index + m[0].length]); }
+      // math on the line: $$…$$ as a formula block, $…$ inline (same rules as the sheet)
+      const reMath = /(?<!\\)\$\$(.+?)(?<!\\)\$\$|(?<![\\$])\$(?=\S)((?:\\.|[^$\\])+?)(?<=\S)\$(?![\d$])/g;
+      while ((m = reMath.exec(s))) {
+        if (!free(m.index, m.index + m[0].length)) continue;
+        const display = m[1] != null, w = v.renderMath((display ? m[1] : m[2]).trim(), display);
+        if (!w) continue;
+        const node = display ? (() => { const b = el('div', 'cm-v-eq'); b.append(w); return b; })() : w;
+        v.widget({ line: i, ch: m.index }, { line: i, ch: m.index + m[0].length }, node);
+        busy.push([m.index, m.index + m[0].length]);
+      }
       // images and links
       const reImg = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
       while ((m = reImg.exec(s))) {

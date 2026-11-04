@@ -87,16 +87,100 @@
     });
   }
   if (window.hljs) hljs.configure({ ignoreUnescapedHTML: true });
+  /* ---------- math: $…$ inline and $$…$$ display (GitHub / Obsidian syntax) ----------
+     Formulas are taken out before Markdown runs, otherwise \\ becomes \ and _ turns into
+     emphasis. Each one leaves a placeholder of private-use characters that Markdown and the
+     sanitizer keep untouched; after sanitizing, KaTeX (trust: false) draws them in place.
+     map[t] gives the source line of transformed line t, so double-click still lands right. */
+  const MATH_OPEN = '', MATH_CLOSE = '';
+  function extractMath(md) {
+    const maths = [], map = [0];
+    let out = '', i = 0, oLine = 0;
+    const n = md.length;
+    const copy = (to) => { for (; i < to; i++) { out += md[i]; if (md[i] === '\n') { oLine++; map.push(oLine); } } };
+    const lineStart = k => k === 0 || md[k - 1] === '\n';
+    while (i < n) {
+      const c = md[i];
+      // fenced code blocks: copied as they are
+      if (lineStart(i)) {
+        const f = /^ {0,3}(`{3,}|~{3,})/.exec(md.slice(i, i + 40));
+        if (f) {
+          const close = new RegExp('\\n {0,3}' + f[1][0] + '{' + f[1].length + ',}[ \\t]*(?=\\n|$)', 'g');
+          close.lastIndex = i + f[0].length;
+          const m = close.exec(md);
+          copy(m ? m.index + m[0].length : n); continue;
+        }
+      }
+      if (c === '\\') { copy(Math.min(n, i + 2)); continue; }                // \$ stays a literal dollar
+      if (c === '`') {                                                       // inline code
+        let k = i; while (md[k] === '`') k++;
+        const ticks = md.slice(i, k), end = md.indexOf(ticks, k);
+        copy(end < 0 ? k : end + ticks.length); continue;
+      }
+      if (c === '$') {
+        let tex = null, end = -1, display = false;
+        if (md[i + 1] === '$') {                                             // $$ … $$ (may span lines)
+          end = md.indexOf('$$', i + 2);
+          if (end > i + 2) { tex = md.slice(i + 2, end); display = true; end += 2; }
+        } else if (md[i + 1] && !/\s/.test(md[i + 1])) {                     // $…$ : no spaces just inside, not "$5"
+          const m = /^\$((?:\\.|[^$\\\n])+?)\$(?!\d)/.exec(md.slice(i, i + 2000));
+          if (m && !/\s$/.test(m[1])) { tex = m[1]; end = i + m[0].length; }
+        }
+        if (tex != null && tex.trim()) {
+          for (let k = i; k < end; k++) if (md[k] === '\n') oLine++;
+          out += MATH_OPEN + maths.length + MATH_CLOSE;
+          maths.push({ tex: tex.trim(), display });
+          i = end; continue;
+        }
+      }
+      copy(i + 1);
+    }
+    return { text: out, maths, map };
+  }
+  const MATH_RE = new RegExp(MATH_OPEN + '(\\d+)' + MATH_CLOSE, 'g');
+  function drawMath(root, maths) {
+    if (!maths.length) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = []; let t;
+    while ((t = walker.nextNode())) if (t.data.includes(MATH_OPEN)) nodes.push(t);
+    for (const node of nodes) {
+      const frag = document.createDocumentFragment(); let last = 0, m;
+      MATH_RE.lastIndex = 0;
+      while ((m = MATH_RE.exec(node.data))) {
+        frag.append(node.data.slice(last, m.index));
+        const f = maths[+m[1]];
+        const el = document.createElement(f.display ? 'div' : 'span');
+        el.className = f.display ? 'math math-display' : 'math';
+        el.dataset.tex = f.tex;
+        if (window.katex) katex.render(f.tex, el, { displayMode: f.display, throwOnError: false, strict: 'ignore', trust: false });
+        else el.textContent = f.display ? `$$${f.tex}$$` : `$${f.tex}$`;
+        frag.append(el); last = m.index + m[0].length;
+      }
+      frag.append(node.data.slice(last));
+      const p = node.parentNode;
+      p.replaceChild(frag, node);
+      // a paragraph holding only display math becomes the formula block itself
+      if (p.tagName === 'P' && p.children.length === 1 && p.firstElementChild.classList.contains('math-display') && !p.textContent.replace(p.firstElementChild.textContent, '').trim()) {
+        const box = p.firstElementChild; for (const a of p.attributes) box.setAttribute(a.name, a.name === 'class' ? 'math math-display' : a.value);
+        p.replaceWith(box);
+      }
+    }
+  }
+
+  let lastMaths = [];
   function toHtml(md) {
-    slugs = {};
+    slugs = {}; lastMaths = [];
     if (!hasMarked) return '<pre>' + esc(md) + '</pre>';
+    const { text, maths, map } = extractMath(md);
+    lastMaths = maths;
+    const src = l => map[Math.min(l, map.length - 1)];
     // render block by block so each top-level element knows its source lines (double-click → source)
-    const tokens = marked.lexer(md);
+    const tokens = marked.lexer(text);
     let raw = '', line = 0;
     for (const t of tokens) {
       const start = line; line += (t.raw.match(/\n/g) || []).length;
       if (t.type === 'space') continue;
-      raw += marked.parser(Object.assign([t], { links: tokens.links })).replace(/^(\s*<[a-zA-Z][\w-]*)/, `$1 data-line="${start}" data-end="${line}"`);
+      raw += marked.parser(Object.assign([t], { links: tokens.links })).replace(/^(\s*<[a-zA-Z][\w-]*)/, `$1 data-line="${src(start)}" data-end="${src(line)}"`);
     }
     // fail closed: without the sanitizer the document is shown as plain text
     return window.DOMPurify ? DOMPurify.sanitize(raw, PURIFY) : '<pre>' + esc(md) + '</pre>';
@@ -133,6 +217,7 @@
     if (!d) { editor.value = ''; buildToc(); status(); return; }
     remoteAllowed = !!d.allowRemote; remoteBlocked = 0;
     page.innerHTML = d.content.trim() ? toHtml(d.content) : '<p class="empty-doc">Documento vacío. Escribe en el editor o suelta un archivo .md aquí.</p>';
+    drawMath(page, lastMaths);
     if (remoteBlocked) {
       // remote images wait for consent, so whoever wrote the document can't tell when it is opened
       const note = document.createElement('div'); note.className = 'remote-note';
@@ -484,7 +569,10 @@
   function exportHtml() {
     const d = cur(); if (!d) return;
     const css = [...document.querySelectorAll('style')].map(s => s.textContent).join('\n');
-    const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.name.replace(MD_RE, ''))}</title><style>${css} body{overflow:auto} .viewer{min-height:100vh}</style></head><body><div class="ws-md" data-mode="read" style="display:block"><section class="viewer"><article class="page"><div class="doc">${page.innerHTML}</div></article></section></div></body></html>`;
+    const body = page.cloneNode(true); body.querySelectorAll('.remote-note').forEach(n => n.remove());
+    // formulas need KaTeX's stylesheet outside the app: same version, pinned by integrity hash
+    const katexCss = body.querySelector('.katex') ? '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">' : '';
+    const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.name.replace(MD_RE, ''))}</title>${katexCss}<style>${css} body{overflow:auto} .viewer{min-height:100vh}</style></head><body><div class="ws-md" data-mode="read" style="display:block"><section class="viewer"><article class="page"><div class="doc">${body.innerHTML}</div></article></section></div></body></html>`;
     if (inFrame) { copyText(html); return; }
     download(d.name.replace(MD_RE, '') + '.html', html, 'text/html'); toast('HTML exportado.');
   }
