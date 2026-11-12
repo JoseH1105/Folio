@@ -116,7 +116,9 @@ Funciona igual con Chrome o Edge: abre la dirección y usa **Instalar**. En Safa
   dos tiradores laterales; la columna se mantiene centrada.
 - La línea entre el texto y la hoja reparte el espacio (también con las flechas del teclado).
 - **Doble clic en la hoja** abre el texto en esa misma palabra.
-- Exportar como HTML, imprimir o guardar en PDF.
+- **Guardar como PDF:** la flecha junto a **Guardar** crea un PDF en A4 igual a la hoja
+  (fórmulas, tablas y código incluidos, en papel claro) y te deja elegir dónde guardarlo.
+- Exportar como HTML o imprimir.
 
 ### LaTeX
 

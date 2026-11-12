@@ -11,9 +11,9 @@ const ENGINE = 'folio-engine-' + ENGINE_VERSION;
 
 const SHELL_FILES = [
   './', 'index.html', 'manifest.webmanifest',
-  'js/ui.js', 'js/visual.js', 'js/markdown.js', 'js/tex-engine.js', 'js/tex.js', 'js/home.js', 'js/shell.js',
+  'js/ui.js', 'js/visual.js', 'js/markdown.js', 'js/md-pdf.js', 'js/tex-engine.js', 'js/tex.js', 'js/home.js', 'js/shell.js',
   'icons/icon-192.png', 'icons/icon-512.png',
-  'vendor/marked.min.js', 'vendor/purify.min.js', 'vendor/highlight.min.js',
+  'vendor/marked.min.js', 'vendor/purify.min.js', 'vendor/highlight.min.js', 'vendor/html-to-image.js',
   'vendor/codemirror/codemirror.js', 'vendor/codemirror/codemirror.css', 'vendor/codemirror/stex.js', 'vendor/codemirror/markdown.js',
   'vendor/katex/katex.min.js', 'vendor/katex/katex.min.css',
   'vendor/fonts/geist/wght.css', 'vendor/fonts/jetbrains-mono/wght.css', 'vendor/fonts/source-serif-4/opsz.css', 'vendor/fonts/source-serif-4/opsz-italic.css',

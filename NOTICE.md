@@ -10,6 +10,6 @@ Folio incluye o descarga los siguientes componentes:
 - **Fuentes** (incluidas en la app, empaquetadas por Fontsource): **Geist** (Vercel), **JetBrains Mono** (JetBrains) y **Source Serif 4** (Adobe) — SIL Open Font License 1.1.
 - **CodeMirror 5** — MIT. https://codemirror.net/5/
 - **PDF.js** — Apache-2.0. https://mozilla.github.io/pdf.js/
-- **marked** — MIT · **DOMPurify** — Apache-2.0 / MPL-2.0 · **highlight.js** — BSD-3-Clause
+- **marked** — MIT · **DOMPurify** — Apache-2.0 / MPL-2.0 · **highlight.js** — BSD-3-Clause · **html-to-image** — MIT (exportar Markdown a PDF)
 
 Como el motor es AGPL, este proyecto completo se distribuye bajo AGPL-3.0-or-later (ver LICENSE).

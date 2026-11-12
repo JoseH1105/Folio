@@ -44,6 +44,7 @@
       "js_markdown_replace",
       "js_markdown_replacerange",
       "js_markdown_save",
+      "js_markdown_savepdf",
       "js_markdown_scrollheight",
       "js_markdown_scrolltop",
       "js_markdown_select",
@@ -97,25 +98,27 @@
     ],
     "2": [
       "js_tex",
-      "js_tex_addlinks",
       "js_tex_applyeqtemplate",
       "js_tex_applylinemarks",
       "js_tex_editable",
       "js_tex_enginedialog",
+      "js_tex_figuresnippet",
       "js_tex_filltemplate",
       "js_tex_forget",
-      "js_tex_godest",
       "js_tex_inmath",
       "js_tex_insertblock",
+      "js_tex_insertfigure",
       "js_tex_insertheading",
       "js_tex_insertmathsymbol",
       "js_tex_inserttextable",
-      "js_tex_loadsynctex",
+      "js_tex_latexhint",
       "js_tex_openeqmenu",
       "js_tex_openpdf",
+      "js_tex_outsideblocks",
       "js_tex_pdfwordat",
       "js_tex_project",
       "js_tex_recents",
+      "js_tex_relfrom",
       "js_tex_renderloglist",
       "js_tex_setlayout",
       "js_tex_setview",
@@ -161,6 +164,7 @@
       "package_dependencies_fontsource_variable_jetbrains_mono",
       "package_dependencies_fontsource_variable_source_serif_4",
       "package_dependencies_highlightjs_cdn_assets",
+      "package_dependencies_html_to_image",
       "package_dependencies_katex",
       "package_dependencies_marked",
       "package_dependencies_pdfjs_dist",
@@ -175,6 +179,7 @@
       "ref_fontsource_variable_jetbrains_mono",
       "ref_fontsource_variable_source_serif_4",
       "ref_highlightjs_cdn_assets",
+      "ref_html_to_image",
       "ref_katex",
       "ref_marked",
       "ref_pdfjs_dist"
@@ -190,8 +195,10 @@
       "tools_build_mirror_data",
       "tools_build_mirror_fmt",
       "tools_build_mirror_formatsfor",
+      "tools_build_mirror_fs",
       "tools_build_mirror_img",
       "tools_build_mirror_loadmeta",
+      "tools_build_mirror_path",
       "tools_build_mirror_put",
       "tools_build_mirror_read",
       "tools_build_mirror_seen",
@@ -214,8 +221,6 @@
       "js_tex_newfile",
       "js_tex_newfolder",
       "js_tex_nodemenu",
-      "js_tex_normpath",
-      "js_tex_ondrop",
       "js_tex_openpath",
       "js_tex_refresh",
       "js_tex_renamepath",
@@ -234,38 +239,43 @@
       "js_tex_indexproject",
       "js_tex_markstale",
       "js_tex_onkey",
-      "js_tex_parselog",
-      "js_tex_saveall",
       "js_tex_saveandcompile",
       "js_tex_setcompiling",
-      "js_tex_setsynctex",
-      "js_tex_translate"
+      "js_tex_setsynctex"
     ],
     "8": [
+      "js_tex_appdir",
       "js_tex_bracedarg",
       "js_tex_enter",
       "js_tex_init",
       "js_tex_initeditor",
+      "js_tex_opensample",
       "js_tex_outlineactive",
       "js_tex_renderoutline",
+      "js_tex_resetsample",
       "js_tex_resolveinput",
+      "js_tex_sampleplotpng",
       "js_tex_showemptyeditor",
       "js_tex_togglecomment",
-      "js_tex_updatefilehead",
-      "js_tex_visualimage"
+      "js_tex_updatefilehead"
     ],
     "9": [
       "js_tex_copyprojecttofolder",
       "js_tex_detectmain",
       "js_tex_newproject",
+      "js_tex_ondrop",
       "js_tex_openfilehandle",
       "js_tex_openfolderdialog",
       "js_tex_openfromlaunch",
       "js_tex_openproject",
       "js_tex_projectidfor",
       "js_tex_renderbanner",
+      "js_tex_reopen",
+      "js_tex_saveall",
       "js_tex_scandir",
-      "js_tex_scandir_walk"
+      "js_tex_scandir_walk",
+      "js_tex_show",
+      "js_tex_verifypermission"
     ],
     "10": [
       "js_visual",
@@ -293,19 +303,20 @@
       "js_ui_toast"
     ],
     "12": [
-      "readme",
-      "readme_1_publicarla_una_sola_vez_unos_10_minutos",
-      "readme_2_instalarla_en_windows",
-      "readme_3_uso",
-      "readme_abrir_archivos_con_clic_derecho",
-      "readme_actualizar",
-      "readme_descargas_y_memoria",
-      "readme_folio_markdown_y_latex_en_tu_escritorio",
-      "readme_licencia"
+      "js_md_pdf",
+      "js_md_pdf_build",
+      "js_md_pdf_footer",
+      "js_md_pdf_layout",
+      "js_md_pdf_linksof",
+      "js_md_pdf_loadlib",
+      "js_md_pdf_paginate",
+      "js_md_pdf_writepdf"
     ],
     "13": [
+      "js_tex_addlinks",
       "js_tex_cssscale",
       "js_tex_freefarpages",
+      "js_tex_godest",
       "js_tex_relayout",
       "js_tex_renderpage",
       "js_tex_showpdf",
@@ -329,7 +340,30 @@
       "design_folio_sistema_visual",
       "design_forma_y_profundidad",
       "design_movimiento",
-      "design_tipografía"
+      "design_tipografía",
+      "notice",
+      "notice_avisos_de_terceros",
+      "readme",
+      "readme_abrir_tus_archivos_con_doble_clic",
+      "readme_actualizar_y_desinstalar",
+      "readme_atajos_de_teclado",
+      "readme_cómo_se_ve",
+      "readme_folio",
+      "readme_funciones",
+      "readme_general",
+      "readme_inicio",
+      "readme_instalarlo_en_tu_computadora",
+      "readme_latex",
+      "readme_latex_121",
+      "readme_licencia",
+      "readme_macos_y_linux",
+      "readme_markdown",
+      "readme_markdown_104",
+      "readme_para_desarrolladores",
+      "readme_para_qué_sirve",
+      "readme_primeros_pasos",
+      "readme_sin_conexión_y_almacenamiento",
+      "readme_windows_microsoft_edge_o_google_chrome"
     ],
     "16": [
       "js_home",
@@ -341,13 +375,11 @@
       "js_home_row"
     ],
     "17": [
-      "js_tex_appdir",
-      "js_tex_opensample",
-      "js_tex_reopen",
-      "js_tex_resetsample",
-      "js_tex_sampleplotpng",
-      "js_tex_show",
-      "js_tex_verifypermission"
+      "js_tex_loadsynctex",
+      "js_tex_normpath",
+      "js_tex_parselog",
+      "js_tex_translate",
+      "js_tex_visualimage"
     ],
     "18": [
       "js_shell",
@@ -356,21 +388,10 @@
       "js_shell_setzen",
       "js_shell_ws"
     ],
-    "19": [
-      "js_tex_figuresnippet",
-      "js_tex_insertfigure",
-      "js_tex_latexhint",
-      "js_tex_outsideblocks",
-      "js_tex_relfrom"
-    ],
     "20": [
       "dml_insert",
       "dml_update",
       "texmf_extra_ieeetran"
-    ],
-    "21": [
-      "notice",
-      "notice_avisos_de_terceros"
     ],
     "22": [
       "sw",
@@ -382,28 +403,26 @@
     ]
   },
   "cohesion": {
-    "0": 0.06370543541788427,
+    "0": 0.06327683615819209,
     "1": 0.06451612903225806,
-    "2": 0.11904761904761904,
+    "2": 0.11494252873563218,
     "3": 0.21666666666666667,
-    "4": 0.11,
-    "5": 0.09333333333333334,
-    "6": 0.2573099415204678,
-    "7": 0.21212121212121213,
-    "8": 0.23636363636363636,
-    "9": 0.2545454545454545,
+    "4": 0.10256410256410256,
+    "5": 0.08547008547008547,
+    "6": 0.2647058823529412,
+    "7": 0.2777777777777778,
+    "8": 0.18681318681318682,
+    "9": 0.20833333333333334,
     "10": 0.3090909090909091,
     "11": 0.24444444444444444,
-    "12": 0.2222222222222222,
-    "13": 0.39285714285714285,
+    "12": 0.4642857142857143,
+    "13": 0.28888888888888886,
     "14": 0.3333333333333333,
-    "15": 0.2857142857142857,
+    "15": 0.06666666666666667,
     "16": 0.47619047619047616,
-    "17": 0.38095238095238093,
+    "17": 0.4,
     "18": 0.6,
-    "19": 0.4,
     "20": 0.6666666666666666,
-    "21": 1.0,
     "22": 1.0,
     "23": 1.0
   },
@@ -439,84 +458,45 @@
       "degree": 11
     },
     {
+      "id": "js_tex_normpath",
+      "label": "normPath()",
+      "degree": 10
+    },
+    {
       "id": "js_tex_engine_db",
       "label": "db()",
       "degree": 10
     },
     {
-      "id": "js_tex_normpath",
-      "label": "normPath()",
+      "id": "readme_folio",
+      "label": "Folio",
       "degree": 10
     },
     {
       "id": "js_markdown_activate",
       "label": "activate()",
       "degree": 9
-    },
-    {
-      "id": "js_tex_insertfigure",
-      "label": "insertFigure()",
-      "degree": 9
     }
   ],
   "surprises": [
     {
-      "source": "initEditor()",
-      "target": "latexHint()",
+      "source": "savePdf()",
+      "target": "build()",
       "source_files": [
-        "js/tex.js",
-        "js/tex.js"
+        "js/markdown.js",
+        "js/md-pdf.js"
       ],
       "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 19 → community 8"
-    },
-    {
-      "source": "resolveInput()",
-      "target": "normPath()",
-      "source_files": [
-        "js/tex.js",
-        "js/tex.js"
-      ],
-      "confidence": "INFERRED",
-      "relation": "indirect_call",
-      "note": "Bridges community 6 → community 8"
-    },
-    {
-      "source": "setView()",
-      "target": "relayout()",
-      "source_files": [
-        "js/tex.js",
-        "js/tex.js"
-      ],
-      "confidence": "EXTRACTED",
       "relation": "calls",
-      "note": "Bridges community 13 → community 2"
-    },
-    {
-      "source": "compile()",
-      "target": "showPdf()",
-      "source_files": [
-        "js/tex.js",
-        "js/tex.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 13 → community 7"
-    },
-    {
-      "source": "openSample()",
-      "target": "openProject()",
-      "source_files": [
-        "js/tex.js",
-        "js/tex.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "note": "Bridges community 17 → community 9"
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
     }
   ],
   "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `savePdf()` connect `tex-engine.js` to `build`?",
+      "why": "High betweenness centrality (0.007) - this node is a cross-community bridge."
+    },
     {
       "type": "isolated_nodes",
       "question": "What connects `insert`, `update` to the rest of the system?",
@@ -525,7 +505,12 @@
     {
       "type": "low_cohesion",
       "question": "Should `tex-engine.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.06370543541788427 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.06327683615819209 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `build()` connect `build` to `tex-engine.js`?",
+      "why": "High betweenness centrality (0.007) - this node is a cross-community bridge."
     },
     {
       "type": "low_cohesion",
@@ -535,17 +520,12 @@
     {
       "type": "low_cohesion",
       "question": "Should `build-mirror.cjs` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.11904761904761904 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.11494252873563218 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
       "question": "Should `markdown.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.11 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `ui.js` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.09333333333333334 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.10256410256410256 - nodes in this community are weakly interconnected."
     }
   ]
 }

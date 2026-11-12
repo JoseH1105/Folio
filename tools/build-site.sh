@@ -34,7 +34,8 @@ cp -r js icons "$OUT/"
 
 V="$OUT/vendor"
 mkdir -p "$V/codemirror" "$V/pdfjs"
-cp node_modules/marked/marked.min.js node_modules/dompurify/dist/purify.min.js node_modules/@highlightjs/cdn-assets/highlight.min.js "$V/"
+cp node_modules/marked/marked.min.js node_modules/dompurify/dist/purify.min.js node_modules/@highlightjs/cdn-assets/highlight.min.js \
+   node_modules/html-to-image/dist/html-to-image.js "$V/"
 CM=node_modules/codemirror
 cp "$CM/lib/codemirror.js" "$CM/lib/codemirror.css" "$CM/mode/stex/stex.js" "$CM/mode/markdown/markdown.js" \
    "$CM/addon/edit/matchbrackets.js" "$CM/addon/edit/closebrackets.js" "$CM/addon/selection/active-line.js" \

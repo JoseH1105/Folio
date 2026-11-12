@@ -557,6 +557,29 @@
     if (!inFrame) { download(/\.\w+$/.test(d.name) ? d.name : d.name + '.md', d.content, 'text/markdown'); markSaved(d); toast('Descargado en tu carpeta de descargas.'); return; }
     await copyText(d.content, true);
   }
+  /* the rendered sheet as a PDF, laid out on A4 pages exactly as it reads on screen */
+  let pdfBusy = false;
+  async function savePdf() {
+    const d = cur(); if (!d || pdfBusy) return;
+    if (!d.content.trim()) { toast('El documento está vacío: no hay nada que guardar en PDF.'); return; }
+    const base = d.name.replace(/\.\w+$/, '') || 'Documento';
+    let handle = null;
+    if (window.showSaveFilePicker) {
+      // ask where first: the picker needs the click that opened it
+      try { handle = await showSaveFilePicker({ id: 'folio-pdf', suggestedName: base + '.pdf', types: [{ description: 'Documento PDF', accept: { 'application/pdf': ['.pdf'] } }] }); }
+      catch (e) { if (e.name === 'AbortError') return; }
+    }
+    pdfBusy = true; toast('Preparando el PDF…', 60000);
+    try {
+      render();
+      const blob = await MdPdf.build(page, { title: base, name: d.name, onProgress: (i, n) => n > 1 && toast(`Preparando el PDF… página ${i} de ${n}`, 60000) });
+      if (handle) { const w = await handle.createWritable(); await w.write(blob); await w.close(); toast(`PDF guardado: ${handle.name}`); }
+      else { download(base + '.pdf', blob); toast('PDF descargado en tu carpeta de descargas.'); }
+    } catch (e) {
+      console.error(e);
+      toast(e.name === 'NotAllowedError' ? 'No se dio permiso para escribir el archivo.' : 'No se pudo crear el PDF. Prueba con Imprimir (Ctrl+P) y elige «Guardar como PDF».', 6000);
+    } finally { pdfBusy = false; }
+  }
   function download(name, content, type) {
     const url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content], { type: type + ';charset=utf-8' }));
     const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
@@ -625,6 +648,13 @@
   if (inFrame) $('#printItem').hidden = true;
   $('#openBtn').addEventListener('click', openDialog);
   $('#saveBtn').addEventListener('click', () => save());
+  const saveMenu = $('#saveMenu');
+  UI.bindMenu($('#saveMore'), saveMenu);
+  saveMenu.addEventListener('click', e => {
+    const b = e.target.closest('[data-sact]'); if (!b) return; saveMenu.hidden = true;
+    ({ save: () => save(), saveAs: () => save(true), pdf: savePdf })[b.dataset.sact]();
+  });
+  if (inFrame) $('#pdfItem').hidden = true;
   function toggleToc() {
     if (app.dataset.mode !== 'read') setMode('read');
     if (innerWidth <= 1000) app.classList.toggle('toc-open');
@@ -679,7 +709,7 @@
 
   function onKey(e) {
     const mod = e.ctrlKey || e.metaKey;
-    if (!mod) { if (e.key === 'Escape') { menu.hidden = true; app.classList.remove('toc-open'); } return; }
+    if (!mod) { if (e.key === 'Escape') { menu.hidden = true; saveMenu.hidden = true; app.classList.remove('toc-open'); } return; }
     const k = e.key.toLowerCase();
     if (k === 's') { e.preventDefault(); save(e.shiftKey); }
     else if (k === 'o') { e.preventDefault(); openDialog(); }

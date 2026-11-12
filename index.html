@@ -26,7 +26,8 @@
 /* Folio — "night composing desk": layered graphite panels, one jade accent for action and state,
    the PDF proof as the only lit sheet. Shell: header → Markdown workspace (format bar, outline | source | sheet)
    or LaTeX workspace (files + outline | editor + problems | PDF), each with its own status line. */
-:root{
+/* .pdf-stage: the off-screen sheet the PDF export paints, always on light paper */
+:root,.pdf-stage{
   --bg-0:#E8EBEF; --bg-1:#F4F5F7; --bg-2:#FFFFFF; --bg-3:#ECEEF1; --bg-4:#E1E4E9;
   --line:#DEE2E7; --line-2:#CBD1D8;
   --ink:#15181C; --ink-2:#4B5360; --ink-3:#687180;
@@ -168,6 +169,11 @@ svg{flex:none}
 .main-sel select{height:26px;border:1px solid var(--line-2);background:var(--bg-2);border-radius:6px;padding:0 6px;max-width:200px;font:12px var(--f-mono);color:var(--ink)}
 .compile{display:flex}
 .compile .btn.primary{border-radius:7px 0 0 7px;min-width:112px;justify-content:center}
+.save-split{display:flex}
+.save-split>.btn.primary{border-radius:7px 0 0 7px}
+.save-split .btn.split{border-radius:0 7px 7px 0;border-left:1px solid color-mix(in srgb,var(--accent-ink) 25%,transparent);width:26px;padding:0;justify-content:center;min-width:0}
+.pdf-stage-host{position:fixed;left:-20000px;top:0;pointer-events:none;z-index:-1}
+.pdf-stage{width:618px;display:flow-root;background:#fff;color:var(--ink)}
 .compile .btn.split{border-radius:0 7px 7px 0;border-left:1px solid color-mix(in srgb,var(--accent-ink) 25%,transparent);width:28px;padding:0;justify-content:center;min-width:0}
 .spin{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -729,7 +735,17 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
         <button data-mode="source" aria-pressed="false" title="Solo texto fuente"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/></svg><span class="lbl-mid">Fuente</span></button>
       </div>
       <button class="btn ghost" id="openBtn" title="Abrir (Ctrl+O)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 4.5v8.5h13V6H8L6.5 3.5h-5z" stroke-linejoin="round"/></svg><span class="lbl-long">Abrir</span></button>
-      <button class="btn primary" id="saveBtn" title="Guardar (Ctrl+S)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 2.5h9l2 2v9h-11z M5 2.5v4h6v-4 M5 13.5v-4h6v4" stroke-linejoin="round"/></svg><span class="lbl-long">Guardar</span></button>
+      <div class="save-split">
+        <button class="btn primary" id="saveBtn" title="Guardar (Ctrl+S)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 2.5h9l2 2v9h-11z M5 2.5v4h6v-4 M5 13.5v-4h6v4" stroke-linejoin="round"/></svg><span class="lbl-long">Guardar</span></button>
+        <div class="menu-wrap"><button class="btn primary split" id="saveMore" aria-label="Más formas de guardar" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m4 6 4 4 4-4"/></svg></button>
+          <div class="menu" id="saveMenu" hidden>
+            <button data-sact="save">Guardar <kbd>Ctrl+S</kbd></button>
+            <button data-sact="saveAs">Guardar como… <kbd>Ctrl+Shift+S</kbd></button>
+            <hr>
+            <button data-sact="pdf" id="pdfItem">Guardar como PDF…</button>
+          </div>
+        </div>
+      </div>
       <div class="menu-wrap">
         <button class="btn icon ghost" id="moreBtn" aria-haspopup="true" aria-expanded="false" aria-label="Más opciones"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="3" cy="8" r="1.4"/><circle cx="8" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/></svg></button>
         <div class="menu" id="menu" hidden>
@@ -1045,6 +1061,7 @@ def promedio(lecturas):
 <script src="js/ui.js"></script>
 <script src="js/visual.js"></script>
 <script src="js/markdown.js"></script>
+<script src="js/md-pdf.js"></script>
 <script src="js/tex-engine.js"></script>
 <script src="js/tex.js"></script>
 <script src="js/home.js"></script>
