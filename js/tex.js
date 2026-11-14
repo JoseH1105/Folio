@@ -1151,8 +1151,11 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
         for (let j = i + 1; j < Math.min(lines.length, i + 25); j++) { const mm = /^l\.(\d+)\s?(.*)$/.exec(lines[j]); if (mm) { line = +mm[1]; ctx = mm[2]; break; } if (lines[j].startsWith('! ')) break; }
         if (/^LaTeX Error:|^Package .* Error:/.test(msg)) { let k = i + 1; while (k < lines.length && lines[k].trim() && !/^(See the|Type  H|l\.\d)/.test(lines[k])) { msg += ' ' + lines[k].trim(); k++; if (k - i > 4) break; } }
         const tr = translate(msg, ctx); if (!tr) continue;
+        // TeX's own wording, up to the l.N line, so a copied error can be looked up or shared as is
+        let e = i + 1; while (e < lines.length && e - i < 25 && !/^l\.\d/.test(lines[e]) && !lines[e].startsWith('! ')) e++;
+        const orig = lines.slice(i, Math.min(lines.length, e + 1)).map(s => s.trimEnd()).join('\n').replace(/\n{3,}/g, '\n\n').trim();
         const key = 'e' + tr[0] + line; if (seen.has(key)) continue; seen.add(key);
-        out.push({ sev: 'error', msg: tr[0], detail: [tr[1], ctx ? `l.${line}: ${ctx.trim()}` : ''].filter(Boolean).join('\n'), file: fileFor(), line });
+        out.push({ sev: 'error', msg: tr[0], detail: [tr[1], ctx ? `l.${line}: ${ctx.trim()}` : ''].filter(Boolean).join('\n'), file: fileFor(), line, orig });
         continue;
       }
       let m;
@@ -1169,11 +1172,11 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
         else if (/Shell escape feature is not enabled/.test(text)) continue;
         else if (/^Font shape/.test(text) || /Some font shapes were not available/.test(text)) continue;
         const key = 'w' + text + (ln ? ln[1] : ''); if (seen.has(key)) continue; seen.add(key);
-        out.push({ sev: 'warning', msg: text, detail, file: fileFor(), line: ln ? +ln[1] : null });
+        out.push({ sev: 'warning', msg: text, detail, file: fileFor(), line: ln ? +ln[1] : null, orig: (who ? `${m[1] ? 'Package' : 'Class'} ${who}` : 'LaTeX') + ' Warning: ' + msg });
       }
       else if ((m = /^(Overfull|Underfull) \\([hv])box \(([^)]+)\).*?(?:lines? (\d+)(?:--(\d+))?)?$/.exec(l))) {
         if (m[1] === 'Underfull') { trackParens(l); continue; }
-        out.push({ sev: 'info', msg: `Línea demasiado ancha (${m[3]})`, detail: 'El texto se sale del margen. Suele ser una palabra larga, una URL o una tabla.', file: fileFor(), line: m[4] ? +m[4] : null });
+        out.push({ sev: 'info', orig: l, msg: `Línea demasiado ancha (${m[3]})`, detail: 'El texto se sale del margen. Suele ser una palabra larga, una URL o una tabla.', file: fileFor(), line: m[4] ? +m[4] : null });
       }
       trackParens(l);
     }
@@ -1191,16 +1194,29 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
   }
   function renderLogList() {
     const el = $('#logList');
-    if (logView === 'raw') { el.innerHTML = rawLog ? `<pre class="log-raw">${esc(rawLog)}</pre>` : '<p class="log-empty">Todavía no hay registro. Compila el proyecto.</p>'; return; }
+    if (logView === 'raw') { el.innerHTML = rawLog ? `<pre class="log-raw">${esc(rawLog)}</pre><div class="log-raw-foot">${UI.copyBtn('Copiar registro completo')}</div>` : '<p class="log-empty">Todavía no hay registro. Compila el proyecto.</p>'; return; }
     if (!problems.length) { el.innerHTML = `<p class="log-empty">${lastPdf ? 'Sin errores ni advertencias.' : 'Compila para ver los errores y advertencias.'}</p>`; return; }
     const sevLabel = { error: 'Error', warning: 'Aviso', info: 'Formato' };
-    el.innerHTML = problems.map((p, i) => `<button class="log-item ${p.sev}" data-i="${i}"><span class="sev">${sevLabel[p.sev]}</span><span class="msg">${esc(p.msg)}${p.detail ? `<small>${esc(p.detail)}</small>` : ''}</span><span class="loc">${p.file ? esc(basename(p.file)) : ''}${p.line ? ':' + p.line : ''}</span></button>`).join('');
+    // a row is clickable (jumps to the line) and holds its own copy button, so it can't be a <button>
+    el.innerHTML = problems.map((p, i) => `<div class="log-item ${p.sev}" data-i="${i}" role="button" tabindex="0"><span class="sev">${sevLabel[p.sev]}</span><span class="msg">${esc(p.msg)}${p.detail ? `<small>${esc(p.detail)}</small>` : ''}${UI.copyBtn(p.sev === 'error' ? 'Copiar error' : 'Copiar')}</span><span class="loc">${p.file ? esc(basename(p.file)) : ''}${p.line ? ':' + p.line : ''}</span></div>`).join('');
+  }
+  function problemText(p) {
+    const label = { error: 'Error', warning: 'Aviso', info: 'Formato' }[p.sev];
+    const where = p.file ? `${p.file}${p.line ? ':' + p.line : ''}` : '';
+    return [`${label}: ${p.msg}`, p.detail, where && `Archivo: ${where}`, p.orig && `\nMensaje original de LaTeX:\n${p.orig}`].filter(Boolean).join('\n');
   }
   $('#logList').addEventListener('click', e => {
+    if (e.target.closest('.err-copy')) {
+      const it = e.target.closest('.log-item');
+      if (it) { const p = problems[+it.dataset.i]; if (p) UI.copyToClipboard(problemText(p), p.sev === 'error' ? 'Error copiado al portapapeles.' : 'Mensaje copiado al portapapeles.'); }
+      else if (rawLog) UI.copyToClipboard(rawLog, 'Registro completo copiado al portapapeles.');
+      return;
+    }
     const b = e.target.closest('.log-item'); if (!b) return;
     const p = problems[+b.dataset.i]; if (!p || !p.file) return;
     if (P.files.has(p.file)) { openPath(p.file, p.line); if (innerWidth <= 1000) setView('code'); }
   });
+  $('#logList').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('log-item')) { e.preventDefault(); e.target.click(); } });
   document.querySelectorAll('[data-log]').forEach(b => b.addEventListener('click', () => {
     logView = b.dataset.log; document.querySelectorAll('[data-log]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderLogList();
   }));

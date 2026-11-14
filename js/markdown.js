@@ -137,6 +137,14 @@
     }
     return { text: out, maths, map };
   }
+  // a formula KaTeX can't draw: its source in red, the reason, and a button to copy both
+  function mathError(el, f, err) {
+    const src = f.display ? `$$${f.tex}$$` : `$${f.tex}$`;
+    const why = String(err && err.message || err).replace(/^KaTeX parse error:\s*/, '').replace(/̲/g, '');   // KaTeX underlines the culprit with combining marks
+    el.classList.add('math-bad');
+    el.dataset.err = `Error en la fórmula: ${why}\n\nFórmula:\n${src}`;
+    el.innerHTML = `<code class="katex-error">${esc(src)}</code><span class="math-why">${esc(why)}</span>${UI.copyBtn()}`;
+  }
   const MATH_RE = new RegExp(MATH_OPEN + '(\\d+)' + MATH_CLOSE, 'g');
   function drawMath(root, maths) {
     if (!maths.length) return;
@@ -152,8 +160,10 @@
         const el = document.createElement(f.display ? 'div' : 'span');
         el.className = f.display ? 'math math-display' : 'math';
         el.dataset.tex = f.tex;
-        if (window.katex) katex.render(f.tex, el, { displayMode: f.display, throwOnError: false, strict: 'ignore', trust: false });
-        else el.textContent = f.display ? `$$${f.tex}$$` : `$${f.tex}$`;
+        if (window.katex) {
+          try { katex.render(f.tex, el, { displayMode: f.display, throwOnError: true, strict: 'ignore', trust: false }); }
+          catch (err) { mathError(el, f, err); }
+        } else el.textContent = f.display ? `$$${f.tex}$$` : `$${f.tex}$`;
         frag.append(el); last = m.index + m[0].length;
       }
       frag.append(node.data.slice(last));
@@ -592,7 +602,7 @@
   function exportHtml() {
     const d = cur(); if (!d) return;
     const css = [...document.querySelectorAll('style')].map(s => s.textContent).join('\n');
-    const body = page.cloneNode(true); body.querySelectorAll('.remote-note').forEach(n => n.remove());
+    const body = page.cloneNode(true); body.querySelectorAll('.remote-note, .err-copy').forEach(n => n.remove());
     // formulas need KaTeX's stylesheet outside the app: same version, pinned by integrity hash
     const katexCss = body.querySelector('.katex') ? '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">' : '';
     const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(d.name.replace(MD_RE, ''))}</title>${katexCss}<style>${css} body{overflow:auto} .viewer{min-height:100vh}</style></head><body><div class="ws-md" data-mode="read" style="display:block"><section class="viewer"><article class="page"><div class="doc">${body.innerHTML}</div></article></section></div></body></html>`;
@@ -601,6 +611,10 @@
   }
 
   /* ---------- task checkboxes in the sheet ---------- */
+  page.addEventListener('click', e => {
+    const b = e.target.closest('.err-copy'); if (!b) return;
+    const m = b.closest('.math-bad'); if (m) UI.copyToClipboard(m.dataset.err);
+  });
   page.addEventListener('change', e => {
     const cb = e.target; if (!cb.matches('input[type=checkbox]')) return;
     const d = cur(); if (!d) return;

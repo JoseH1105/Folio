@@ -6,9 +6,9 @@
     "semantic_hash": "9fca8685124e2d87c9cb2c3b46122f8c"
   },
   "js/markdown.js": {
-    "mtime": 1794458032.8237846,
-    "seen": 1794458477.9386778,
-    "ast_hash": "9e6b27be360a07afacb2fb5b7af5305a",
+    "mtime": 1794631205.4310124,
+    "seen": 1794631293.7678638,
+    "ast_hash": "c24dc6435cf3fdef9393ce35d48731c7",
     "semantic_hash": ""
   },
   "js/shell.js": {
@@ -24,16 +24,16 @@
     "semantic_hash": "e8d84074d76fc1826cbc11c8a85eee2f"
   },
   "js/tex.js": {
-    "mtime": 1793340889.500913,
-    "seen": 1793344320.2610195,
-    "ast_hash": "11f26fa4e00355abd490614609b6c7b4",
-    "semantic_hash": "11f26fa4e00355abd490614609b6c7b4"
+    "mtime": 1794631258.1916707,
+    "seen": 1794631293.7678638,
+    "ast_hash": "50659616a0a2192e2f602a9fe3dcc47b",
+    "semantic_hash": ""
   },
   "js/ui.js": {
-    "mtime": 1792646119.9265873,
-    "seen": 1792691918.0021026,
-    "ast_hash": "e05eb3e410da99be1ed09e1ae932f54e",
-    "semantic_hash": "e05eb3e410da99be1ed09e1ae932f54e"
+    "mtime": 1794631180.6824763,
+    "seen": 1794631293.7678638,
+    "ast_hash": "d9e3117d31063d6db02a4f5c54dd64e5",
+    "semantic_hash": ""
   },
   "package.json": {
     "mtime": 1794457947.1947055,
@@ -90,15 +90,15 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793758467.084469,
-    "seen": 1794458477.9386778,
-    "ast_hash": "35a3a90ddd38b7ff6d1036e298c90d7b",
+    "mtime": 1794458519.677148,
+    "seen": 1794631293.7678638,
+    "ast_hash": "097f56b0629a00b952938d3a12da62c1",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1794458020.8956664,
-    "seen": 1794458477.9386778,
-    "ast_hash": "297005d6109ce8b4a27f1c6a96c42982",
+    "mtime": 1794631180.6859896,
+    "seen": 1794631293.7678638,
+    "ast_hash": "7fed4d1a7ddebacf2fba0783a68ef211",
     "semantic_hash": ""
   },
   "icons/icon-192.png": {
@@ -132,9 +132,9 @@
     "semantic_hash": "34eb6260b6490e012589b92a75c05493"
   },
   "js/md-pdf.js": {
-    "mtime": 1794458379.1258514,
-    "seen": 1794458477.9386778,
-    "ast_hash": "e1c807d8f70e78c776785bb710e07b9f",
+    "mtime": 1794631180.6854854,
+    "seen": 1794631293.7678638,
+    "ast_hash": "d03d3d387228352b3af905b6a774963d",
     "semantic_hash": ""
   },
   "docs/capturas/inicio.png": {

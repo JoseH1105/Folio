@@ -11,6 +11,19 @@
   const inFrame = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
 
   let toastT;
+  /* errors: copy the whole message (and what produced it) to the clipboard */
+  const COPY_ICON = '<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5v-2a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2"/></svg>';
+  const copyBtn = (label = 'Copiar error') => `<button type="button" class="err-copy" title="Copiar el mensaje completo al portapapeles">${COPY_ICON}<span>${label}</span></button>`;
+  async function copyToClipboard(text, done = 'Error copiado al portapapeles.') {
+    try { await navigator.clipboard.writeText(text); toast(done); return true; }
+    catch (e) {
+      // clipboard API blocked (permissions, iframe): fall back to a hidden textarea
+      const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (er) { }
+      ta.remove(); toast(ok ? done : 'No se pudo copiar: el navegador bloqueó el portapapeles.'); return ok;
+    }
+  }
   function toast(msg, ms) {
     const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT);
     toastT = setTimeout(() => { t.hidden = true; }, ms || Math.min(8000, 2400 + msg.length * 35));
@@ -100,5 +113,5 @@
     pop.style.top = (r.bottom + 6) + 'px';
   }
 
-  window.UI = { initPicker, pickTable, $, esc, debounce, store, inFrame, toast, dialog, ask, initTheme, bindMenu };
+  window.UI = { initPicker, pickTable, $, esc, debounce, store, inFrame, toast, dialog, ask, initTheme, bindMenu, copyBtn, copyToClipboard };
 })();

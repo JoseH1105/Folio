@@ -166,7 +166,7 @@
     const stage = document.createElement('div'); stage.className = 'pdf-stage';
     const doc = source.cloneNode(true);
     doc.removeAttribute('id');
-    doc.querySelectorAll('.remote-note').forEach(el => el.remove());
+    doc.querySelectorAll('.remote-note, .err-copy').forEach(el => el.remove());
     doc.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
     source.querySelectorAll('input[type=checkbox]').forEach((cb, i) => { const c = doc.querySelectorAll('input[type=checkbox]')[i]; if (c) c.checked = cb.checked; });
     stage.appendChild(doc); host.appendChild(stage); document.body.appendChild(host);
