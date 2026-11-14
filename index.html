@@ -301,12 +301,18 @@ svg{flex:none}
 .doc .math-display .katex-display{margin:.3em 0}
 .doc .math .katex{font-size:1.06em}
 .doc .math .katex-error{font:.85em var(--f-mono);color:var(--danger)}
-.doc .math-bad{background:var(--danger-soft);border-radius:6px;padding:.1em .4em;display:inline-flex;flex-wrap:wrap;align-items:center;gap:.2em .6em}
-.doc .math-display.math-bad{display:flex;justify-content:center;padding:.5em .8em}
+.doc .math-bad{background:var(--danger-soft);border-radius:6px;padding:.25em 40px .25em .5em;display:inline-flex;flex-wrap:wrap;align-items:center;gap:.2em .6em;position:relative;min-height:34px}
+.doc .math-display.math-bad{display:flex;justify-content:center;padding:.5em 44px .5em .8em}
+/* copy button: at the end of the error, centred in its height */
+.doc .math-bad .err-copy{position:absolute;right:4px;top:50%;margin-top:-14px}
 .doc .math-bad .katex-error{background:none;padding:0}
 .doc .math-why{font:12.5px/1.4 var(--f-ui);color:var(--danger);font-style:normal}
-.err-copy{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border:1px solid var(--line-2);border-radius:6px;background:var(--bg-2);color:var(--ink-2);font:500 11.5px/1 var(--f-ui);cursor:pointer;white-space:nowrap;vertical-align:middle}
-.err-copy:hover{background:var(--bg-3);color:var(--ink);border-color:var(--accent-line)}
+.err-copy{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:28px;height:28px;padding:0;border:1px solid transparent;border-radius:7px;background:none;color:var(--ink-3);font:500 12px/1 var(--f-ui);cursor:pointer;white-space:nowrap;vertical-align:middle;flex:none;transition:color .15s,background .15s,border-color .15s}
+.err-copy.with-text{width:auto;padding:0 10px 0 8px;border-color:var(--line-2)}
+.err-copy:hover{background:var(--bg-3);color:var(--ink);border-color:var(--line-2)}
+.err-copy .front{transition:fill .15s}
+.err-copy.done{color:var(--accent)}
+.err-copy.done .front{fill:currentColor}
 .err-copy:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 @media print{.err-copy{display:none!important}}
 .remote-note{display:flex;align-items:center;gap:12px;margin:0 0 1.4em;padding:10px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--bg-1);font:13px/1.45 var(--f-ui);color:var(--ink-2)}
@@ -423,7 +429,8 @@ svg{flex:none}
 .log-item.error .sev{color:var(--danger);background:var(--danger-soft)} .log-item.warning .sev{color:var(--warn);background:var(--warn-soft)} .log-item.info .sev{color:var(--ink-3);background:var(--bg-4)}
 .log-item .msg{color:var(--ink);overflow-wrap:anywhere}
 .log-item .msg small{display:block;color:var(--ink-3);font:12px/1.5 var(--f-mono);margin-top:3px;white-space:pre-wrap}
-.log-item .msg .err-copy{display:flex;width:max-content;margin-top:7px}
+.log-item .loc-col{display:flex;flex-direction:column;align-items:center;align-self:stretch;gap:4px;min-width:28px}
+.log-item .loc-col .err-copy{margin:auto 0}
 .log-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .log-raw-foot{padding:0 14px 12px}
 .log-item .loc{font:12px var(--f-mono);color:var(--ink-3);white-space:nowrap}

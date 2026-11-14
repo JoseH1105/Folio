@@ -6,9 +6,9 @@
     "semantic_hash": "9fca8685124e2d87c9cb2c3b46122f8c"
   },
   "js/markdown.js": {
-    "mtime": 1794631205.4310124,
-    "seen": 1794631293.7678638,
-    "ast_hash": "c24dc6435cf3fdef9393ce35d48731c7",
+    "mtime": 1794631649.0451088,
+    "seen": 1794631718.5933144,
+    "ast_hash": "f7955ed4171619ee56cf2111edf2a510",
     "semantic_hash": ""
   },
   "js/shell.js": {
@@ -24,15 +24,15 @@
     "semantic_hash": "e8d84074d76fc1826cbc11c8a85eee2f"
   },
   "js/tex.js": {
-    "mtime": 1794631258.1916707,
-    "seen": 1794631293.7678638,
-    "ast_hash": "50659616a0a2192e2f602a9fe3dcc47b",
+    "mtime": 1794631649.0446088,
+    "seen": 1794631718.5933144,
+    "ast_hash": "ada662b4e37aa9d826fda0db379967c7",
     "semantic_hash": ""
   },
   "js/ui.js": {
-    "mtime": 1794631180.6824763,
-    "seen": 1794631293.7678638,
-    "ast_hash": "d9e3117d31063d6db02a4f5c54dd64e5",
+    "mtime": 1794631649.044109,
+    "seen": 1794631718.5933144,
+    "ast_hash": "ad22d50f62d6a4929bcf09872ce32628",
     "semantic_hash": ""
   },
   "package.json": {
@@ -90,15 +90,15 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794458519.677148,
-    "seen": 1794631293.7678638,
-    "ast_hash": "097f56b0629a00b952938d3a12da62c1",
+    "mtime": 1794631322.376759,
+    "seen": 1794631718.5933144,
+    "ast_hash": "1cb2ea974bd6b8d35670fafd9be76981",
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1794631180.6859896,
-    "seen": 1794631293.7678638,
-    "ast_hash": "7fed4d1a7ddebacf2fba0783a68ef211",
+    "mtime": 1794631704.8292563,
+    "seen": 1794631718.5933144,
+    "ast_hash": "b91a7c35eefa5f4e290e9835f748a8f4",
     "semantic_hash": ""
   },
   "icons/icon-192.png": {

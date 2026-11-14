@@ -613,7 +613,7 @@
   /* ---------- task checkboxes in the sheet ---------- */
   page.addEventListener('click', e => {
     const b = e.target.closest('.err-copy'); if (!b) return;
-    const m = b.closest('.math-bad'); if (m) UI.copyToClipboard(m.dataset.err);
+    const m = b.closest('.math-bad'); if (m) UI.copyToClipboard(m.dataset.err, undefined, b);
   });
   page.addEventListener('change', e => {
     const cb = e.target; if (!cb.matches('input[type=checkbox]')) return;

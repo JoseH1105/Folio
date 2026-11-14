@@ -1194,11 +1194,11 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
   }
   function renderLogList() {
     const el = $('#logList');
-    if (logView === 'raw') { el.innerHTML = rawLog ? `<pre class="log-raw">${esc(rawLog)}</pre><div class="log-raw-foot">${UI.copyBtn('Copiar registro completo')}</div>` : '<p class="log-empty">Todavía no hay registro. Compila el proyecto.</p>'; return; }
+    if (logView === 'raw') { el.innerHTML = rawLog ? `<pre class="log-raw">${esc(rawLog)}</pre><div class="log-raw-foot">${UI.copyBtn('Copiar registro completo', true)}</div>` : '<p class="log-empty">Todavía no hay registro. Compila el proyecto.</p>'; return; }
     if (!problems.length) { el.innerHTML = `<p class="log-empty">${lastPdf ? 'Sin errores ni advertencias.' : 'Compila para ver los errores y advertencias.'}</p>`; return; }
     const sevLabel = { error: 'Error', warning: 'Aviso', info: 'Formato' };
     // a row is clickable (jumps to the line) and holds its own copy button, so it can't be a <button>
-    el.innerHTML = problems.map((p, i) => `<div class="log-item ${p.sev}" data-i="${i}" role="button" tabindex="0"><span class="sev">${sevLabel[p.sev]}</span><span class="msg">${esc(p.msg)}${p.detail ? `<small>${esc(p.detail)}</small>` : ''}${UI.copyBtn(p.sev === 'error' ? 'Copiar error' : 'Copiar')}</span><span class="loc">${p.file ? esc(basename(p.file)) : ''}${p.line ? ':' + p.line : ''}</span></div>`).join('');
+    el.innerHTML = problems.map((p, i) => `<div class="log-item ${p.sev}" data-i="${i}" role="button" tabindex="0"><span class="sev">${sevLabel[p.sev]}</span><span class="msg">${esc(p.msg)}${p.detail ? `<small>${esc(p.detail)}</small>` : ''}</span><span class="loc-col"><span class="loc">${p.file ? esc(basename(p.file)) : ''}${p.line ? ':' + p.line : ''}</span>${UI.copyBtn(p.sev === 'error' ? 'Copiar error' : 'Copiar mensaje')}</span></div>`).join('');
   }
   function problemText(p) {
     const label = { error: 'Error', warning: 'Aviso', info: 'Formato' }[p.sev];
@@ -1206,10 +1206,11 @@ Más información en \\url{https://es.wikipedia.org/wiki/Sistema_de_primer_orden
     return [`${label}: ${p.msg}`, p.detail, where && `Archivo: ${where}`, p.orig && `\nMensaje original de LaTeX:\n${p.orig}`].filter(Boolean).join('\n');
   }
   $('#logList').addEventListener('click', e => {
-    if (e.target.closest('.err-copy')) {
+    const cb = e.target.closest('.err-copy');
+    if (cb) {
       const it = e.target.closest('.log-item');
-      if (it) { const p = problems[+it.dataset.i]; if (p) UI.copyToClipboard(problemText(p), p.sev === 'error' ? 'Error copiado al portapapeles.' : 'Mensaje copiado al portapapeles.'); }
-      else if (rawLog) UI.copyToClipboard(rawLog, 'Registro completo copiado al portapapeles.');
+      if (it) { const p = problems[+it.dataset.i]; if (p) UI.copyToClipboard(problemText(p), p.sev === 'error' ? 'Error copiado al portapapeles.' : 'Mensaje copiado al portapapeles.', cb); }
+      else if (rawLog) UI.copyToClipboard(rawLog, 'Registro completo copiado al portapapeles.', cb);
       return;
     }
     const b = e.target.closest('.log-item'); if (!b) return;

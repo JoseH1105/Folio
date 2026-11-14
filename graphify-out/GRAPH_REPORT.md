@@ -1,15 +1,17 @@
 # Graph Report - Folio  (2026-11-13)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 19 files · ~67,140 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 13 file(s) not represented in the graph (top: .bst 5, (none) 2, .bib 2)
 
 ## Summary
 - 360 nodes · 659 edges · 23 communities (19 shown, 4 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 69 edges (avg confidence: 0.85)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 69 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b08e4d2c`
+- Built from commit: `4fc61b5d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -43,12 +45,12 @@
 2. `compile()` - 15 edges
 3. `renderTree()` - 13 edges
 4. `runCompile()` - 11 edges
-5. `openPath()` - 11 edges
-6. `initEditor()` - 11 edges
+5. `initEditor()` - 11 edges
+6. `openPath()` - 11 edges
 7. `db()` - 10 edges
 8. `normPath()` - 10 edges
 9. `Folio` - 10 edges
-10. `activate()` - 9 edges
+10. `render()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `savePdf()` --calls--> `build()`  [INFERRED]
@@ -145,6 +147,8 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `copyToClipboard()` connect `NOTICE.md` to `tex-engine.js`, `build-mirror.cjs`?**
   _High betweenness centrality (0.136) - this node is a cross-community bridge._
+- **Are the 2 inferred relationships involving `initEditor()` (e.g. with `latexHint()` and `visualImage()`) actually correct?**
+  _`initEditor()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `insert`, `update` to the rest of the system?**
   _2 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `tex-engine.js` be split into smaller, more focused modules?**
@@ -155,5 +159,3 @@ _Questions this graph is uniquely positioned to answer:_
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Why does `build()` connect `build` to `tex-engine.js`?**
   _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Should `build-mirror.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.11264367816091954 - nodes in this community are weakly interconnected._

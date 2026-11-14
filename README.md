@@ -116,7 +116,7 @@ Funciona igual con Chrome o Edge: abre la dirección y usa **Instalar**. En Safa
   dos tiradores laterales; la columna se mantiene centrada.
 - La línea entre el texto y la hoja reparte el espacio (también con las flechas del teclado).
 - **Doble clic en la hoja** abre el texto en esa misma palabra.
-- Una fórmula que no se puede dibujar muestra el motivo y un botón **Copiar error**.
+- Una fórmula que no se puede dibujar muestra el motivo y el mismo botón de copiar.
 - **Guardar como PDF:** la flecha junto a **Guardar** crea un PDF en A4 igual a la hoja
   (fórmulas, tablas y código incluidos, en papel claro) y te deja elegir dónde guardarlo.
 - Exportar como HTML o imprimir.
@@ -125,8 +125,8 @@ Funciona igual con Chrome o Edge: abre la dirección y usa **Instalar**. En Safa
 
 - **Compilación real a PDF** (pdfLaTeX + BibTeX) dentro de la app, automática al escribir o
   con **Compilar** (`Ctrl+Enter`).
-- **Errores en español** en el panel de problemas; clic en uno y saltas a la línea. **Copiar error**
-  copia el mensaje completo (explicación, archivo, línea y el texto original de LaTeX), y en
+- **Errores en español** en el panel de problemas; clic en uno y saltas a la línea. El botón de copiar
+  (dos hojas, a la derecha de cada error) copia el mensaje completo (explicación, archivo, línea y el texto original de LaTeX), y en
   *Registro completo* puedes copiar todo el registro.
 - **Doble clic en el PDF** salta a la línea del código donde está esa palabra (SyncTeX).
 - **Esquema** de secciones y de los archivos incluidos con `\input`.

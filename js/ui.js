@@ -12,16 +12,20 @@
 
   let toastT;
   /* errors: copy the whole message (and what produced it) to the clipboard */
-  const COPY_ICON = '<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5v-2a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2"/></svg>';
-  const copyBtn = (label = 'Copiar error') => `<button type="button" class="err-copy" title="Copiar el mensaje completo al portapapeles">${COPY_ICON}<span>${label}</span></button>`;
-  async function copyToClipboard(text, done = 'Error copiado al portapapeles.') {
-    try { await navigator.clipboard.writeText(text); toast(done); return true; }
+  const COPY_ICON = '<svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path class="back" d="M6 4.6H4.3A2.2 2.2 0 0 0 2.1 6.8v5.5a2.2 2.2 0 0 0 2.2 2.2h3.4a2.2 2.2 0 0 0 2.2-2.1"/><rect class="front" x="6" y="1.5" width="7.9" height="10.6" rx="2.2"/></svg>';
+  // icon-only by default; withText adds the label beside the icon (e.g. the full log)
+  const copyBtn = (label = 'Copiar error', withText = false) =>
+    `<button type="button" class="err-copy${withText ? ' with-text' : ''}" title="${label}" aria-label="${label}">${COPY_ICON}${withText ? `<span>${label}</span>` : ''}</button>`;
+  // btn: the button pressed, whose front sheet fills in for a moment as confirmation
+  async function copyToClipboard(text, done = 'Error copiado al portapapeles.', btn) {
+    const flash = () => { if (!btn) return; btn.classList.add('done'); clearTimeout(btn._t); btn._t = setTimeout(() => btn.classList.remove('done'), 1400); };
+    try { await navigator.clipboard.writeText(text); toast(done); flash(); return true; }
     catch (e) {
       // clipboard API blocked (permissions, iframe): fall back to a hidden textarea
       const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0';
       document.body.appendChild(ta); ta.select();
       let ok = false; try { ok = document.execCommand('copy'); } catch (er) { }
-      ta.remove(); toast(ok ? done : 'No se pudo copiar: el navegador bloqueó el portapapeles.'); return ok;
+      ta.remove(); toast(ok ? done : 'No se pudo copiar: el navegador bloqueó el portapapeles.'); if (ok) flash(); return ok;
     }
   }
   function toast(msg, ms) {
