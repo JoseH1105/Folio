@@ -8,6 +8,8 @@ const BUILD = '__BUILD__';
 const ENGINE_VERSION = 'busytex-1.4.1';
 const SHELL = 'folio-shell-' + BUILD;
 const ENGINE = 'folio-engine-' + ENGINE_VERSION;
+// served straight from the repository (no build step): always ask the server first, so edits show up
+const DEV = BUILD.startsWith('__');
 
 const SHELL_FILES = [
   './', 'index.html', 'manifest.webmanifest',
@@ -27,8 +29,10 @@ const SHELL_FILES = [
   'busytex/texlive-basic.js', 'busytex/texlive-basic.js.providespackage.txt'
 ];
 
+// a new version takes over as soon as it is downloaded (not only once every Folio window is
+// closed); the page then reloads itself if nothing was touched yet, or offers to (shell.js)
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(SHELL).then(c => c.addAll(SHELL_FILES)));
+  e.waitUntil(caches.open(SHELL).then(c => c.addAll(SHELL_FILES)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
@@ -61,6 +65,13 @@ self.addEventListener('fetch', e => {
 
   e.respondWith((async () => {
     const c = await caches.open(SHELL);
+    if (DEV) {
+      try {
+        const r = await fetch(req, { cache: 'no-cache' });
+        if (r.ok && url.pathname.startsWith(new URL('./', self.registration.scope).pathname)) c.put(req, r.clone());
+        return r;
+      } catch (err) { /* offline: fall back to the copy below */ }
+    }
     const hit = await c.match(req, { ignoreSearch: req.mode === 'navigate' }) || (req.mode === 'navigate' ? await c.match('index.html') : null);
     if (hit) return hit;
     try {

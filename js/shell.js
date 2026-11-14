@@ -85,13 +85,20 @@
 
   /* ---------- service worker (offline + updates) ---------- */
   if ('serviceWorker' in navigator && !inFrame && location.protocol !== 'file:') {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      reg.addEventListener('updatefound', () => {
-        const nw = reg.installing; if (!nw) return;
-        nw.addEventListener('statechange', () => {
-          if (nw.state === 'installed' && navigator.serviceWorker.controller) toast('Hay una versión nueva de Folio. Se usará la próxima vez que abras la app.', 6000);
-        });
-      });
-    }).catch(() => { });
+    // a new version takes control right after it downloads (sw.js skips waiting). If the app was
+    // just opened and nothing was touched, reload into it at once; otherwise offer a button, so
+    // no one loses the cursor or an unsaved change.
+    let touched = false;
+    const mark = () => { touched = true; };
+    ['keydown', 'pointerdown', 'drop'].forEach(t => addEventListener(t, mark, { capture: true, once: true }));
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || reloading) return;   // first install: this page is already the new version
+      const reload = () => { reloading = true; location.reload(); };
+      if (!touched && performance.now() < 20000) reload();
+      else toast('Hay una versión nueva de Folio.', 20000, { label: 'Actualizar ahora', run: reload });
+    });
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => { });
   }
 })();

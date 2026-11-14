@@ -28,8 +28,14 @@
       ta.remove(); toast(ok ? done : 'No se pudo copiar: el navegador bloqueó el portapapeles.'); if (ok) flash(); return ok;
     }
   }
-  function toast(msg, ms) {
+  // action: optional { label, run } shown as a button inside the toast
+  function toast(msg, ms, action) {
     const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT);
+    if (action) {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'toast-act'; b.textContent = action.label;
+      b.addEventListener('click', () => { t.hidden = true; action.run(); });
+      t.append(' ', b);
+    }
     toastT = setTimeout(() => { t.hidden = true; }, ms || Math.min(8000, 2400 + msg.length * 35));
   }
 

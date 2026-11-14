@@ -1,17 +1,17 @@
 # Graph Report - Folio  (2026-11-13)
 
 ## Corpus Check
-- 19 files · ~67,140 words
+- 19 files · ~67,395 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 13 file(s) not represented in the graph (top: .bst 5, (none) 2, .bib 2)
 
 ## Summary
-- 360 nodes · 659 edges · 23 communities (19 shown, 4 thin omitted)
+- 361 nodes · 660 edges · 23 communities (20 shown, 3 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 69 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4fc61b5d`
+- Built from commit: `654cab97`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,7 +35,7 @@
 - openSample
 - insertFigure
 - NOTICE.md
-- scanDir
+- openSample
 - IEEEtran.cls
 - sw.js
 - build-site.sh
@@ -59,7 +59,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (23 total, 4 thin omitted)
+## Communities (23 total, 3 thin omitted)
 
 ### Community 0 - "tex-engine.js"
 Cohesion: 0.06
@@ -70,8 +70,8 @@ Cohesion: 0.06
 Nodes (31): runs-on, steps, concurrency, cancel-in-progress, group, environment, needs, runs-on (+23 more)
 
 ### Community 2 - "build-mirror.cjs"
-Cohesion: 0.11
-Nodes (22): appDir(), applyEqTemplate(), applyLineMarks(), editable(), fillTemplate(), inMath(), insertBlock(), insertHeading() (+14 more)
+Cohesion: 0.12
+Nodes (19): applyEqTemplate(), applyLineMarks(), editable(), fillTemplate(), inMath(), insertBlock(), insertHeading(), insertMathSymbol() (+11 more)
 
 ### Community 3 - "tex.js"
 Cohesion: 0.22
@@ -86,8 +86,8 @@ Cohesion: 0.09
 Nodes (20): BARE_NAME_FORMATS, basic, { cd, meta }, chunk(), data, FMT, formatsFor(), fs (+12 more)
 
 ### Community 6 - "folio-tex-worker.js"
-Cohesion: 0.26
-Nodes (19): addFiles(), addImage(), deletePath(), dirHandleFor(), newFile(), newFolder(), nodeMenu(), normPath() (+11 more)
+Cohesion: 0.27
+Nodes (18): addFiles(), addImage(), deletePath(), dirHandleFor(), newFile(), newFolder(), nodeMenu(), normPath() (+10 more)
 
 ### Community 7 - "Folio — Markdown y LaTeX en tu escritorio"
 Cohesion: 0.22
@@ -98,7 +98,7 @@ Cohesion: 0.24
 Nodes (11): bracedArg(), enter(), init(), initEditor(), outlineActive(), renderOutline(), resolveInput(), showEmptyEditor() (+3 more)
 
 ### Community 9 - "Folio — sistema visual"
-Cohesion: 0.24
+Cohesion: 0.23
 Nodes (13): copyProjectToFolder(), detectMain(), newProject(), openFileHandle(), openFolderDialog(), openFromLaunch(), openProject(), projectIdFor() (+5 more)
 
 ### Community 10 - "IEEEtran.cls"
@@ -114,8 +114,8 @@ Cohesion: 0.46
 Nodes (7): build(), footer(), layout(), linksOf(), loadLib(), paginate(), writePdf()
 
 ### Community 13 - "shell.js"
-Cohesion: 0.25
-Nodes (11): addLinks(), cssScale(), freeFarPages(), goDest(), relayout(), renderPage(), setView(), showPdf() (+3 more)
+Cohesion: 0.29
+Nodes (10): addLinks(), cssScale(), freeFarPages(), goDest(), relayout(), renderPage(), showPdf(), stepZoom() (+2 more)
 
 ### Community 14 - "sw.js"
 Cohesion: 0.33
@@ -137,16 +137,20 @@ Nodes (5): figureSnippet(), insertFigure(), latexHint(), outsideBlocks(), relFro
 Cohesion: 0.60
 Nodes (3): openLaunched(), setWs(), setZen()
 
+### Community 19 - "openSample"
+Cohesion: 0.38
+Nodes (7): appDir(), openSample(), reopen(), resetSample(), samplePlotPng(), show(), verifyPermission()
+
 ## Knowledge Gaps
 - **2 isolated node(s):** `insert`, `update`
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 108 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `copyToClipboard()` connect `NOTICE.md` to `tex-engine.js`, `build-mirror.cjs`?**
-  _High betweenness centrality (0.136) - this node is a cross-community bridge._
+  _High betweenness centrality (0.135) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `initEditor()` (e.g. with `latexHint()` and `visualImage()`) actually correct?**
   _`initEditor()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `insert`, `update` to the rest of the system?**
@@ -154,7 +158,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `tex-engine.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06229508196721312 - nodes in this community are weakly interconnected._
 - **Why does `savePdf()` connect `tex-engine.js` to `build`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Why does `build()` connect `build` to `tex-engine.js`?**

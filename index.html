@@ -429,8 +429,8 @@ svg{flex:none}
 .log-item.error .sev{color:var(--danger);background:var(--danger-soft)} .log-item.warning .sev{color:var(--warn);background:var(--warn-soft)} .log-item.info .sev{color:var(--ink-3);background:var(--bg-4)}
 .log-item .msg{color:var(--ink);overflow-wrap:anywhere}
 .log-item .msg small{display:block;color:var(--ink-3);font:12px/1.5 var(--f-mono);margin-top:3px;white-space:pre-wrap}
-.log-item .loc-col{display:flex;flex-direction:column;align-items:center;align-self:stretch;gap:4px;min-width:28px}
-.log-item .loc-col .err-copy{margin:auto 0}
+.log-item .loc-col{display:flex;flex-direction:column;align-items:flex-end;align-self:stretch;gap:4px;min-width:28px}
+.log-item .loc-col .err-copy{margin:auto -6px auto 0}
 .log-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .log-raw-foot{padding:0 14px 12px}
 .log-item .loc{font:12px var(--f-mono);color:var(--ink-3);white-space:nowrap}
@@ -612,6 +612,8 @@ li.CodeMirror-hint-active{background:var(--accent-soft);color:var(--ink);box-sha
 .field{display:grid;gap:6px;margin:0 0 16px;font-size:12.5px;color:var(--ink-2);font-weight:500}
 .field input{width:100%;font:13.5px var(--f-mono);height:34px}
 .field small{color:var(--ink-3);font-weight:400}
+.toast-act{margin-left:10px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);border-radius:6px;height:24px;padding:0 10px;font:600 12px var(--f-ui);cursor:pointer}
+.toast-act:hover{background:var(--accent);color:var(--accent-ink)}
 .toast{position:fixed;left:50%;bottom:calc(42px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:70;background:var(--bg-3);color:var(--ink);border:1px solid var(--line-2);padding:9px 16px;border-radius:10px;box-shadow:var(--shadow-2);font-size:13px;max-width:min(560px,calc(100vw - 32px));text-align:center;animation:toast .2s var(--ease)}
 @keyframes toast{from{opacity:0;transform:translate(-50%,6px)}}
 .settings dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 16px;font-size:13px}
